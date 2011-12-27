@@ -507,7 +507,7 @@
 5580     k(m+1) = h(3-n)
 5590     next m
 5600    k(i) = h(n)
-5610   if j1 then 5710 : else goto 5730
+5610   if j1 then 5710 else goto 5730
 5620  k = k+1
 5630  if k <= l then 5470
 5640  t = q(k(i))
