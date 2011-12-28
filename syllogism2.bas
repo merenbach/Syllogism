@@ -798,40 +798,41 @@ msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
 	if msg then print "Suggestion: try the LINK or LINK* command."
 	return
 9060 rem---Substitute terms---
-9070 print "Enter address of old term; or 0 for help, -1 to exit, -2 for dump"
-	input i1
-	if i1 <> -1 then
-		if i1 = -2 then
+	do
+		print "Enter address of old term; or 0 for help, -1 to exit, -2 for dump"
+		input i1
+		if i1 = -1 then
+			exit do
+		elseif i1 = -2 then
 			gosub 8890
-			goto 9070
-		endif
-		if i1 = 0 then
-			print "   This subroutine allows a term in a syllogism to be uniformly"
-			print "replaced by another term.  This is useful e.g. for finding an"
-			print "interpretation which actually makes the premises true, to produce as"
-			print "an obvious example of invalidity an argument having exactly the same"
-			print "logical form.  The substitution does not take place in the premises"
-			print "as originally entered; it takes place in the terms as stored within"
-			print "the program.  Thus, the LINK and LIST commands will display the"
-			print "original premises; to see the changed ones, use the LIST* and LINK*"
-			print "commands."
-			print "   To find the 'addresses' of the terms, enter -2 to run the DUMP."
-			print "   Warning: if you replace a term with another one already occurring"
-			print "in the syllogism, the result will not make much sense.  However,"
-			print "this routine does not convert entered term to lower-case or singular."
 		else
-			if i1 > l1 then
-				print "Address ";i1;" too large.  Symbol table only of length ";l1
+			if i1 = 0 then
+				print "   This subroutine allows a term in a syllogism to be uniformly"
+				print "replaced by another term.  This is useful e.g. for finding an"
+				print "interpretation which actually makes the premises true, to produce as"
+				print "an obvious example of invalidity an argument having exactly the same"
+				print "logical form.  The substitution does not take place in the premises"
+				print "as originally entered; it takes place in the terms as stored within"
+				print "the program.  Thus, the LINK and LIST commands will display the"
+				print "original premises; to see the changed ones, use the LIST* and LINK*"
+				print "commands."
+				print "   To find the 'addresses' of the terms, enter -2 to run the DUMP."
+				print "   Warning: if you replace a term with another one already occurring"
+				print "in the syllogism, the result will not make much sense.  However,"
+				print "this routine does not convert entered term to lower-case or singular."
 			else
-				print "Enter new term to replace ";g$(g(i1));" '";t$(i1);"'"
-				input w$
-				t$(i1) = w$
-				print "Replaced by '";w$;"'"
+				if i1 > l1 then
+					print "Address ";i1;" too large.  Symbol table only of length ";l1
+				else
+					print "Enter new term to replace ";g$(g(i1));" '";t$(i1);"'"
+					input w$
+					t$(i1) = w$
+					print "Replaced by '";w$;"'"
+				endif
 			endif
+			print
 		endif
-		print
-		goto 9070
-	endif
+	loop
 	print "Exit from substitution routine"
 	return
 end
