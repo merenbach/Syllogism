@@ -71,7 +71,7 @@ data "ZZZZZ","ZZZZZ"
 msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
 1070 if msg then print "Enter HELP for list of commands"
 1080 rem---Input line---
-	print ">";
+	print "> ";
 	line input l1$
 	l = len(l1$)
 	if l = 0 then 1070
