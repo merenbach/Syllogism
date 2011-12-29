@@ -700,18 +700,19 @@ msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
 	print "    that term '";t$(v1);"' denotes."
 7370 return
 7460 rem---list---
-	i = 0
-7540 i = l(i)
-	if i = 0 then 7650
-	print n(i);" ";
-	if l1$ = "list" then 7630
-		if r(i) < 6 and g(q(i)) = 2 then r(i) = r(i)+2
-		if r(i) < 4 then print x$(r(i));"  ";
-		print t$(p(i));y$(r(i));"  ";t$(q(i));z$(r(i))
-		goto 7540
-7630 print l$(i)
-	goto 7540
-7650 return
+	i = l(0)
+	while not (i = 0)
+		print n(i);" ";
+		if l1$ <> "list" then
+			if r(i) < 6 and g(q(i)) = 2 then r(i) = r(i)+2
+			if r(i) < 4 then print x$(r(i));"  ";
+			print t$(p(i));y$(r(i));"  ";t$(q(i));z$(r(i))
+		else
+			print l$(i)
+		endif
+		i = l(i)
+	wend
+	return
 7660 rem---List valid inputs---
 	cls : print "Valid commands are:"
 	print "   <n>  [ <statement> ]   Insert, delete, or replace premise number  <n> "
