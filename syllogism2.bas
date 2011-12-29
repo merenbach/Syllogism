@@ -342,12 +342,13 @@ msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
 3950 rem---Search T$() for W$ from I1 to L1---
 	rem If found, I1 = L1; else I1 = L1+1. B1 set to 1st empty loc.
 	b1 = 0
-3980 if i1 > l1 then 4030
-	if t$(i1) = w$ then 4030
+	do
+		if i1 > l1 then exit do
+		if t$(i1) = w$ then exit do
 		if o(i1) = 0 and b1 = 0 then b1 = i1
 		i1 = i1+1
-		goto 3980
-4030 return
+	loop
+	return
 4040 rem---Convert W$ to singular---
 	l = len(w$)
 	if l < 4 then 4090
