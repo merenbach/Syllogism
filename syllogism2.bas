@@ -438,16 +438,22 @@ msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
 4760 rem---Delete a line---
 	n = val(s$(1))
 	i = 0
-4790 j1 = l(i)
-		if j1 = 0 then print "Line ";n;" not found" : goto 4880
-			if n = n(j1) then 4840
-				i = l(i)
-				goto 4790
-4840		a(0) = a(0)-1
+	do
+		j1 = l(i)
+		if j1 = 0 then
+			print "Line ";n;" not found"
+			exit do
+		elseif n = n(j1) then
+			a(0) = a(0) - 1
 			a(a(0)) = j1
 			l(i) = l(j1)
 			gosub 4890
-4880 return
+			exit do
+		else
+			i = l(i)
+		endif
+	loop
+	return
 4890 rem---Decrement table entries---
 	j(1) = p(j1)
 	j(2) = q(j1)
