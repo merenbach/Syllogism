@@ -413,18 +413,17 @@ msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
 		if j1 = 0 then
 			gosub 4690
 			exit do
-		endif
-		if n = n(j1) then
+		elseif n = n(j1) then
 			gosub 4890
 			l$(j1) = l$
 			a1 = j1
 			exit do
-		endif
-		if n < n(j1) then
+		elseif n < n(j1) then
 			gosub 4690
 			exit do
+		else
+			i = j1
 		endif
-		i = j1
 	loop
 	return
 4690 rem subroutine from 4530
