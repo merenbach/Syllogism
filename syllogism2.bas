@@ -76,63 +76,69 @@ msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
 	line input l1$
 	l = len(l1$)
 	if l = 0 then 1070
-1120 l2$ = right$(l1$,1)
-		if l2$ = " " then 1160
-			if l2$ <> "." and l2$ <> "?" and l2$ <> "!" then 1181
+	do
+		l2$ = right$(l1$,1)
+		if l2$ <> " " then
+			if l2$ <> "." and l2$ <> "?" and l2$ <> "!" then exit do
 			print left$(tb$,l);" ^   Punctuation mark ignored"
-1160	if l = 1 then 1080
-		l = l-1 : l1$ = left$(l1$,l) : goto 1120
-1181 if left$(l1$,1) <> " " then 1190
+		endif
 		if l = 1 then 1080
-		l = l-1 : l1$ = right$(l1$,l) : goto 1181
-1190 rem / FOR I = 1 TO L
+		l = l-1 : l1$ = left$(l1$,l)
+	loop
+	do
+		if left$(l1$,1) <> " " then exit do
+		if l = 1 then 1080
+		l = l-1 : l1$ = right$(l1$,l)
+	loop
+	rem / FOR I = 1 TO L
 		rem / V = ASC(MID$(L1$,I,1))
 		rem / IF V >= 65 AND V <= 90  THEN  MID$(L1$,I,1) = CHR$(V+32)
 		rem / NEXT
 	rem Metal doesn't support mid$ as command, but lcase$() is well supported...
 	l1$ = lcase$(l1$)
-	if l1$ <> "stop" then 1230
+	if l1$ = "stop" then
 		if msg then print "(Some versions support typing CONT to continue)"
-	stop
+		stop
 		goto 1080
-1230 if l1$ <> "new" then 1270
+	elseif l1$ = "new" then
 		print "Begin new syllogism"
 		gosub 1840
 		goto 1080
-1270 if l1$ <> "sample" then 1310
+	elseif l1$ = "sample" then
 		gosub 1840
 		gosub 8980
 		goto 1080
-1310 if l1$ <> "help" then 1340
+	elseif l1$ = "help" then
 		gosub 7660
 		goto 1080
-1340 if l1$ <> "syntax" then 1370
+	elseif l1$ = "syntax" then
 		gosub 7960
 		goto 1080
-1370 if l1$ <> "info" then 1430
+	elseif l1$ = "info" then
 		gosub 8290
 		goto 1080
-1430 if l1$ <> "dump" then 1460
+	elseif l1$ = "dump" then
 		gosub 8890
 		goto 1080
-1460 if l1$ <> "msg" then 1500
+	elseif l1$ = "msg" then
 		msg = not (msg)
 		print "Messages turned ";
 		if msg then print "on" : else print "off"
 		goto 1080
-1500 if l1$ <> "substitute" then 1540
+	elseif l1$ = "substitute" then
 		if l(0) = 0 then 1612
 		gosub 9060
 		goto 1080
-1540 if l1$ <> "link" and l1$ <> "link*" then 1561
+	elseif l1$ = "link" or l1$ = "link*" then
 		if l(0) = 0 then 1612
 		gosub 5070
 		goto 1080
-1561 if l1$ <> "list" and l1$ <> "list*" then 1570
+	elseif l1$ = "list" or l1$ = "list*" then
 		if l(0) = 0 then 1612
 		gosub 7460
 		goto 1080
-1570 rem--scan line L1$ into array S$()
+	endif
+	rem--scan line L1$ into array S$()
 	gosub 2020
 	if t(1) <> 1 then 1745
 		if t(2) then 1640
