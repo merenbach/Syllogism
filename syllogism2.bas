@@ -440,12 +440,13 @@ msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
 4890 rem---Decrement table entries---
 	j(1) = p(j1)
 	j(2) = q(j1)
-	if r(j1) mod 2 = 0 then 4960
+	if r(j1) mod 2 <> 0 then
 		n1 = n1-1
 		j(4) = 1
-		goto 4970
-4960 if g(q(j1)) = 2 then j(4) = 1 : else j(4) = 0
-4970 if r(j1) >= 2 then j(3) = 1 : else j(3) = 0
+	else
+		if g(q(j1)) = 2 then j(4) = 1 : else j(4) = 0
+	endif
+	if r(j1) >= 2 then j(3) = 1 : else j(3) = 0
 	for k = 1 to 2
 		o(j(k)) = o(j(k))-1
 		if o(j(k)) > 0 then 5040
