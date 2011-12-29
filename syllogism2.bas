@@ -407,23 +407,33 @@ msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
 	l = len(l1$)
 	l$ = mid$(l1$,s+1,l-s)
 	i = 0
-4590 j1 = l(i)
-	if j1 = 0 then 4690
-		if n <> n(j1) then 4660
+	do
+		j1 = l(i)
+		if j1 = 0 then
+			gosub 4690
+			exit do
+		endif
+		if n = n(j1) then
 			gosub 4890
 			l$(j1) = l$
 			a1 = j1
-			goto 4750
-4660	if n < n(j1) then 4690
-			i = j1
-			goto 4590
-4690 a1 = a(a(0))
+			exit do
+		endif
+		if n < n(j1) then
+			gosub 4690
+			exit do
+		endif
+		i = j1
+	loop
+	return
+4690 rem subroutine from 4530
+	a1 = a(a(0))
 	l$(a1) = l$
 	n(a1) = n
 	l(i) = a1
 	l(a1) = j1
 	a(0) = a(0)+1
-4750 return
+	return
 4760 rem---Delete a line---
 	n = val(s$(1))
 	i = 0
