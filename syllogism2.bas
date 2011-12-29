@@ -42,10 +42,11 @@ data "<null>","+  = ","+","<null>","+   = / = ","*"
 rem /error check/ for err = 0 to 7 : print x$(err),y$(err),z$(err) : next err
 dim u$(75),v$(75)
 i = 0
-770 i = i+1
-771  read u$(i),v$(i)
-780  if u$(i) <> "ZZZZZ" then 770
-790 u1 = i-1
+do
+	i = i + 1
+	read u$(i),v$(i)
+loop until u$(i) = "ZZZZZ"
+u1 = i - 1
 data "socrates","socrates","parmenides","parmenides","epimenides","epimenides"
 data "mice","mouse","lice","louse","geese","goose"
 data "children","child","oxen","ox","people","person","teeth","tooth"
