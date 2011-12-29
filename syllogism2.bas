@@ -70,109 +70,111 @@ data "goyim","goy","seraphim","seraph","cherubim","cherub"
 data "semen","semen","amen","amen"
 data "ZZZZZ","ZZZZZ"
 msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
-1070 if msg then print "Enter HELP for list of commands"
+gosub 1070
 1080 rem---Input line---
-	print "> ";
-	line input l1$
-	l = len(l1$)
-	if l = 0 then 1070
 	do
-		l2$ = right$(l1$,1)
-		if l2$ <> " " then
-			if l2$ <> "." and l2$ <> "?" and l2$ <> "!" then exit do
-			print left$(tb$,l);" ^   Punctuation mark ignored"
-		endif
-		if l = 1 then 1080
-		l = l-1 : l1$ = left$(l1$,l)
-	loop
-	do
-		if left$(l1$,1) <> " " then exit do
-		if l = 1 then 1080
-		l = l-1 : l1$ = right$(l1$,l)
-	loop
-	rem / FOR I = 1 TO L
-		rem / V = ASC(MID$(L1$,I,1))
-		rem / IF V >= 65 AND V <= 90  THEN  MID$(L1$,I,1) = CHR$(V+32)
-		rem / NEXT
-	rem Metal doesn't support mid$ as command, but lcase$() is well supported...
-	l1$ = lcase$(l1$)
-	if l1$ = "stop" then
-		if msg then print "(Some versions support typing CONT to continue)"
-		stop
-		goto 1080
-	elseif l1$ = "new" then
-		print "Begin new syllogism"
-		gosub 1840
-		goto 1080
-	elseif l1$ = "sample" then
-		gosub 1840
-		gosub 8980
-		goto 1080
-	elseif l1$ = "help" then
-		gosub 7660
-		goto 1080
-	elseif l1$ = "syntax" then
-		gosub 7960
-		goto 1080
-	elseif l1$ = "info" then
-		gosub 8290
-		goto 1080
-	elseif l1$ = "dump" then
-		gosub 8890
-		goto 1080
-	elseif l1$ = "msg" then
-		msg = not (msg)
-		print "Messages turned ";
-		if msg then print "on" : else print "off"
-		goto 1080
-	elseif l1$ = "substitute" then
-		if l(0) = 0 then
-			gosub 1612
+		print ">";
+		line input l1$
+		l = len(l1$)
+		if l = 0 then
+			gosub 1070
 		else
-			gosub 9060
-		endif
-		goto 1080
-	elseif l1$ = "link" or l1$ = "link*" then
-		if l(0) = 0 then
-			gosub 1612
-		else
-			gosub 5070
-		endif
-		goto 1080
-	elseif l1$ = "list" or l1$ = "list*" then
-		if l(0) = 0 then
-			gosub 1612
-		else
-			gosub 7460
-		endif
-		goto 1080
-	endif
-	rem--scan line L1$ into array S$()
-	gosub 2020
-	if t(1) = 1 then
-		if t(2) then
-			gosub 2890 : rem parse the line in S$()
-			if d1 >= 0 then
-				gosub 4530 : rem enter line into list
-				gosub 3400 : rem add terms to symbol table
-			endif
-		else
-			if l(0) then
-				gosub 4760 : rem delete line
+			do
+				l2$ = right$(l1$,1)
+				if l2$ <> " " then
+					if l2$ <> "." and l2$ <> "?" and l2$ <> "!" then exit do
+					print left$(tb$,l);" ^   Punctuation mark ignored"
+				endif
+				if l = 1 then 1080
+				l = l-1 : l1$ = left$(l1$,l)
+			loop
+			do
+				if left$(l1$,1) <> " " then exit do
+				if l = 1 then 1080
+				l = l-1 : l1$ = right$(l1$,l)
+			loop
+			rem / FOR I = 1 TO L
+				rem / V = ASC(MID$(L1$,I,1))
+				rem / IF V >= 65 AND V <= 90  THEN  MID$(L1$,I,1) = CHR$(V+32)
+				rem / NEXT
+			rem Metal doesn't support mid$ as command, but lcase$() is well supported...
+			l1$ = lcase$(l1$)
+			if l1$ = "stop" then
+				if msg then print "(Some versions support typing CONT to continue)"
+				stop
+			elseif l1$ = "new" then
+				print "Begin new syllogism"
+				gosub 1840
+			elseif l1$ = "sample" then
+				gosub 1840
+				gosub 8980
+			elseif l1$ = "help" then
+				gosub 7660
+			elseif l1$ = "syntax" then
+				gosub 7960
+			elseif l1$ = "info" then
+				gosub 8290
+			elseif l1$ = "dump" then
+				gosub 8890
+			elseif l1$ = "msg" then
+				msg = not (msg)
+				print "Messages turned ";
+				if msg then print "on" : else print "off"
+			elseif l1$ = "substitute" then
+				if l(0) = 0 then
+					gosub 1612
+				else
+					gosub 9060
+				endif
+			elseif l1$ = "link" or l1$ = "link*" then
+				if l(0) = 0 then
+					gosub 1612
+				else
+					gosub 5070
+				endif
+			elseif l1$ = "list" or l1$ = "list*" then
+				if l(0) = 0 then
+					gosub 1612
+				else
+					gosub 7460
+				endif
 			else
-				gosub 1612
+				rem--scan line L1$ into array S$()
+				gosub 2020
+				if t(1) = 1 then
+					if t(2) then
+						gosub 2890 : rem parse the line in S$()
+						if d1 >= 0 then
+							gosub 4530 : rem enter line into list
+							gosub 3400 : rem add terms to symbol table
+						endif
+					else
+						if l(0) then
+							gosub 4760 : rem delete line
+						else
+							gosub 1612
+						endif
+					endif
+				else
+					if t(1) = 0 then
+						gosub 1070
+					else
+						rem draw/test conclusion
+						gosub 5070 : rem is it a syl?
+						if not (j1 > 1) then
+							if j1 = 0 then gosub 5880 : rem poss. conclusion?
+							if not (j1 > 1) then
+								if t(2) then gosub 6630 : else gosub 6200 : rem test/draw conclusion
+							endif
+						endif
+					endif
+				endif
 			endif
 		endif
-		goto 1080
-	endif
-	if t(1) = 0 then 1070
-	rem draw/test conclusion
-	gosub 5070 : rem is it a syl?
-	if j1 > 1 then 1080
-	if j1 = 0 then gosub 5880 : rem poss. conclusion?
-		if j1 > 1 then 1080
-		if t(2) then gosub 6630 : else gosub 6200 : rem test/draw conclusion
-	goto 1080
+	loop
+1070 rem precedes input
+	if msg then print "Enter HELP for list of commands"
+	return
 1612 rem subroutine for no premises
 	print "No premises"
 	return
