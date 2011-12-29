@@ -126,32 +126,46 @@ msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
 		if msg then print "on" : else print "off"
 		goto 1080
 	elseif l1$ = "substitute" then
-		if l(0) = 0 then 1612
-		gosub 9060
+		if l(0) = 0 then
+			gosub 1612
+		else
+			gosub 9060
+		endif
 		goto 1080
 	elseif l1$ = "link" or l1$ = "link*" then
-		if l(0) = 0 then 1612
-		gosub 5070
+		if l(0) = 0 then
+			gosub 1612
+		else
+			gosub 5070
+		endif
 		goto 1080
 	elseif l1$ = "list" or l1$ = "list*" then
-		if l(0) = 0 then 1612
-		gosub 7460
+		if l(0) = 0 then
+			gosub 1612
+		else
+			gosub 7460
+		endif
 		goto 1080
 	endif
 	rem--scan line L1$ into array S$()
 	gosub 2020
-	if t(1) <> 1 then 1745
-		if t(2) then 1640
-			if l(0) then 1620
-1612			print "No premises" : goto 1080
-1620		gosub 4760 : rem delete line
-			goto 1080
-1640	gosub 2890 : rem parse the line in S$()
-		if d1 < 0 then 1080
-		gosub 4530 : rem enter line into list
-		gosub 3400 : rem add terms to symbol table
+	if t(1) = 1 then
+		if t(2) then
+			gosub 2890 : rem parse the line in S$()
+			if d1 >= 0 then
+				gosub 4530 : rem enter line into list
+				gosub 3400 : rem add terms to symbol table
+			endif
+		else
+			if l(0) then
+				gosub 4760 : rem delete line
+			else
+				gosub 1612
+			endif
+		endif
 		goto 1080
-1745 if t(1) = 0 then 1070
+	endif
+	if t(1) = 0 then 1070
 	rem draw/test conclusion
 	gosub 5070 : rem is it a syl?
 	if j1 > 1 then 1080
@@ -159,6 +173,9 @@ msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
 		if j1 > 1 then 1080
 		if t(2) then gosub 6630 : else gosub 6200 : rem test/draw conclusion
 	goto 1080
+1612 rem subroutine for no premises
+	print "No premises"
+	return
 1840 rem---New---
 	if l(0) <> 0 then
 		for i = 1 to l1
