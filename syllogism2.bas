@@ -153,18 +153,20 @@ msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
 		if t(2) then gosub 6630 : else gosub 6200 : rem test/draw conclusion
 	goto 1080
 1840 rem---New---
-	if l(0) = 0 then 2010
-	for i = 1 to l1
-		d(i) = 0 : t$(i) = "" : b(i) = 0 : o(i) = 0 : g(i) = 0
-	next i
-	l1 = 0 : n1 = 0
-	j = l(0)
-1960 a(0) = a(0)-1
-		a(a(0)) = j
-		j = l(j)
-		if j > 0 then 1960
-	l(0) = 0
-2010 return
+	if l(0) <> 0 then
+		for i = 1 to l1
+			d(i) = 0 : t$(i) = "" : b(i) = 0 : o(i) = 0 : g(i) = 0
+		next i
+		l1 = 0 : n1 = 0
+		j = l(0)
+		do
+			a(0) = a(0)-1
+			a(a(0)) = j
+			j = l(j)
+		loop until not (j > 0)
+		l(0) = 0
+	endif
+	return
 2020 rem---L1$ into array S$()---
 	rem T(): 1:line num., 2:"/", 3:quantifier, 4:no/not, 5:is/are, 6:term
 	rem                     10 SOME  FRIED COCONUTS   ARE  NOT  TASTY
