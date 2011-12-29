@@ -465,11 +465,12 @@ msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
 	if r(j1) >= 2 then j(3) = 1 : else j(3) = 0
 	for k = 1 to 2
 		o(j(k)) = o(j(k))-1
-		if o(j(k)) > 0 then 5040
+		if not (o(j(k)) > 0) then
 			t$(j(k)) = ""
 			b(j(k)) = 0
 			g(j(k)) = 0
-5040	d(j(k)) = d(j(k))-j(k+2)
+		endif
+		d(j(k)) = d(j(k))-j(k+2)
 	next k
 	return
 5070 rem---See if syllogism---
