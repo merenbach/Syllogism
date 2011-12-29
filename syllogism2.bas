@@ -767,19 +767,20 @@ msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
 	return
 8890 rem---"Dump" values of variables---
 	print "Highest symbol table loc. used:";l1;"  Negative premises:";n1
-	if l1 = 0 then 8970
-	print "Adr. art. term";left$(tb$,48-14);"type       occurs    dist. count"
-	for i = 1 to l1
-		rem Metal's lack of tabbing gets difficult here...
-		itab = 7-len(str$(i))
-		astringtab = 11-len(a$(b(i)))-7
-		tstringtab = 49-len(t$(i))-11
-		gtab = 60-len(str$(g(i)))-49
-		otab = 71-len(str$(o(i)))-60
-		print i;left$(tb$,itab);a$(b(i));left$(tb$,astringtab);t$(i);left$(tb$,tstringtab);g(i);left$(tb$,gtab);
-		print o(i);left$(tb$,otab);d(i)
+	if l1 <> 0 then
+		print "Adr. art. term";left$(tb$,48-14);"type       occurs    dist. count"
+		for i = 1 to l1
+			rem Metal's lack of tabbing gets difficult here...
+			itab = 7-len(str$(i))
+			astringtab = 11-len(a$(b(i)))-7
+			tstringtab = 49-len(t$(i))-11
+			gtab = 60-len(str$(g(i)))-49
+			otab = 71-len(str$(o(i)))-60
+			print i;left$(tb$,itab);a$(b(i));left$(tb$,astringtab);t$(i);left$(tb$,tstringtab);g(i);left$(tb$,gtab);
+			print o(i);left$(tb$,otab);d(i)
 		next i
-8970 return
+	endif
+	return
 8980 rem--sample--
 	for z8 = 1 to 10 : read l1$ : print l1$
 	gosub 2020 : gosub 2890 : gosub 4530 : gosub 3400
