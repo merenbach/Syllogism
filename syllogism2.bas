@@ -546,69 +546,73 @@ rem---Input line--- : rem 1080
 				next i
 			endif
 		endif
-		if j1 then 5870
-		i = l(0)
-		l = 0
-		rem [am] loop until not(i) might be more appropriate, in terms
-		rem [am] of semantic translation, but it doesn't work here...
-		do
-			l = l+1
-			k(l) = i
-			i = l(i)
-		loop until i = 0
-		if l = 1 then 5750
-		if d(c(1)) = 0 and d(c(2)) = 1 then t = c(2) : else t = c(1)
-		for i = 1 to l
-			for k = i to l
-				if p(k(k)) = t or q(k(k)) = t then
-					if p(k(k)) = t then
-						t = q(k(k))
-					elseif q(k(k)) = t then
-						t = p(k(k))
+		if j1 = 0 then
+			rem [am] in spirit, should be "if not (j1)""
+			i = l(0)
+			l = 0
+			rem [am] loop until not(i) might be more appropriate, in terms
+			rem [am] of semantic translation, but it doesn't work here...
+			do
+				l = l+1
+				k(l) = i
+				i = l(i)
+			loop until i = 0
+			if l <> 1 then
+				if d(c(1)) = 0 and d(c(2)) = 1 then t = c(2) : else t = c(1)
+				for i = 1 to l
+					for k = i to l
+						if p(k(k)) = t or q(k(k)) = t then
+							if p(k(k)) = t then
+								t = q(k(k))
+							elseif q(k(k)) = t then
+								t = p(k(k))
+							endif
+							if k <> i then
+								n = 1
+								h(1) = k(i)
+								for m = i to k-1
+									n = 3-n
+									h(n) = k(m+1)
+									k(m+1) = h(3-n)
+									next m
+								k(i) = h(n)
+							endif
+							if j1 then gosub 5710
+							exit for
+						endif
+					next k
+					if k > l then
+						t = q(k(i))
+						if not(j1 > 0) then
+							j1 = 4
+							print "Not a syllogism: no way to order premises so that each premise"
+							print "shares exactly one term with its successor; there is a"
+						endif
+						print "closed loop in the term chain within the premise set--"
+						gosub 5710
 					endif
-					if k <> i then
-						n = 1
-						h(1) = k(i)
-						for m = i to k-1
-							n = 3-n
-							h(n) = k(m+1)
-							k(m+1) = h(3-n)
-							next m
-						k(i) = h(n)
-					endif
-					if j1 then gosub 5710
-					exit for
-				endif
-			next k
-			if k > l then
-				t = q(k(i))
-				if not(j1 > 0) then
-					j1 = 4
-					print "Not a syllogism: no way to order premises so that each premise"
-					print "shares exactly one term with its successor; there is a"
-				endif
-				print "closed loop in the term chain within the premise set--"
-				gosub 5710
+				next i
 			endif
-		next i
-5750	if j1 > 0 then 5870
-		if l1$ = "link" or l1$ = "link*" then
-			print "Premises of syllogism in order of term links:"
-			for i = 1 to l
-				print n(k(i));" ";
-				if l1$ <> "link" then
-					if r(k(i)) < 6 and g(q(k(i))) = 2 then r(k(i)) = r(k(i))+2
-					if r(k(i)) < 4 then print x$(r(k(i)));"  ";
-					print t$(p(k(i)));y$(r(k(i)));"  ";t$(q(k(i)));z$(r(k(i)))
-				else
-					print l$(k(i))
+			if not (j1 > 0) then
+				if l1$ = "link" or l1$ = "link*" then
+					print "Premises of syllogism in order of term links:"
+					for i = 1 to l
+						print n(k(i));" ";
+						if l1$ <> "link" then
+							if r(k(i)) < 6 and g(q(k(i))) = 2 then r(k(i)) = r(k(i))+2
+							if r(k(i)) < 4 then print x$(r(k(i)));"  ";
+							print t$(p(k(i)));y$(r(k(i)));"  ";t$(q(k(i)));z$(r(k(i)))
+						else
+							print l$(k(i))
+						endif
+					next i
 				endif
-			next i
+			endif
 		endif
 	else
 		j1 = 1
 	endif
-5870 return
+	return
 5710 rem [am] subroutine from 5070 see if syll
 	print n(k(i));
 	print l$(k(i))
