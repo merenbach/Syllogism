@@ -264,55 +264,90 @@ rem---Input line--- : rem 1080
 2885 return
 2890 rem---Parse line in S$()---
 	d1 = -1
-	if s$(2) <> "all" then 2990
-		if t(3) <> 6 then 3350
-		if t(4) <> 5 then 3330
-		if t(5) <> 6 then 3370
-		w$(1) = s$(3)
-		w$(2) = s$(5)
-		d1 = 2 : rem all A is B
-		goto 3390
-2990 if s$(2) <> "some" then 3130
-		if t(3) <> 6 then 3350
-		if t(4) <> 5 then 3330
-		if s$(5) = "not" then 3080
-			if t(5) <> 6 then 3370
+	if s$(2) = "all" then
+		if t(3) <> 6 then
+			gosub 3350
+		elseif t(4) <> 5 then
+			gosub 3330
+		elseif t(5) <> 6 then
+			gosub 3370
+		else
 			w$(1) = s$(3)
 			w$(2) = s$(5)
-			d1 = 0 : rem Some A is B
-			goto 3390
-3080	if t(6) <> 6 then 3370
-			w$(1) = s$(3)
-			w$(2) = s$(6)
+			d1 = 2 : rem all A is B
+		endif
+	elseif s$(2) = "some" then
+		if t(3) <> 6 then
+			gosub 3350
+		elseif t(4) <> 5 then
+			gosub 3330
+		elseif s$(5) <> "not" then
+			if t(5) <> 6 then
+				gosub 3370
+			else
+				w$(1) = s$(3)
+				w$(2) = s$(5)
+				d1 = 0 : rem Some A is B
+			endif
+		else
+			if t(6) <> 6 then
+				gosub 3370
+			else
+				w$(1) = s$(3)
+				w$(2) = s$(6)
 				d1 = 1 : rem some A is not B
-				goto 3390
-3130 if s$(2) <> "no" then 3210
-		if t(3) <> 6 then 3350
-		if t(4) <> 5 then 3330
-		if t(5) <> 6 then 3370
-		w$(1) = s$(3)
-		w$(2) = s$(5)
-		d1 = 3 : rem no A is B
-		goto 3390
-3210 if t(2) <> 6 then 3350
-	if t(3) <> 5 then 3330
-	w$(1) = s$(2)
-	if s$(4) = "not" then 3290
-		if t(4) <> 6 then 3370
-		d1 = 4 : rem a is T
-		w$(2) = s$(4)
-		goto 3390
-3290 if t(5) <> 6 then 3370
-		d1 = 5 : rem a is not T
-		w$(2) = s$(5)
-		goto 3390
-3330 print "** Missing copula is/are"
-	goto 3380
-3350 print "** Subject term bad or missing"
-	goto 3380
-3370 print "** Predicate term bad or missing"
-3380 if msg then print "Enter SYNTAX for help with statements"
-3390 return
+			endif
+		endif
+	elseif s$(2) = "no" then
+		if t(3) <> 6 then
+			gosub 3350
+		elseif t(4) <> 5 then
+			gosub 3330
+		elseif t(5) <> 6 then
+			gosub 3370
+			gosub 3380
+		else
+			w$(1) = s$(3)
+			w$(2) = s$(5)
+			d1 = 3 : rem no A is B
+		endif
+	elseif t(2) <> 6 then
+		gosub 3350
+	elseif t(3) = 5 then
+		w$(1) = s$(2)
+		if s$(4) <> "not" then
+			if t(4) <> 6 then
+			gosub 3370
+		endif
+			d1 = 4 : rem a is T
+			w$(2) = s$(4)
+		else
+			if t(5) <> 6 then
+				gosub 3370
+			else
+				d1 = 5 : rem a is not T
+				w$(2) = s$(5)
+			endif
+		endif
+	else
+		gosub 3330
+	endif
+	return
+3330 rem [am] subroutine from 2890
+	print "** Missing copula is/are"
+	gosub 3380
+	return
+3350 rem [am] subroutine from 2890
+	print "** Subject term bad or missing"
+	gosub 3380
+	return
+3370 rem [am] subroutine from 2890
+	print "** Predicate term bad or missing"
+	gosub 3380
+	return
+3380 rem [am] subroutine from 2890
+	if msg then print "Enter SYNTAX for help with statements"
+	return
 3400 rem---Add W$(1), W$(2) to table T$()---
 	if (d1 mod 2) = 0 then 3440
 		n1 = n1+1
