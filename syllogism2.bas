@@ -349,58 +349,74 @@ rem---Input line--- : rem 1080
 	if msg then print "Enter SYNTAX for help with statements"
 	return
 3400 rem---Add W$(1), W$(2) to table T$()---
-	if (d1 mod 2) = 0 then 3440
+	if (d1 mod 2) <> 0 then
 		n1 = n1+1
 		if n1 > 1 and msg then print "Warning: ";n1;" negative premises"
-3440 e(1) = 0
+	endif
+	e(1) = 0
 	for j = 1 to 2
-	w$ = w$(j)
-	if d1 < 4 then g = 1 :  else if j = 1 then g = 2 :  else g = p1
-	gosub 4040
-	i1 = 1
-3500 gosub 3950
-	if i1 <= l1 then 3550
-		if b1 > 0 then i1 = b1 : else l1 = l1+1
-		t$(i1) = w$
-		goto 3720
-3550 if g = 0 then 3660
-	if g(i1) = 0 then 3620
-	if g = g(i1) then 3730
-		if not msg then 3600
-			print "Warning: ";g$(g);" '";w$;"' has also occurred as a ";g$(3-g)
-3600	i1 = i1+1
-	goto 3500
-3620 if not msg then 3710
-		print "Note: earlier use of '";w$;"' taken as the ";g$(g);" used here"
-	goto 3710
-3660 if g(i1) = 0 and  not msg then 3730
-		print "Note: predicate term '";w$;"'";
-		print " taken as the ";g$(g(i1));" used earlier"
-	goto 3730
-3710 if g = 2 then d(i1) = o(i1)
-3720 g(i1) = g
-3730 if e(j) > 0 then 3770
-		if b(i1) > 0 or w$ = w$(j) then 3780
-			a$ = left$(w$,1)
-	if a$ = "a" or a$ = "e" or a$ = "i" or a$ = "o" or a$ = "u" then e(j) = 2 : else e(j) = 1
-3770		b(i1) = e(j)
-3780 o(i1) = o(i1)+1
-	if o(i1) < 3 then 3810
-	if not msg then 3810
-		print "Warning: ";g$(g(i1));" '";w$;"' has occurred";o(i1);"times"
-3810 if j = 2 then 3850
-		p(a1) = i1
-		if d1 >= 2 then d(i1) = d(i1)+1
-		goto 3900
-3850 q(a1) = i1
-		if p(a1) <> q(a1) then 3880
-			if msg then print "Warning: same term occurs twice in line ";s$(1)
-3880	if g(i1) = 2 then d1 = d1+2
-		if d1 = 6 or d1 mod 2 then d(i1) = d(i1)+1
-3900 if o(i1) <> 2 or d(i1) > 0 then 3920
-		if msg then print "Warning: undistributed middle term '";t$(i1);"'"
-3920 next j
+		w$ = w$(j)
+		if d1 < 4 then g = 1 :  else if j = 1 then g = 2 :  else g = p1
+		gosub 4040
+		i1 = 1
+		do
+	 		gosub 3950
+			if i1 > l1 then
+				if b1 > 0 then i1 = b1 : else l1 = l1+1
+				t$(i1) = w$
+				g(i1) = g
+				exit do
+			endif
+			if g = 0 then
+				if not(g(i1) = 0 and  not msg) then
+					print "Note: predicate term '";w$;"'";
+					print " taken as the ";g$(g(i1));" used earlier"
+				endif
+				exit do
+			endif
+			if g(i1) = 0 then
+				gosub 3620
+				if g = 2 then d(i1) = o(i1)
+				exit do
+			endif
+			if g = g(i1) then exit do
+			if msg then
+				print "Warning: ";g$(g);" '";w$;"' has also occurred as a ";g$(3-g)
+			endif
+			i1 = i1+1
+		loop
+		if e(j) > 0 then 3770
+			if b(i1) > 0 or w$ = w$(j) then 3780
+				a$ = left$(w$,1)
+		if a$ = "a" or a$ = "e" or a$ = "i" or a$ = "o" or a$ = "u" then e(j) = 2 : else e(j) = 1
+3770			b(i1) = e(j)
+3780	o(i1) = o(i1)+1
+		if o(i1) >= 3 then
+			if msg then
+				print "Warning: ";g$(g(i1));" '";w$;"' has occurred";o(i1);"times"
+			endif
+		endif
+		if j <> 2 then
+			p(a1) = i1
+			if d1 >= 2 then d(i1) = d(i1)+1
+		else
+			q(a1) = i1
+			if p(a1) = q(a1) then
+				if msg then print "Warning: same term occurs twice in line ";s$(1)
+			endif
+			if g(i1) = 2 then d1 = d1+2
+			if d1 = 6 or d1 mod 2 then d(i1) = d(i1)+1
+		endif
+		if not (o(i1) <> 2 or d(i1) > 0) then
+			if msg then print "Warning: undistributed middle term '";t$(i1);"'"
+		endif
+	next j
 	r(a1) = d1
+	return
+3620 rem [am] subroutine from 3400 add strings
+	if msg then
+		print "Note: earlier use of '";w$;"' taken as the ";g$(g);" used here"
+	endif
 	return
 3950 rem---Search T$() for W$ from I1 to L1---
 	rem If found, I1 = L1; else I1 = L1+1. B1 set to 1st empty loc.
