@@ -139,39 +139,41 @@ gosub 1070
 					gosub 7460
 				endif
 			else
-				rem--scan line L1$ into array S$()
-				gosub 2020
-				if t(1) = 1 then
-					if t(2) then
-						gosub 2890 : rem parse the line in S$()
-						if d1 >= 0 then
-							gosub 4530 : rem enter line into list
-							gosub 3400 : rem add terms to symbol table
-						endif
-					else
-						if l(0) then
-							gosub 4760 : rem delete line
-						else
-							gosub 1612
-						endif
-					endif
-				else
-					if t(1) = 0 then
-						gosub 1070
-					else
-						rem draw/test conclusion
-						gosub 5070 : rem is it a syl?
-						if not (j1 > 1) then
-							if j1 = 0 then gosub 5880 : rem poss. conclusion?
-							if not (j1 > 1) then
-								if t(2) then gosub 6630 : else gosub 6200 : rem test/draw conclusion
-							endif
-						endif
-					endif
-				endif
+				gosub 1570
 			endif
 		endif
 	loop
+1570 rem--scan line L1$ into array S$()
+	gosub 2020
+	if t(1) = 1 then
+		if t(2) then
+			gosub 2890 : rem parse the line in S$()
+			if d1 >= 0 then
+				gosub 4530 : rem enter line into list
+				gosub 3400 : rem add terms to symbol table
+			endif
+		else
+			if l(0) then
+				gosub 4760 : rem delete line
+			else
+				gosub 1612
+			endif
+		endif
+	else
+		if t(1) = 0 then
+			gosub 1070
+		else
+			rem draw/test conclusion
+			gosub 5070 : rem is it a syl?
+			if not (j1 > 1) then
+				if j1 = 0 then gosub 5880 : rem poss. conclusion?
+				if not (j1 > 1) then
+					if t(2) then gosub 6630 : else gosub 6200 : rem test/draw conclusion
+				endif
+			endif
+		endif
+	endif
+	return
 1070 rem precedes input
 	if msg then print "Enter HELP for list of commands"
 	return
