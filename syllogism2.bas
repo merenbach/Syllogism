@@ -558,33 +558,31 @@ rem---Input line--- : rem 1080
 		loop until i = 0
 		if l = 1 then 5750
 		if d(c(1)) = 0 and d(c(2)) = 1 then t = c(2) : else t = c(1)
-		i = 1
-5460	k = i
-		do
-			if p(k(k)) = t or q(k(k)) = t then
-				if p(k(k)) = t then
-					t = q(k(k))
-				elseif q(k(k)) = t then
-					t = p(k(k))
+		for i = 1 to l
+			for k = i to l
+				if p(k(k)) = t or q(k(k)) = t then
+					if p(k(k)) = t then
+						t = q(k(k))
+					elseif q(k(k)) = t then
+						t = p(k(k))
+					endif
+					if k <> i then
+						n = 1
+						h(1) = k(i)
+						for m = i to k-1
+							n = 3-n
+							h(n) = k(m+1)
+							k(m+1) = h(3-n)
+							next m
+						k(i) = h(n)
+					endif
+					if j1 then
+						goto 5710
+					else
+						goto 5730
+					endif
 				endif
-				if k <> i then
-					n = 1
-					h(1) = k(i)
-					for m = i to k-1
-						n = 3-n
-						h(n) = k(m+1)
-						k(m+1) = h(3-n)
-						next m
-					k(i) = h(n)
-				endif
-				if j1 then
-					goto 5710
-				else
-					goto 5730
-				endif
-			endif
-			k = k+1
-		loop until k > l
+			next k
 			t = q(k(i))
 			if not(j1 > 0) then
 				j1 = 4
@@ -594,8 +592,7 @@ rem---Input line--- : rem 1080
 			print "closed loop in the term chain within the premise set--"
 5710		print n(k(i));
 			print l$(k(i))
-5730		i = i+1
-			if i <= l then 5460
+5730	next i
 5750	if j1 > 0 then 5870
 		if l1$ = "link" or l1$ = "link*" then
 			print "Premises of syllogism in order of term links:"
