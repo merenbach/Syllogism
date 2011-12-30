@@ -379,56 +379,70 @@ rem---Input line--- : rem 1080
 	return
 4040 rem---Convert W$ to singular---
 	l = len(w$)
-	if l < 4 then 4090
-		s$ = left$(w$,4)
-		if s$ = "the " then 4520
-4090 x$ = ""
-	i = 1
-	n = 1
-4120 if i > l then 4510
-		s$ = mid$(w$,i,1)
-		if s$ <> " " then 4170
-			i = i+1
-			goto 4120
-4170 m = 1
-4180 if i+m > l then 4230
-		s$ = mid$(w$,i+m,1)
-		if s$ = " " then 4230
-			m = m+1
-			goto 4180
-4230 s$ = mid$(w$,i,m)
-	y$ = s$
-	k = 1
-4260 if y$ <> u$(k) then 4290
-		y$ = v$(k)
-		goto 4470
-4290	k = k+1
-		if k <= u1 then 4260
-4302 if len(y$) < 3 then 4310
-		if right$(y$,3) <> "men" then 4310
-		y$ = left$(y$,len(y$)-2)+"an"
-		goto 4470
-4310 l$ = right$(y$,1)
-4320 if l$ <> "s" then 4470
-		if len(y$) > 1 then l$ = right$(y$,2) :  else goto 4470
-		if l$ = "ss" or l$ = "us" or l$ = "is" or l$ = "'s" then 4470
-			y$ = left$(y$,len(y$)-1)
-			if len(y$) > 1 then l$ = right$(y$,2) :  else goto 4470
-4370 if l$ <> "xe" then 4400
-		y$ = left$(y$,len(y$)-1)
-		goto 4470
-4400 if l$ <> "ie" or len(y$) <= 3 then 4440
-		y$ = left$(y$,len(y$)-2)
-		y$ = y$+"y"
-		goto 4470
-4440 if len(y$) > 2 then l$ = right$(y$,3) :  else goto 4470
-	if l$ <> "sse" and l$ <> "she" and l$ <> "che" then 4470
-		y$ = left$(y$,len(y$)-1)
-4470 if len(x$) = 0 then x$ = y$ :  else x$ = x$+" "+y$
-	n = n+1
-	i = m+i
-	goto 4120
-4510 w$ = x$
+	if not (l >= 4 and left$(w$,4) = "the ") then
+		x$ = ""
+		i = 1
+		n = 1
+		do
+			do
+				if i > l then
+					w$ = x$
+					goto 4520
+				endif
+				s$ = mid$(w$,i,1)
+				if s$ <> " " then exit do
+				i = i+1
+			loop
+			for m = 1 to (l - i)
+				s$ = mid$(w$,i+m,1)
+				if s$ = " " then exit for
+			next m
+			s$ = mid$(w$,i,m)
+			y$ = s$
+			for k = 1 to u1
+				if y$ = u$(k) then
+					y$ = v$(k)
+					goto 4470
+				endif
+			next k
+			if len(y$) >= 3 then
+				if right$(y$,3) = "men" then
+					y$ = left$(y$,len(y$)-2)+"an"
+					goto 4470
+				endif
+			endif
+			l$ = right$(y$,1)
+			if l$ = "s" then
+				if len(y$) > 1 then
+					l$ = right$(y$,2)
+					if not (l$ = "ss" or l$ = "us" or l$ = "is" or l$ = "'s") then
+						y$ = left$(y$,len(y$)-1)
+						if len(y$) > 1 then
+							l$ = right$(y$,2)
+							if l$ = "xe" then
+								y$ = left$(y$,len(y$)-1)
+							else
+								if not (l$ <> "ie" or len(y$) <= 3) then
+									y$ = left$(y$,len(y$)-2)
+									y$ = y$+"y"
+								else
+									if len(y$) > 2 then
+										l$ = right$(y$,3)
+										if not (l$ <> "sse" and l$ <> "she" and l$ <> "che") then
+											y$ = left$(y$,len(y$)-1)
+										endif
+									endif
+								endif
+							endif
+						endif
+					endif
+				endif
+			endif
+	4470	if len(x$) = 0 then x$ = y$ :  else x$ = x$+" "+y$
+			n = n+1
+			i = m+i
+		loop
+	endif
 4520 return
 4530 rem---Enter line into list---
 	n = val(s$(1))
