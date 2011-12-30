@@ -576,23 +576,21 @@ rem---Input line--- : rem 1080
 							next m
 						k(i) = h(n)
 					endif
-					if j1 then
-						goto 5710
-					else
-						goto 5730
-					endif
+					if j1 then gosub 5710
+					exit for
 				endif
 			next k
-			t = q(k(i))
-			if not(j1 > 0) then
-				j1 = 4
-				print "Not a syllogism: no way to order premises so that each premise"
-				print "shares exactly one term with its successor; there is a"
+			if k > l then
+				t = q(k(i))
+				if not(j1 > 0) then
+					j1 = 4
+					print "Not a syllogism: no way to order premises so that each premise"
+					print "shares exactly one term with its successor; there is a"
+				endif
+				print "closed loop in the term chain within the premise set--"
+				gosub 5710
 			endif
-			print "closed loop in the term chain within the premise set--"
-5710		print n(k(i));
-			print l$(k(i))
-5730	next i
+		next i
 5750	if j1 > 0 then 5870
 		if l1$ = "link" or l1$ = "link*" then
 			print "Premises of syllogism in order of term links:"
@@ -611,6 +609,10 @@ rem---Input line--- : rem 1080
 		j1 = 1
 	endif
 5870 return
+5710 rem [am] subroutine from 5070 see if syll
+	print n(k(i));
+	print l$(k(i))
+	return
 5880 rem---See if conclusion possible---
 	c1 = c(1)
 	c2 = c(2)
