@@ -172,10 +172,10 @@ rem---Input line--- : rem 1080
 		endif
 	endif
 	return
-1070 rem precedes input
+1070 rem [am] precedes input
 	if msg then print "Enter HELP for list of commands"
 	return
-1612 rem subroutine for no premises
+1612 rem [am] subroutine for no premises
 	print "No premises"
 	return
 1840 rem---New---
