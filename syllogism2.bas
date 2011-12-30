@@ -719,71 +719,92 @@ rem---Input line--- : rem 1080
 	if g2 = 2 and d1 < 6 and d1 > 3 then d1 = d1+2
 	w$ = w$(1)
 	gosub 4040
-	if j1 = 0 then 6750
+	if not (j1 = 0) then
 		w$(1) = w$
-		goto 6840
-6750 for j = 1 to 2
-		if w$ <> t$(c(j)) then 6810
-			if g(c(j)) > 0 then 6800
-				print "Note: '";t$(c(j));"' used in premises taken to be ";g$(g1)
-				goto 6840
-6800		if g1 = g(c(j)) then 6840
-6810	next j
-	print "** Conclusion may not contain ";g$(g1);" '";w$;"'."
-	j = 0
+	else
+		for j = 1 to 2
+			if w$ = t$(c(j)) then
+				if not (g(c(j)) > 0) then
+					print "Note: '";t$(c(j));"' used in premises taken to be ";g$(g1)
+					goto 6840
+				endif
+				if g1 = g(c(j)) then 6840
+			endif
+		next j
+		print "** Conclusion may not contain ";g$(g1);" '";w$;"'."
+		j = 0
+	endif
 6840 w$ = w$(2)
 	gosub 4040
-	if j1 = 0 then 6940
-		if w$ = w$(1) then 6910
-6880		print "** Conclusion from no premises must have same subject and predic";
-				print "ate."
-			goto 7370
-6910	if d1 <> 4 or g2 = 0 then 7120
+	if not (j1 = 0) then
+		if w$ = w$(1) then
+			if d1 <> 4 or g2 = 0 then 7120
 			print "** Subject is a ";g$(2);", predicate is a ";g$(1);" -- but"
-			goto 6880
-6940 if j > 0 then 6970
+		endif
+		gosub 6880
+		goto 7370
+	endif
+	if not (j > 0) then
 		if w$ = t$(c(1)) then t2 = c(2) : else t2 = c(1)
-		goto 7070
-6970 t1 = c(j)
-	t2 = c(3-j)
-	if w$ <> t$(t2) then 7060
-		if g(t2) > 0 then 7040
+	else
+		t1 = c(j)
+		t2 = c(3-j)
+		if w$ = t$(t2) then
+			if not (g(t2) > 0) then
+				if g2 = 0 then 7090
+				print "Note: '";t$(t2);"' used in premises taken to be ";g$(g2)
+				goto 7090
+			endif
 			if g2 = 0 then 7090
-			print "Note: '";t$(t2);"' used in premises taken to be ";g$(g2)
-			goto 7090
-7040	if g2 = 0 then 7090
-		if g2 = g(t2) then 7090
-7060 print "** Conclusion may not contain ";g$(g2);" '";w$;"';"
-7070 print "** Conclusion must contain ";g$(g(t2));" '";t$(t2);"'."
-	 goto 7370
-7090 if n1 = 0 or (d1 mod 2) = 1 then 7120
+			if g2 = g(t2) then 7090
+		endif
+		print "** Conclusion may not contain ";g$(g2);" '";w$;"';"
+	endif
+	print "** Conclusion must contain ";g$(g(t2));" '";t$(t2);"'."
+	goto 7370
+7090 if not (n1 = 0 or (d1 mod 2) = 1) then
 		print "** Negative conclusion required."
 		goto 7370
-7120 if n1 > 0 or d1 mod 2 = 0 then 7150
-		print "** Affirmative conclusion required."
-		goto 7370
-7150 if j1 = 1 then 7250
-	if d(t1) > 0 or d1 <= 1 or d1 >= 4 then 7200
-		print "** Term '";t$(t1);"' not distributed in premises"
-7180	print "   may not be distributed in conclusion."
-		goto 7370
-7200 if d(t2) > 0 then 7250
-		if d1 mod 2 = 0 and d1 <> 6 then 7250
-		print "** Term '";t$(t2);"' not distributed in premises"
-		goto 7180
-7250 print "-->  VALID!"
-	if j1 = 0 then 7300
+	else
+7120	if (n1 > 0 or d1 mod 2 = 0) then
+			print "** Affirmative conclusion required."
+			goto 7370
+		endif
+	endif
+	if j1 <> 1 then
+		if not (d(t1) > 0 or d1 <= 1 or d1 >= 4) then
+			print "** Term '";t$(t1);"' not distributed in premises"
+			gosub 7180
+			goto 7370
+		endif
+		if not (d(t2) > 0) then
+			if not (d1 mod 2 = 0 and d1 <> 6) then
+				print "** Term '";t$(t2);"' not distributed in premises"
+				gosub 7180
+				goto 7370
+			endif
+		endif
+	endif
+	print "-->  VALID!"
+	if not (j1 = 0) then
 		if d1 > 0 then 7370
 		t$(0) = w$
-		goto 7350
-7300 if d(t1) = 0 or d1 >= 2 then 7330
+	elseif not (d(t1) = 0 or d1 >= 2) then
 		v1 = t1
-		goto 7350
-7330 if d(t2) > 0 and d1 mod 2 = 0 and d1 <> 4 and d1 <> 6 then v1 = t2
-	if v1 = 0 then 7370
-7350 print "    but on Aristotelian interpretation only, i.e. on requirement"
+	else
+		if d(t2) > 0 and d1 mod 2 = 0 and d1 <> 4 and d1 <> 6 then v1 = t2
+		if v1 = 0 then 7370
+	endif
+	print "    but on Aristotelian interpretation only, i.e. on requirement"
 	print "    that term '";t$(v1);"' denotes."
 7370 return
+6880 rem [am] subroutine from 6630
+	print "** Conclusion from no premises must have same subject and predic";
+	print "ate."
+	return
+7180 rem [am] subroutine from 6630
+	print "   may not be distributed in conclusion."
+	return
 7460 rem---list---
 	i = l(0)
 	while not (i = 0)
