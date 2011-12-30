@@ -70,8 +70,8 @@ data "goyim","goy","seraphim","seraph","cherubim","cherub"
 data "semen","semen","amen","amen"
 data "ZZZZZ","ZZZZZ"
 msg = -1 : a(0) = 1 : for i = 1 to 63 : a(i) = i : next i
-gosub 1070
-1080 rem---Input line---
+rem---Input line--- : rem 1080
+	gosub 1070
 	do
 		print ">";
 		line input l1$
@@ -88,57 +88,59 @@ gosub 1070
 				l1$ = left$(l1$, l - 1)
 			loop
 			l1$ = ltrim$(l1$)
-			if len(l1$) = 0 then goto 1080
-			rem / FOR I = 1 TO L
-				rem / V = ASC(MID$(L1$,I,1))
-				rem / IF V >= 65 AND V <= 90  THEN  MID$(L1$,I,1) = CHR$(V+32)
-				rem / NEXT
-			rem Metal doesn't support mid$ as command, but lcase$() is well supported...
-			l1$ = lcase$(l1$)
-			if l1$ = "stop" then
-				if msg then print "(Some versions support typing CONT to continue)"
-				stop
-			elseif l1$ = "new" then
-				print "Begin new syllogism"
-				gosub 1840
-			elseif l1$ = "sample" then
-				gosub 1840
-				gosub 8980
-			elseif l1$ = "help" then
-				gosub 7660
-			elseif l1$ = "syntax" then
-				gosub 7960
-			elseif l1$ = "info" then
-				gosub 8290
-			elseif l1$ = "dump" then
-				gosub 8890
-			elseif l1$ = "msg" then
-				msg = not (msg)
-				print "Messages turned ";
-				if msg then print "on" : else print "off"
-			elseif l1$ = "substitute" then
-				if l(0) = 0 then
-					gosub 1612
+			if len(l1$) > 0 then
+				rem / FOR I = 1 TO L
+					rem / V = ASC(MID$(L1$,I,1))
+					rem / IF V >= 65 AND V <= 90  THEN  MID$(L1$,I,1) = CHR$(V+32)
+					rem / NEXT
+				rem Metal doesn't support mid$ as command, but lcase$() is well supported...
+				l1$ = lcase$(l1$)
+				if l1$ = "stop" then
+					if msg then print "(Some versions support typing CONT to continue)"
+					exit do
+				elseif l1$ = "new" then
+					print "Begin new syllogism"
+					gosub 1840
+				elseif l1$ = "sample" then
+					gosub 1840
+					gosub 8980
+				elseif l1$ = "help" then
+					gosub 7660
+				elseif l1$ = "syntax" then
+					gosub 7960
+				elseif l1$ = "info" then
+					gosub 8290
+				elseif l1$ = "dump" then
+					gosub 8890
+				elseif l1$ = "msg" then
+					msg = not (msg)
+					print "Messages turned ";
+					if msg then print "on" : else print "off"
+				elseif l1$ = "substitute" then
+					if l(0) = 0 then
+						gosub 1612
+					else
+						gosub 9060
+					endif
+				elseif l1$ = "link" or l1$ = "link*" then
+					if l(0) = 0 then
+						gosub 1612
+					else
+						gosub 5070
+					endif
+				elseif l1$ = "list" or l1$ = "list*" then
+					if l(0) = 0 then
+						gosub 1612
+					else
+						gosub 7460
+					endif
 				else
-					gosub 9060
+					gosub 1570
 				endif
-			elseif l1$ = "link" or l1$ = "link*" then
-				if l(0) = 0 then
-					gosub 1612
-				else
-					gosub 5070
-				endif
-			elseif l1$ = "list" or l1$ = "list*" then
-				if l(0) = 0 then
-					gosub 1612
-				else
-					gosub 7460
-				endif
-			else
-				gosub 1570
 			endif
 		endif
 	loop
+	stop
 1570 rem--scan line L1$ into array S$()
 	gosub 2020
 	if t(1) = 1 then
