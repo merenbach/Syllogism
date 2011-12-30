@@ -726,15 +726,17 @@ rem---Input line--- : rem 1080
 			if w$ = t$(c(j)) then
 				if not (g(c(j)) > 0) then
 					print "Note: '";t$(c(j));"' used in premises taken to be ";g$(g1)
-					goto 6840
+					exit for
 				endif
-				if g1 = g(c(j)) then 6840
+				if g1 = g(c(j)) then exit for
 			endif
 		next j
-		print "** Conclusion may not contain ";g$(g1);" '";w$;"'."
-		j = 0
+		if j > 2 then
+			print "** Conclusion may not contain ";g$(g1);" '";w$;"'."
+			j = 0
+		endif
 	endif
-6840 w$ = w$(2)
+	w$ = w$(2)
 	gosub 4040
 	if not (j1 = 0) then
 		if w$ = w$(1) then
@@ -742,25 +744,25 @@ rem---Input line--- : rem 1080
 			print "** Subject is a ";g$(2);", predicate is a ";g$(1);" -- but"
 		endif
 		gosub 6880
-		goto 7370
-	endif
-	if not (j > 0) then
-		if w$ = t$(c(1)) then t2 = c(2) : else t2 = c(1)
 	else
-		t1 = c(j)
-		t2 = c(3-j)
-		if w$ = t$(t2) then
-			if not (g(t2) > 0) then
+		if not (j > 0) then
+			if w$ = t$(c(1)) then t2 = c(2) : else t2 = c(1)
+		else
+			t1 = c(j)
+			t2 = c(3-j)
+			if w$ = t$(t2) then
+				if not (g(t2) > 0) then
+					if g2 = 0 then 7090
+					print "Note: '";t$(t2);"' used in premises taken to be ";g$(g2)
+					goto 7090
+				endif
 				if g2 = 0 then 7090
-				print "Note: '";t$(t2);"' used in premises taken to be ";g$(g2)
-				goto 7090
+				if g2 = g(t2) then 7090
 			endif
-			if g2 = 0 then 7090
-			if g2 = g(t2) then 7090
+			print "** Conclusion may not contain ";g$(g2);" '";w$;"';"
 		endif
-		print "** Conclusion may not contain ";g$(g2);" '";w$;"';"
+		print "** Conclusion must contain ";g$(g(t2));" '";t$(t2);"'."
 	endif
-	print "** Conclusion must contain ";g$(g(t2));" '";t$(t2);"'."
 	goto 7370
 7090 if not (n1 = 0 or (d1 mod 2) = 1) then
 		print "** Negative conclusion required."
