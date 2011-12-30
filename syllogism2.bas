@@ -621,33 +621,47 @@ rem---Input line--- : rem 1080
 	c1 = c(1)
 	c2 = c(2)
 	for i = 1 to l1
-		if o(i) < 2 then 6000
-			if d(i) > 0 then 5980
-				if j1 > 0 then 5970
+		if o(i) >= 2 then
+			if not (d(i) > 0) then
+				if not (j1 > 0) then
 					print "Undistributed middle terms:"
 					j1 = 5
-5970			print left$(tb$,5);t$(i)
-5980		if d(i) = 1 or g(i) = 2 then 6000
-				v1 = i
-6000	next i
-	if n1 < 2 then 6040
+				endif
+				print left$(tb$,5);t$(i)
+			endif
+			if d(i) <> 1 and g(i) <> 2 then v1 = i
+		endif
+	next i
+	if n1 >= 2 then
 		j1 = 6
 		print "More than one negative premise:"
-6040 if j1 > 0 then 6180
-	if n1 = 0 then 6190
-	if d(c1) > 0 or d(c2) > 0 then 6100
-		print "Terms '";t$(c1);"' and '";t$(c2);"',";" one of which is"
-		goto 6150
-6100 if d(c1) > 0 or g(c2) < 2 then 6130
-		print "Term '";t$(c1);"'"
-		goto 6150
-6130 if d(c2) > 0 or g(c1) < 2 then 6190
-		print "Term '";t$(c2);"'"
-6150 print "required in predicate of negative conclusion"
+	endif
+	if j1 > 0 then
+		gosub 6180
+	else
+		if not (n1 = 0) then
+			if not (d(c1) > 0 or d(c2) > 0) then
+				print "Terms '";t$(c1);"' and '";t$(c2);"',";" one of which is"
+				gosub 6150
+			elseif not (d(c1) > 0 or g(c2) < 2) then
+				print "Term '";t$(c1);"'"
+				gosub 6150
+			elseif not (d(c2) > 0 or g(c1) < 2) then
+				print "Term '";t$(c2);"'"
+				gosub 6150
+			endif
+		endif
+	endif
+	return
+6150 rem [am] subroutine from 5880
+	print "required in predicate of negative conclusion"
 	print "not distributed in the premises."
 	j1 = 7
-6180 print "No possible conclusion."
-6190 return
+	gosub 6180
+	return
+6180 rem [am] no possible conc. (from 5880)
+	print "No possible conclusion."
+	return
 6200 rem---Compute conclusion---
 	if l(0) = 0 then z$ = "A is A" : goto 6580
 	if n1 = 0 then 6400
