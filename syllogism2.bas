@@ -518,80 +518,101 @@ rem---Input line--- : rem 1080
 5070 rem---See if syllogism---
 	j1 = 0
 	v1 = 0 : rem flag for modern validity
-	if l(0) then 5140
-		j1 = 1 : goto 5870
-5140 c = 0
-	for i = 1 to l1
-		if o(i) = 0 or o(i) = 2 then 5250
-			if o(i) <> 1 then 5210
-				c = c+1
-				c(c) = i
-				goto 5250
-5210		if j1 = 2 then 5240
-				print "Not a syllogism:"
-				j1 = 2
-5240		print "   ";g$(g(i));" '";t$(i);"' occurs ";o(i);" times in premises."
-5250	next i
-	if c = 2 then 5360
-		print "Not a syllogism:"
-		j1 = 3
-		if c > 0 then 5320
-			print "   no terms occur exactly once in premises."
-			goto 5360
-5320	print "   ";c;" terms occur exactly once in premises."
-	for i = 1 to c
-		print left$(tb$,6);t$(c(i));" -- ";g$(g(c(i)))
-	next i
-5360 if j1 then 5870
-	i = l(0)
-	l = 0
-5390	l = l+1
-		k(l) = i
-		i = l(i)
-		if i then 5390
-	if l = 1 then 5750
-	if d(c(1)) = 0 and d(c(2)) = 1 then t = c(2) : else t = c(1)
-	i = 1
-5460 k = i
-5470	if p(k(k)) <> t then 5500
-			t = q(k(k))
-			goto 5520
-5500	if q(k(k)) <> t then 5620
-			t = p(k(k))
-5520		if k = i then 5610
-				n = 1
-				h(1) = k(i)
-				for m = i to k-1
-					n = 3-n
-					h(n) = k(m+1)
-					k(m+1) = h(3-n)
-					next m
-				k(i) = h(n)
-5610		if j1 then 5710 else goto 5730
-5620	k = k+1
-		if k <= l then 5470
-		t = q(k(i))
-		if j1 > 0 then 5700
-			j1 = 4
-			print "Not a syllogism: no way to order premises so that each premise"
-			print "shares exactly one term with its successor; there is a"
-5700		print "closed loop in the term chain within the premise set--"
+	if l(0) then
+		c = 0
+		for i = 1 to l1
+			if not(o(i) = 0 or o(i) = 2) then
+				if o(i) = 1 then
+					c = c+1
+					c(c) = i
+				else
+					if j1 <> 2 then
+						print "Not a syllogism:"
+						j1 = 2
+					endif
+					print "   ";g$(g(i));" '";t$(i);"' occurs ";o(i);" times in premises."
+				endif
+			endif
+		next i
+		if c <> 2 then
+			print "Not a syllogism:"
+			j1 = 3
+			if not(c > 0) then
+				print "   no terms occur exactly once in premises."
+			else
+				print "   ";c;" terms occur exactly once in premises."
+				for i = 1 to c
+					print left$(tb$,6);t$(c(i));" -- ";g$(g(c(i)))
+				next i
+			endif
+		endif
+		if j1 then 5870
+		i = l(0)
+		l = 0
+		rem [am] loop until not(i) might be more appropriate, in terms
+		rem [am] of semantic translation, but it doesn't work here...
+		do
+			l = l+1
+			k(l) = i
+			i = l(i)
+		loop until i = 0
+		if l = 1 then 5750
+		if d(c(1)) = 0 and d(c(2)) = 1 then t = c(2) : else t = c(1)
+		i = 1
+5460	k = i
+		do
+			if p(k(k)) = t or q(k(k)) = t then
+				if p(k(k)) = t then
+					t = q(k(k))
+				elseif q(k(k)) = t then
+					t = p(k(k))
+				endif
+				if k <> i then
+					n = 1
+					h(1) = k(i)
+					for m = i to k-1
+						n = 3-n
+						h(n) = k(m+1)
+						k(m+1) = h(3-n)
+						next m
+					k(i) = h(n)
+				endif
+				if j1 then
+					goto 5710
+				else
+					goto 5730
+				endif
+			endif
+			k = k+1
+		loop until k > l
+			t = q(k(i))
+			if not(j1 > 0) then
+				j1 = 4
+				print "Not a syllogism: no way to order premises so that each premise"
+				print "shares exactly one term with its successor; there is a"
+			endif
+			print "closed loop in the term chain within the premise set--"
 5710		print n(k(i));
 			print l$(k(i))
 5730		i = i+1
 			if i <= l then 5460
-5750 if j1 > 0 then 5870
-	 if l1$ <> "link" and l1$ <> "link*" then 5870
-		print "Premises of syllogism in order of term links:"
-		for i = 1 to l
-			print n(k(i));" ";
-				if l1$ = "link" then 5850
-				if r(k(i)) < 6 and g(q(k(i))) = 2 then r(k(i)) = r(k(i))+2
-				if r(k(i)) < 4 then print x$(r(k(i)));"  ";
-				print t$(p(k(i)));y$(r(k(i)));"  ";t$(q(k(i)));z$(r(k(i)))
-				goto 5860
-5850			print l$(k(i))
-5860	next i
+5750	if j1 > 0 then 5870
+		if l1$ = "link" or l1$ = "link*" then
+			print "Premises of syllogism in order of term links:"
+			for i = 1 to l
+				print n(k(i));" ";
+				if l1$ <> "link" then
+					if r(k(i)) < 6 and g(q(k(i))) = 2 then r(k(i)) = r(k(i))+2
+					if r(k(i)) < 4 then print x$(r(k(i)));"  ";
+					print t$(p(k(i)));y$(r(k(i)));"  ";t$(q(k(i)));z$(r(k(i)))
+				else
+					print l$(k(i))
+				endif
+			next i
+		endif
+	else
+		j1 = 1
+	endif
 5870 return
 5880 rem---See if conclusion possible---
 	c1 = c(1)
