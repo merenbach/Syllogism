@@ -663,49 +663,54 @@ rem---Input line--- : rem 1080
 	print "No possible conclusion."
 	return
 6200 rem---Compute conclusion---
-	if l(0) = 0 then z$ = "A is A" : goto 6580
-	if n1 = 0 then 6400
-	rem negative conclusion
-	if d(c2) > 0 then 6260
-		z$ = "Some "+t$(c2)+" is not "+a$(b(c1))+t$(c1)
-		goto 6390
-6260 if d(c1) > 0 then 6290
-		z$ = "Some "+t$(c1)+" is not "+a$(b(c2))+t$(c2)
-		goto 6390
-6290 if g(c1) < 2 then 6320
-		z$ = t$(c1)+" is not "+a$(b(c2))+t$(c2)
-		goto 6390
-6320 if g(c2) < 2 then 6350
-		z$ = t$(c2)+" is not "+a$(b(c1))+t$(c1)
-		goto 6390
-6350 if b(c1) > 0 or b(c2) = 0 then 6380
-		z$ = "No "+t$(c2)+" is "+a$(b(c1))+t$(c1)
-		goto 6390
-6380	z$ = "No "+t$(c1)+" is "+a$(b(c2))+t$(c2)
-6390 goto 6570
-6400 rem affirmative conclusion
-	if d(c1) = 0 then 6470
-		if g(c1) = 2 then 6450
-			z$ = "All "+t$(c1)+" is "+t$(c2)
-			goto 6570
-6450		z$ = t$(c1)+" is "+a$(b(c2))+t$(c2)
-			goto 6570
-6470 if d(c2) = 0 then 6530
-		if g(c2) = 2 then 6510
-			z$ = "All "+t$(c2)+" is "+t$(c1)
-			goto 6570
-6510		z$ = t$(c2)+" is "+a$(b(c1))+t$(c1)
-			goto 6570
-6530 if b(c1) > 0 or b(c2) = 0 then 6560
-		z$ = "Some "+t$(c2)+" is "+a$(b(c1))+t$(c1)
-		goto 6570
-6560	z$ = "Some "+t$(c1)+" is "+a$(b(c2))+t$(c2)
-6570 rem PRINT  conclusion
-6580 print "  / ";z$
-	if v1 = 0 then 6620
+	if l(0) = 0 then
+		z$ = "A is A"
+	else
+		if not (n1 = 0) then
+			rem negative conclusion
+			if not (d(c2) > 0) then
+				z$ = "Some "+t$(c2)+" is not "+a$(b(c1))+t$(c1)
+			elseif not (d(c1) > 0) then
+				z$ = "Some "+t$(c1)+" is not "+a$(b(c2))+t$(c2)
+			elseif g(c1) >= 2 then
+				z$ = t$(c1)+" is not "+a$(b(c2))+t$(c2)
+			elseif g(c2) >= 2 then
+				z$ = t$(c2)+" is not "+a$(b(c1))+t$(c1)
+			elseif not (b(c1) > 0 or b(c2) = 0) then
+				z$ = "No "+t$(c2)+" is "+a$(b(c1))+t$(c1)
+			else
+				z$ = "No "+t$(c1)+" is "+a$(b(c2))+t$(c2)
+			endif
+		else
+			rem affirmative conclusion
+			if not (d(c1) = 0) then
+				if g(c1) <> 2 then
+					z$ = "All "+t$(c1)+" is "+t$(c2)
+				else
+					z$ = t$(c1)+" is "+a$(b(c2))+t$(c2)
+				endif
+			elseif not (d(c2) = 0) then
+				if g(c2) <> 2 then
+					z$ = "All "+t$(c2)+" is "+t$(c1)
+				else
+					z$ = t$(c2)+" is "+a$(b(c1))+t$(c1)
+				endif
+			else
+				if not (b(c1) > 0 or b(c2) = 0) then
+					z$ = "Some "+t$(c2)+" is "+a$(b(c1))+t$(c1)
+				else
+					z$ = "Some "+t$(c1)+" is "+a$(b(c2))+t$(c2)
+				endif
+			endif
+		endif
+	endif
+	rem PRINT  conclusion
+	print "  / ";z$
+	if not(v1 = 0) then
 		print "  * Aristotle-valid only, i.e. on requirement that term ";
 		print "'";t$(v1);"' denotes."
-6620 return
+	endif
+	return
 6630 rem---test offered conclusion---
 	rem--conc. poss, line in s$()
 	gosub 2890
