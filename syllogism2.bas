@@ -80,19 +80,15 @@ gosub 1070
 			gosub 1070
 		else
 			do
+				l1$ = rtrim$(l1$)
 				l2$ = right$(l1$,1)
-				if l2$ <> " " then
-					if l2$ <> "." and l2$ <> "?" and l2$ <> "!" then exit do
-					print left$(tb$,l);" ^   Punctuation mark ignored"
-				endif
-				if l = 1 then 1080
-				l = l-1 : l1$ = left$(l1$,l)
+				if l2$ <> "." and l2$ <> "?" and l2$ <> "!" then exit do
+				l = len(l1$)
+				print left$(tb$, l);" ^   Punctuation mark ignored"
+				l1$ = left$(l1$, l - 1)
 			loop
-			do
-				if left$(l1$,1) <> " " then exit do
-				if l = 1 then 1080
-				l = l-1 : l1$ = right$(l1$,l)
-			loop
+			l1$ = ltrim$(l1$)
+			if len(l1$) = 0 then goto 1080
 			rem / FOR I = 1 TO L
 				rem / V = ASC(MID$(L1$,I,1))
 				rem / IF V >= 65 AND V <= 90  THEN  MID$(L1$,I,1) = CHR$(V+32)
