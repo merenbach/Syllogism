@@ -480,7 +480,7 @@ rem---Convert W$ to singular--- : rem [am] 4040
 def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 	local x$, y$
 	local my_matched_plural
-	if len(word$) < 4 or left$(word$,4) <> "the " then
+	if not fnHAS_PREFIX(word$, "the ") then
 		x$ = ""
 		i = 1
 		n = 1
@@ -500,7 +500,7 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 					endif
 				next k
 				if my_matched_plural = false then
-					if len(y$) >= 3 and right$(y$,3) = "men" then
+					if fnHAS_SUFFIX(y$, "men") then
 						y$ = left$(y$,len(y$)-2)+"an"
 					else
 						l$ = right$(y$,1)
@@ -1091,3 +1091,25 @@ def fnAPPEND$(string$, suffix$)
 		string$ = string$ + " " + suffix$
 	endif
 	=string$
+
+def fnHAS_PREFIX(string$, fragment$)
+	local l, flag
+	flag = false
+	len_string = len(string$)
+	len_fragment = len(fragment$)
+	if len_string >= len_fragment and len_fragment > 0 then
+		if left$(string$, len_fragment) = fragment$ then flag = true
+	endif
+	=flag
+end
+
+def fnHAS_SUFFIX(string$, fragment$)
+	local l, flag
+	flag = false
+	len_string = len(string$)
+	len_fragment = len(fragment$)
+	if len_string >= len_fragment and len_fragment > 0 then
+		if right$(string$, len_fragment) = fragment$ then flag = true
+	endif
+	=flag
+end
