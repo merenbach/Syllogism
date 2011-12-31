@@ -5,9 +5,6 @@ rem I hope compatibility with two indpendently developed BASICs should
 rem assure some universality regardless of platform. The following
 rem notes should help anybody with a similar project.
 rem Summary of changes.....
-rem * Metal doesn't support PRINT TAB(N). It supports the command HTAB, but a
-rem bug makes it useless for formatting more than one column of text. The only
-rem standard BASIC solution is the " " character, implemented with tb$ and Left$()
 rem * Metal doesn't support MID$() as a command. Both support LCASE$().
 rem * Metal crashes when it reads an empty ("") DATA item. Had to hack it.
 rem * Metal requires ; between PRINT items. Also, it doesn't add a space
@@ -17,8 +14,6 @@ rem Chipmunk requires quotes around DATA items
 rem Chipmunk buggy when using integer variables (J%), use floating point (J)
 rem Neither support PRINT CHR$(27) as a way to clear the screen; used cls
 rem Peace. Ben Sharvy. luvnpeas99@yahoo.com
-rem Metal doesn't support PRINT TAB(N)...
-tb$ = "                                                  "
 cls : print "Syllogism Program Copyright (c) 1988 Richard Sharvy"
 print "Syllogism 1.0 (c) 2002 Richard Sharvy's estate"
 print "Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org" : print
@@ -84,7 +79,7 @@ rem---Input line--- : rem 1080
 				l2$ = right$(l1$,1)
 				if l2$ <> "." and l2$ <> "?" and l2$ <> "!" then exit do
 				l = len(l1$)
-				print left$(tb$, l);" ^   Punctuation mark ignored"
+				print space$(l);" ^   Punctuation mark ignored"
 				l1$ = left$(l1$, l - 1)
 			loop
 			l1$ = ltrim$(l1$)
@@ -304,10 +299,10 @@ rem Scan : rem [am] 2520
 	loop until j > 6
 2885 return
 2460 rem [am] subroutine from 2020
-	print left$(tb$,i+n);"^   Invalid numeral or command"
+	print space$(i+n);"^   Invalid numeral or command"
 	return
 2670 rem [am] subroutine from 2020
-	print left$(tb$,i+k-1);"^"
+	print space$(i+k-1);"^"
 	print "Reserved word '";s$;"' may not occur within a term"
 	t(1) = 0
 	return
@@ -644,7 +639,7 @@ rem Scan : rem [am] 2520
 			else
 				print "   ";c;" terms occur exactly once in premises."
 				for i = 1 to c
-					print left$(tb$,6);t$(c(i));" -- ";g$(g(c(i)))
+					print space$(6);t$(c(i));" -- ";g$(g(c(i)))
 				next i
 			endif
 		endif
@@ -729,7 +724,7 @@ rem Scan : rem [am] 2520
 					print "Undistributed middle terms:"
 					j1 = 5
 				endif
-				print left$(tb$,5);t$(i)
+				print space$(5);t$(i)
 			endif
 			if d(i) <> 1 and g(i) <> 2 then v1 = i
 		endif
@@ -927,27 +922,27 @@ rem Scan : rem [am] 2520
 7660 rem---List valid inputs---
 	cls : print "Valid commands are:"
 	print "   <n>  [ <statement> ]   Insert, delete, or replace premise number  <n> "
-	print left$(tb$,28);"Examples:   10  All men are mortal"
-	print left$(tb$,40);"10"
-	print "  DUMP";left$(tb$,15);"Prints symbol table, distribution count, etc."
-	print "  HELP";left$(tb$,15);"Prints this list"
-	print "  INFO";left$(tb$,15);"Gives information about syllogisms"
-	print "  LIST";left$(tb$,15);"Lists premises"
-	print "  LIST*";left$(tb$,14);"Same, but displays distribution analysis:"
-	print left$(tb$,25);"distributed positions marked with '*', "
-	print left$(tb$,25);"designators marked with '+'"
-	print "  LINK";left$(tb$,15);"Lists premises in order of term-links (if possible)"
-	print "  LINK*";left$(tb$,14);"Same, but in distribution-analysis format"
-	print "  MSG";left$(tb$,16);"Turns on/off Printing of certain messages and warnings"
-	print "  NEW";left$(tb$,16);"Erases current syllogism"
-	print "  SAMPLE";left$(tb$,13);"Erases current syllogism and enters sample syllogism"
-	print "  STOP";left$(tb$,15);"Stops entire program"
-	print "  SUBSTITUTE";left$(tb$,9);"Allows uniform substitution of new terms in ";
+	print space$(28);"Examples:   10  All men are mortal"
+	print space$(40);"10"
+	print "  DUMP";space$(15);"Prints symbol table, distribution count, etc."
+	print "  HELP";space$(15);"Prints this list"
+	print "  INFO";space$(15);"Gives information about syllogisms"
+	print "  LIST";space$(15);"Lists premises"
+	print "  LIST*";space$(14);"Same, but displays distribution analysis:"
+	print space$(25);"distributed positions marked with '*', "
+	print space$(25);"designators marked with '+'"
+	print "  LINK";space$(15);"Lists premises in order of term-links (if possible)"
+	print "  LINK*";space$(14);"Same, but in distribution-analysis format"
+	print "  MSG";space$(16);"Turns on/off Printing of certain messages and warnings"
+	print "  NEW";space$(16);"Erases current syllogism"
+	print "  SAMPLE";space$(13);"Erases current syllogism and enters sample syllogism"
+	print "  STOP";space$(15);"Stops entire program"
+	print "  SUBSTITUTE";space$(9);"Allows uniform substitution of new terms in ";
 	print "old premises"
-	print "  SYNTAX";left$(tb$,13);"Explains statement syntax, with examples"
-	print "  /";left$(tb$,18);"Asks program to draw conclusion"
-	print "  /  <statement>";left$(tb$,5);"Tests  <statement>  as conclusion"
-	print left$(tb$,25);"Note: this can be done even if there are no premises"
+	print "  SYNTAX";space$(13);"Explains statement syntax, with examples"
+	print "  /";space$(18);"Asks program to draw conclusion"
+	print "  /  <statement>";space$(5);"Tests  <statement>  as conclusion"
+	print space$(25);"Note: this can be done even if there are no premises"
 	return
 7960 rem--"syntax"--
 	cls : print "Valid statement forms:"
@@ -998,7 +993,7 @@ rem Scan : rem [am] 2520
 8890 rem---"Dump" values of variables---
 	print "Highest symbol table loc. used:";l1;"  Negative premises:";n1
 	if l1 <> 0 then
-		print "Adr. art. term";left$(tb$,48-14);"type       occurs    dist. count"
+		print "Adr. art. term";space$(48-14);"type       occurs    dist. count"
 		for i = 1 to l1
 			rem Metal's lack of tabbing gets difficult here...
 			itab = 7-len(str$(i))
@@ -1006,8 +1001,8 @@ rem Scan : rem [am] 2520
 			tstringtab = 49-len(t$(i))-11
 			gtab = 60-len(str$(g(i)))-49
 			otab = 71-len(str$(o(i)))-60
-			print i;left$(tb$,itab);a$(b(i));left$(tb$,astringtab);t$(i);left$(tb$,tstringtab);g(i);left$(tb$,gtab);
-			print o(i);left$(tb$,otab);d(i)
+			print i;space$(itab);a$(b(i));space$(astringtab);t$(i);space$(tstringtab);g(i);space$(gtab);
+			print o(i);space$(otab);d(i)
 		next i
 	endif
 	return
