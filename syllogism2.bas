@@ -198,84 +198,87 @@ rem---Input line--- : rem 1080
 	rem                     10 SOME  FRIED COCONUTS   ARE  NOT  TASTY
 	rem                      1   3        6            5    4     6
 	for j = 1 to 6 : s$(j) = "" : t(j) = 0 : next j
-	p1 = 0 : e(2) = 0 : j = 1 : i = 1
+	p1 = 0
+	e(2) = 0
+	j = 1
+	i = 1
 	l = len(l1$)
 	do
-2180 if i > l then 2885
-		s$ = mid$(l1$,i,1)
-		if s$ = " " then
+		do
+			if i > l then 2885
+			s$ = mid$(l1$,i,1)
+			if s$ <> " " then exit do
 			i = i+1
-			goto 2180
-		endif
-	for k = 1 to (l - i)
-		s$ = mid$(l1$,i+k,1)
-		if s$ = " " then exit for
-	next k
-	s$ = mid$(l1$,i,k) : rem S$ is set to next word
-	if j <= 1 then
-		if s$ = "/" then
-			t(1) = 2
-		else
-			n = len(s$)
-			if n > 4 then
-				gosub 2460
-				goto 2885
+		loop
+		for k = 1 to (l - i)
+			s$ = mid$(l1$,i+k,1)
+			if s$ = " " then exit for
+		next k
+		s$ = mid$(l1$,i,k) : rem S$ is set to next word
+		if j <= 1 then
+			if s$ = "/" then
+				t(1) = 2
 			else
-				for n = 1 to len(s$)
-					t$ = mid$(s$,n,1)
-					if asc(t$) > 57 or asc(t$) < 48 then
-						gosub 2460
-						goto 2885
-					endif
-				next n
-				t(1) = 1
+				n = len(s$)
+				if n > 4 then
+					gosub 2460
+					goto 2885
+				else
+					for n = 1 to len(s$)
+						t$ = mid$(s$,n,1)
+						if asc(t$) > 57 or asc(t$) < 48 then
+							gosub 2460
+							goto 2885
+						endif
+					next n
+					t(1) = 1
+				endif
 			endif
+			goto 2840
 		endif
-		goto 2840
-	endif
 rem Scan : rem [am] 2520
-	if s$ = "somebody" or s$ = "something" or s$ = "nobody" or s$ = "nothing" then 2670
-	if s$ = "someone" or s$ = "everyone" or s$ = "everybody" or s$ = "everything" then 2670
-	if s$ = "all" or s$ = "some" then
-		if t(j) = 6 then 2670
-		t(j) = 3
-		goto 2840
-	elseif s$ = "no" or s$ = "not" then
-		if t(j) = 6 then 2670
-		t(j) = 4
-		goto 2840
-	endif
-	if s$ = "is" or s$ = "are" then
-		if t(j) = 6 then
-			if not (t(j-1) = 5 or t(j-2) = 5) then
-				j = j+1
-				t(j) = 5
-				goto 2840
+		if s$ = "somebody" or s$ = "something" or s$ = "nobody" or s$ = "nothing" then 2670
+		if s$ = "someone" or s$ = "everyone" or s$ = "everybody" or s$ = "everything" then 2670
+		if s$ = "all" or s$ = "some" then
+			if t(j) = 6 then 2670
+			t(j) = 3
+			goto 2840
+		elseif s$ = "no" or s$ = "not" then
+			if t(j) = 6 then 2670
+			t(j) = 4
+			goto 2840
+		endif
+		if s$ = "is" or s$ = "are" then
+			if t(j) = 6 then
+				if not (t(j-1) = 5 or t(j-2) = 5) then
+					j = j+1
+					t(j) = 5
+					goto 2840
+				endif
 			endif
+2670		print left$(tb$,i+k-1);"^"
+			print "Reserved word '";s$;"' may not occur within a term"
+			t(1) = 0
+			goto 2885
 		endif
-2670	print left$(tb$,i+k-1);"^"
-		print "Reserved word '";s$;"' may not occur within a term"
-		t(1) = 0
-		goto 2885
-	endif
-	if t(j) <> 6 then
-		if t(j-1) <> 5 and t(j-2) <> 5 then 2790
-		if s$ = "a" or s$ = "an" or s$ = "sm" then
-			if i = l then 2790
-			if s$ = "a" then e(2) = 1 :  else if s$ = "an" then e(2) = 2 :  else e(2) = 3
-			p1 = 1
-		else
-			if s$ = "the" then p1 = 2
-2790		s$(j) = s$
-			t(j) = 6
+		if t(j) <> 6 then
+			if t(j-1) <> 5 and t(j-2) <> 5 then 2790
+			if s$ = "a" or s$ = "an" or s$ = "sm" then
+				if i = l then 2790
+				if s$ = "a" then e(2) = 1 :  else if s$ = "an" then e(2) = 2 :  else e(2) = 3
+				p1 = 1
+			else
+				if s$ = "the" then p1 = 2
+2790			s$(j) = s$
+				t(j) = 6
+			endif
+			goto 2860
 		endif
+		s$(j) = s$(j)+" "+s$
 		goto 2860
-	endif
-	s$(j) = s$(j)+" "+s$
-	goto 2860
-2840 s$(j) = s$
-	j = j+1
-2860 i = k+i
+2840	s$(j) = s$
+		j = j+1
+2860	i = k+i
 	loop until j > 6
 2885 return
 2460 rem [am] subroutine from 2020
