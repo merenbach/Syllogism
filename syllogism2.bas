@@ -100,11 +100,11 @@ rem---Input line--- : rem 1080
 					gosub 1840
 					gosub 8980
 				elseif l1$ = "help" then
-					gosub 7660
+					procLIST_VALID_INPUTS
 				elseif l1$ = "syntax" then
-					gosub 7960
+					procSYNTAX
 				elseif l1$ = "info" then
-					gosub 8290
+					procINFO
 				elseif l1$ = "dump" then
 					gosub 8890
 				elseif l1$ = "msg" then
@@ -919,7 +919,8 @@ rem Scan : rem [am] 2520
 		i = l(i)
 	wend
 	return
-7660 rem---List valid inputs---
+rem---List valid inputs--- : rem [am] 7660
+def procLIST_VALID_INPUTS
 	cls : print "Valid commands are:"
 	print "   <n>  [ <statement> ]   Insert, delete, or replace premise number  <n> "
 	print space$(28);"Examples:   10  All men are mortal"
@@ -943,8 +944,9 @@ rem Scan : rem [am] 2520
 	print "  /";space$(18);"Asks program to draw conclusion"
 	print "  /  <statement>";space$(5);"Tests  <statement>  as conclusion"
 	print space$(25);"Note: this can be done even if there are no premises"
-	return
-7960 rem--"syntax"--
+	endproc
+rem--"syntax"-- : rem [am] 7960
+def procSYNTAX
 	cls : print "Valid statement forms:"
 	print "  All    <general term #1>   is/are       <general term #2>"
 	print "  Some   <general term #1>   is/are       <general term #2>"
@@ -968,8 +970,9 @@ rem Scan : rem [am] 2520
 	print "The indefinite article 'sm' may be used with mass terms in predicates"
 	print "(e.g. 'This puddle is sm ink') to ensure that the mass term is taken"
 	print "as a general term rather than as a designator."
-	return
-8290 rem---Info---
+	endproc
+rem---Info--- : rem [am] 8290
+def procINFO
 	cls : print "   To use this program, enter a syllogism, one line at a time,"
 	print "and  THEN  test conclusions or ask the program to draw a conclusion."
 	print
@@ -989,7 +992,7 @@ rem Scan : rem [am] 2520
 	print "and drawing and testing more conclusions." : print
 	print "Reference:  H. Gensler, 'A Simplified Decision Procedure for Categor-"
 	print "   ical Syllogisms,' Notre Dame J. of Formal Logic 14 (1973) 457-466."
-	return
+	endproc
 8890 rem---"Dump" values of variables---
 	print "Highest symbol table loc. used:";l1;"  Negative premises:";n1
 	if l1 <> 0 then
