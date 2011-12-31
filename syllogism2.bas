@@ -492,13 +492,15 @@ rem Scan : rem [am] 2520
 			for k = 1 to u1
 				if y$ = u$(k) then
 					y$ = v$(k)
-					goto 4470
+					x$ = fnAPPEND$(x$, y$)
+					goto 4480
 				endif
 			next k
 			if len(y$) >= 3 then
 				if right$(y$,3) = "men" then
 					y$ = left$(y$,len(y$)-2)+"an"
-					goto 4470
+					x$ = fnAPPEND$(x$, y$)
+					goto 4480
 				endif
 			endif
 			l$ = right$(y$,1)
@@ -528,12 +530,8 @@ rem Scan : rem [am] 2520
 					endif
 				endif
 			endif
-	4470	if len(x$) = 0 then
-				x$ = y$
-			else
-				x$ = x$+" "+y$
-			endif
-			n = n+1
+			x$ = fnAPPEND$(x$, y$)
+4480		n = n+1
 			i = m+i
 		loop
 	endif
@@ -1087,3 +1085,12 @@ def fnNEXT_SPACE(string$, index)
 		if mid$(string$, index + m, 1) = " " then exit for
 	next m
 	=m
+
+rem from 4040 : rem [am] 4470
+def fnAPPEND$(string$, suffix$)
+	if len(string$) = 0 then
+		string$ = suffix$
+	else
+		string$ = string$ + " " + suffix$
+	endif
+	=string$
