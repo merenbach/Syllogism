@@ -510,15 +510,13 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 								if l$ <> "ss" and l$ <> "us" and l$ <> "is" and l$ <> "'s" then
 									y$ = left$(y$,len(y$)-1)
 									if len(y$) > 1 then
-										l$ = right$(y$,2)
-										if l$ = "xe" then
+										if fnHAS_SUFFIX(y$, "xe") then
 											y$ = left$(y$,len(y$)-1)
-										elseif l$ = "ie" and len(y$) > 3 then
+										elseif fnHAS_SUFFIX(y$, "ie") then
 											y$ = left$(y$,len(y$)-2)
 											y$ = y$+"y"
-										elseif len(y$) > 2 then
-											l$ = right$(y$,3)
-											if l$ = "sse" or l$ = "she" or l$ = "che" then y$ = left$(y$,len(y$)-1)
+										elseif fnHAS_SUFFIX(y$, "sse") or fnHAS_SUFFIX(y$, "she") or fnHAS_SUFFIX(y$, "che") then
+											y$ = left$(y$,len(y$)-1)
 										endif
 									endif
 								endif
