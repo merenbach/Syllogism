@@ -405,7 +405,7 @@ rem Scan : rem [am] 2520
 	for j = 1 to 2
 		w$ = w$(j)
 		if d1 < 4 then g = 1 :  else if j = 1 then g = 2 :  else g = p1
-		gosub 4040
+		w$ = fnCONVERT_WSTR_TO_SINGULAR$(w$)
 		i1 = 1
 		do
 	 		gosub 3950
@@ -476,19 +476,21 @@ rem Scan : rem [am] 2520
 		i1 = i1+1
 	loop
 	return
-4040 rem---Convert W$ to singular---
-	l = len(w$)
-	if l < 4 or left$(w$,4) <> "the " then
+rem---Convert W$ to singular--- : rem [am] 4040
+def fnCONVERT_WSTR_TO_SINGULAR$(word$)
+	local x$, y$
+
+	if len(word$) < 4 or left$(word$,4) <> "the " then
 		x$ = ""
 		i = 1
 		n = 1
 		do
-			if fnIS_BLANK(w$, i) = true then
-				w$ = x$
+			if fnIS_BLANK(word$, i) = true then
+				word$ = x$
 				exit do
 			else
-				m = fnNEXT_SPACE(w$, i)
-				y$ = mid$(w$, i, m)
+				m = fnNEXT_SPACE(word$, i)
+				y$ = mid$(word$, i, m)
 				for k = 1 to u1
 					if y$ = u$(k) then
 						y$ = v$(k)
@@ -528,7 +530,7 @@ rem Scan : rem [am] 2520
 			endif
 		loop
 	endif
-	return
+	=word$
 4530 rem---Enter line into list---
 	n = val(s$(1))
 	s = len(s$(1))+1
@@ -803,7 +805,7 @@ rem Scan : rem [am] 2520
 		if d1 < 4 then g1 = 1 : g2 = 1 : else g1 = 2 : g2 = p1
 		if g2 = 2 and d1 < 6 and d1 > 3 then d1 = d1+2
 		w$ = w$(1)
-		gosub 4040
+		w$ = fnCONVERT_WSTR_TO_SINGULAR$(w$)
 		if not (j1 = 0) then
 			w$(1) = w$
 		else
@@ -822,7 +824,7 @@ rem Scan : rem [am] 2520
 			endif
 		endif
 		w$ = w$(2)
-		gosub 4040
+		w$ = fnCONVERT_WSTR_TO_SINGULAR$(w$)
 		if not (j1 = 0) then
 			if w$ = w$(1) then
 				if d1 <> 4 or g2 = 0 then
