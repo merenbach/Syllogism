@@ -507,24 +507,18 @@ rem Scan : rem [am] 2520
 			if l$ = "s" then
 				if len(y$) > 1 then
 					l$ = right$(y$,2)
-					if not (l$ = "ss" or l$ = "us" or l$ = "is" or l$ = "'s") then
+					if l$ <> "ss" and l$ <> "us" and l$ <> "is" and l$ <> "'s" then
 						y$ = left$(y$,len(y$)-1)
 						if len(y$) > 1 then
 							l$ = right$(y$,2)
 							if l$ = "xe" then
 								y$ = left$(y$,len(y$)-1)
-							else
-								if not (l$ <> "ie" or len(y$) <= 3) then
-									y$ = left$(y$,len(y$)-2)
-									y$ = y$+"y"
-								else
-									if len(y$) > 2 then
-										l$ = right$(y$,3)
-										if not (l$ <> "sse" and l$ <> "she" and l$ <> "che") then
-											y$ = left$(y$,len(y$)-1)
-										endif
-									endif
-								endif
+							elseif l$ = "ie" and len(y$) > 3 then
+								y$ = left$(y$,len(y$)-2)
+								y$ = y$+"y"
+							elseif len(y$) > 2 then
+								l$ = right$(y$,3)
+								if l$ = "sse" or l$ = "she" or l$ = "che" then y$ = left$(y$,len(y$)-1)
 							endif
 						endif
 					endif
