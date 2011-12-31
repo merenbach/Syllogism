@@ -385,12 +385,14 @@ rem---Input line--- : rem 1080
 			endif
 			i1 = i1+1
 		loop
-		if e(j) > 0 then 3770
-			if b(i1) > 0 or w$ = w$(j) then 3780
-				a$ = left$(w$,1)
-		if a$ = "a" or a$ = "e" or a$ = "i" or a$ = "o" or a$ = "u" then e(j) = 2 : else e(j) = 1
-3770			b(i1) = e(j)
-3780	o(i1) = o(i1)+1
+		if e(j) > 0 then
+			b(i1) = e(j) : rem [am] duplicate from below
+		elseif not (b(i1) > 0 or w$ = w$(j)) then
+			a$ = left$(w$,1)
+			if a$ = "a" or a$ = "e" or a$ = "i" or a$ = "o" or a$ = "u" then e(j) = 2 : else e(j) = 1
+			b(i1) = e(j) : rem [am] duplicate from above
+		endif
+		o(i1) = o(i1)+1
 		if o(i1) >= 3 then
 			if msg then
 				print "Warning: ";g$(g(i1));" '";w$;"' has occurred";o(i1);"times"
