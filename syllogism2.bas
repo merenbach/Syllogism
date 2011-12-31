@@ -490,11 +490,11 @@ rem Scan : rem [am] 2520
 		i = 1
 		n = 1
 		do
-			if fnISBLANK(w$, i) = true then
+			if fnIS_BLANK(w$, i) = true then
 				w$ = x$
 				exit do
 			endif
-			m = fnNEXTSPACE(w$, i)
+			m = fnNEXT_SPACE(w$, i)
 			s$ = mid$(w$,i,m)
 			y$ = s$
 			for k = 1 to u1
@@ -1070,7 +1070,7 @@ rem Scan : rem [am] 2520
 	return
 end
 
-def fnISBLANK(string$, index)
+def fnIS_BLANK(string$, index)
 	local isblank
 	local i
 	local l
@@ -1086,7 +1086,7 @@ def fnISBLANK(string$, index)
 	next i
 	=isblank
 
-def fnNEXTSPACE(string$, index)
+def fnNEXT_SPACE(string$, index)
 	local m
 	local l
 
