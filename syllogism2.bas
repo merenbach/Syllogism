@@ -502,7 +502,6 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 				if my_matched_plural = false then
 					if len(y$) >= 3 and right$(y$,3) = "men" then
 						y$ = left$(y$,len(y$)-2)+"an"
-						x$ = fnAPPEND$(x$, y$)
 					else
 						l$ = right$(y$,1)
 						if l$ = "s" then
@@ -525,8 +524,8 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 								endif
 							endif
 						endif
-						x$ = fnAPPEND$(x$, y$)
 					endif
+					x$ = fnAPPEND$(x$, y$)
 				endif
 				n = n+1
 				i = m+i
