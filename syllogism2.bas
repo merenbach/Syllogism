@@ -1070,15 +1070,14 @@ rem Scan : rem [am] 2520
 	return
 end
 
+rem from 4040
 def fnIS_BLANK(string$, index)
 	local isblank
 	local i
-	local l
 	
 	isblank = true
-	l = len(string$)
 
-	for i = index to l
+	for i = index to len(string$)
 		if mid$(w$, i, 1) <> " " then
 			isblank = false
 			exit for
@@ -1086,12 +1085,10 @@ def fnIS_BLANK(string$, index)
 	next i
 	=isblank
 
+rem from 4040
 def fnNEXT_SPACE(string$, index)
 	local m
-	local l
-
-	l = len(string$)
-	for m = 1 to (l - index)
+	for m = 1 to (len(string$) - index)
 		if mid$(string$, index + m, 1) = " " then exit for
 	next m
 	=m
