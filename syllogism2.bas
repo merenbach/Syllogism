@@ -236,36 +236,42 @@ rem---Input line--- : rem 1080
 rem Scan : rem [am] 2520
 	if s$ = "somebody" or s$ = "something" or s$ = "nobody" or s$ = "nothing" then 2670
 	if s$ = "someone" or s$ = "everyone" or s$ = "everybody" or s$ = "everything" then 2670
-	if s$ <> "all" and s$ <> "some" then 2570
+	if s$ = "all" or s$ = "some" then
 		if t(j) = 6 then 2670
 		t(j) = 3
 		goto 2840
-2570 if s$ <> "no" and s$ <> "not" then 2610
+	elseif s$ = "no" or s$ = "not" then
 		if t(j) = 6 then 2670
 		t(j) = 4
 		goto 2840
-2610 if s$ <> "is" and s$ <> "are" then 2710
-		if t(j) <> 6 then 2670
-		if t(j-1) = 5 or t(j-2) = 5 then 2670
-			j = j+1
-			t(j) = 5
-			goto 2840
+	endif
+	if s$ = "is" or s$ = "are" then
+		if t(j) = 6 then
+			if not (t(j-1) = 5 or t(j-2) = 5) then
+				j = j+1
+				t(j) = 5
+				goto 2840
+			endif
+		endif
 2670	print left$(tb$,i+k-1);"^"
 		print "Reserved word '";s$;"' may not occur within a term"
 		t(1) = 0
 		goto 2885
-2710 if t(j) = 6 then 2820
-	if t(j-1) <> 5 and t(j-2) <> 5 then 2790
-	if s$ <> "a" and s$ <> "an" and s$ <> "sm" then 2780
-		if i = l then 2790
-		if s$ = "a" then e(2) = 1 :  else if s$ = "an" then e(2) = 2 :  else e(2) = 3
-		p1 = 1
+	endif
+	if t(j) <> 6 then
+		if t(j-1) <> 5 and t(j-2) <> 5 then 2790
+		if s$ = "a" or s$ = "an" or s$ = "sm" then
+			if i = l then 2790
+			if s$ = "a" then e(2) = 1 :  else if s$ = "an" then e(2) = 2 :  else e(2) = 3
+			p1 = 1
+		else
+			if s$ = "the" then p1 = 2
+2790		s$(j) = s$
+			t(j) = 6
+		endif
 		goto 2860
-2780 if s$ = "the" then p1 = 2
-2790 s$(j) = s$
-	t(j) = 6
-	goto 2860
-2820 s$(j) = s$(j)+" "+s$
+	endif
+	s$(j) = s$(j)+" "+s$
 	goto 2860
 2840 s$(j) = s$
 	j = j+1
