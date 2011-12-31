@@ -490,8 +490,7 @@ rem Scan : rem [am] 2520
 				exit do
 			endif
 			m = fnNEXT_SPACE(w$, i)
-			s$ = mid$(w$,i,m)
-			y$ = s$
+			y$ = mid$(w$, i, m)
 			for k = 1 to u1
 				if y$ = u$(k) then
 					y$ = v$(k)
