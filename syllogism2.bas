@@ -494,10 +494,7 @@ rem Scan : rem [am] 2520
 				w$ = x$
 				exit do
 			endif
-			for m = 1 to (l - i)
-				s$ = mid$(w$,i+m,1)
-				if s$ = " " then exit for
-			next m
+			m = fnNEXTSPACE(w$, i)
 			s$ = mid$(w$,i,m)
 			y$ = s$
 			for k = 1 to u1
@@ -1088,3 +1085,13 @@ def fnISBLANK(string$, index)
 		endif
 	next i
 	=isblank
+
+def fnNEXTSPACE(string$, index)
+	local m
+	local l
+
+	l = len(string$)
+	for m = 1 to (l - index)
+		if mid$(string$, index + m, 1) = " " then exit for
+	next m
+	=m
