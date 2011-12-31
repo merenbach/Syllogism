@@ -819,91 +819,92 @@ rem Scan : rem [am] 2520
 6630 rem---test offered conclusion---
 	rem--conc. poss, line in s$()
 	gosub 2890
-	if d1 < 0 then 7370
-	if d1 < 4 then g1 = 1 : g2 = 1 : else g1 = 2 : g2 = p1
-	if g2 = 2 and d1 < 6 and d1 > 3 then d1 = d1+2
-	w$ = w$(1)
-	gosub 4040
-	if not (j1 = 0) then
-		w$(1) = w$
-	else
-		for j = 1 to 2
-			if w$ = t$(c(j)) then
-				if not (g(c(j)) > 0) then
-					print "Note: '";t$(c(j));"' used in premises taken to be ";g$(g1)
-					exit for
-				endif
-				if g1 = g(c(j)) then exit for
-			endif
-		next j
-		if j > 2 then
-			print "** Conclusion may not contain ";g$(g1);" '";w$;"'."
-			j = 0
-		endif
-	endif
-	w$ = w$(2)
-	gosub 4040
-	if not (j1 = 0) then
-		if w$ = w$(1) then
-			if d1 <> 4 or g2 = 0 then 7120
-			print "** Subject is a ";g$(2);", predicate is a ";g$(1);" -- but"
-		endif
-		gosub 6880
-	else
-		if not (j > 0) then
-			if w$ = t$(c(1)) then t2 = c(2) : else t2 = c(1)
+	if not (d1 < 0) then
+		if d1 < 4 then g1 = 1 : g2 = 1 : else g1 = 2 : g2 = p1
+		if g2 = 2 and d1 < 6 and d1 > 3 then d1 = d1+2
+		w$ = w$(1)
+		gosub 4040
+		if not (j1 = 0) then
+			w$(1) = w$
 		else
-			t1 = c(j)
-			t2 = c(3-j)
-			if w$ = t$(t2) then
-				if not (g(t2) > 0) then
-					if g2 = 0 then 7090
-					print "Note: '";t$(t2);"' used in premises taken to be ";g$(g2)
-					goto 7090
+			for j = 1 to 2
+				if w$ = t$(c(j)) then
+					if not (g(c(j)) > 0) then
+						print "Note: '";t$(c(j));"' used in premises taken to be ";g$(g1)
+						exit for
+					endif
+					if g1 = g(c(j)) then exit for
 				endif
-				if g2 = 0 then 7090
-				if g2 = g(t2) then 7090
+			next j
+			if j > 2 then
+				print "** Conclusion may not contain ";g$(g1);" '";w$;"'."
+				j = 0
 			endif
-			print "** Conclusion may not contain ";g$(g2);" '";w$;"';"
 		endif
-		print "** Conclusion must contain ";g$(g(t2));" '";t$(t2);"'."
-	endif
-	goto 7370
-7090 if not (n1 = 0 or (d1 mod 2) = 1) then
-		print "** Negative conclusion required."
+		w$ = w$(2)
+		gosub 4040
+		if not (j1 = 0) then
+			if w$ = w$(1) then
+				if d1 <> 4 or g2 = 0 then
+					goto 7120
+				endif
+				print "** Subject is a ";g$(2);", predicate is a ";g$(1);" -- but"
+			endif
+			gosub 6880
+		else
+			if not (j > 0) then
+				if w$ = t$(c(1)) then t2 = c(2) : else t2 = c(1)
+			else
+				t1 = c(j)
+				t2 = c(3-j)
+				if w$ = t$(t2) then
+					if not (g(t2) > 0) or (g2 = 0 or g2 = g(t2)) then
+						if not (g(t2) > 0) and not (g2 = 0) then
+							print "Note: '";t$(t2);"' used in premises taken to be ";g$(g2)
+						endif
+						if not (n1 = 0 or (d1 mod 2) = 1) then
+							print "** Negative conclusion required."
+							goto 7370
+						endif
+						goto 7120
+					endif
+				endif
+				print "** Conclusion may not contain ";g$(g2);" '";w$;"';"
+			endif
+			print "** Conclusion must contain ";g$(g(t2));" '";t$(t2);"'."
+		endif
 		goto 7370
-	else
 7120	if (n1 > 0 or d1 mod 2 = 0) then
 			print "** Affirmative conclusion required."
 			goto 7370
 		endif
-	endif
-	if j1 <> 1 then
-		if not (d(t1) > 0 or d1 <= 1 or d1 >= 4) then
-			print "** Term '";t$(t1);"' not distributed in premises"
-			gosub 7180
-			goto 7370
-		endif
-		if not (d(t2) > 0) then
-			if not (d1 mod 2 = 0 and d1 <> 6) then
-				print "** Term '";t$(t2);"' not distributed in premises"
+		if j1 <> 1 then
+			if not (d(t1) > 0 or d1 <= 1 or d1 >= 4) then
+				print "** Term '";t$(t1);"' not distributed in premises"
 				gosub 7180
 				goto 7370
 			endif
+			if not (d(t2) > 0) then
+				if not (d1 mod 2 = 0 and d1 <> 6) then
+					print "** Term '";t$(t2);"' not distributed in premises"
+					gosub 7180
+					goto 7370
+				endif
+			endif
 		endif
+		print "-->  VALID!"
+		if not (j1 = 0) then
+			if d1 > 0 then goto 7370
+			t$(0) = w$
+		elseif not (d(t1) = 0 or d1 >= 2) then
+			v1 = t1
+		else
+			if d(t2) > 0 and d1 mod 2 = 0 and d1 <> 4 and d1 <> 6 then v1 = t2
+			if v1 = 0 then goto 7370
+		endif
+		print "    but on Aristotelian interpretation only, i.e. on requirement"
+		print "    that term '";t$(v1);"' denotes."
 	endif
-	print "-->  VALID!"
-	if not (j1 = 0) then
-		if d1 > 0 then 7370
-		t$(0) = w$
-	elseif not (d(t1) = 0 or d1 >= 2) then
-		v1 = t1
-	else
-		if d(t2) > 0 and d1 mod 2 = 0 and d1 <> 4 and d1 <> 6 then v1 = t2
-		if v1 = 0 then 7370
-	endif
-	print "    but on Aristotelian interpretation only, i.e. on requirement"
-	print "    that term '";t$(v1);"' denotes."
 7370 return
 6880 rem [am] subroutine from 6630
 	print "** Conclusion from no premises must have same subject and predic";
