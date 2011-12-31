@@ -479,7 +479,7 @@ rem Scan : rem [am] 2520
 rem---Convert W$ to singular--- : rem [am] 4040
 def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 	local x$, y$
-
+	local my_matched_plural
 	if len(word$) < 4 or left$(word$,4) <> "the " then
 		x$ = ""
 		i = 1
@@ -491,41 +491,44 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 			else
 				m = fnNEXT_SPACE(word$, i)
 				y$ = mid$(word$, i, m)
+				my_matched_plural = false
 				for k = 1 to u1
 					if y$ = u$(k) then
 						y$ = v$(k)
 						x$ = fnAPPEND$(x$, y$)
-						goto 4480
+						my_matched_plural = true
 					endif
 				next k
-				if len(y$) >= 3 and right$(y$,3) = "men" then
-					y$ = left$(y$,len(y$)-2)+"an"
-					x$ = fnAPPEND$(x$, y$)
-				else
-					l$ = right$(y$,1)
-					if l$ = "s" then
-						if len(y$) > 1 then
-							l$ = right$(y$,2)
-							if l$ <> "ss" and l$ <> "us" and l$ <> "is" and l$ <> "'s" then
-								y$ = left$(y$,len(y$)-1)
-								if len(y$) > 1 then
-									l$ = right$(y$,2)
-									if l$ = "xe" then
-										y$ = left$(y$,len(y$)-1)
-									elseif l$ = "ie" and len(y$) > 3 then
-										y$ = left$(y$,len(y$)-2)
-										y$ = y$+"y"
-									elseif len(y$) > 2 then
-										l$ = right$(y$,3)
-										if l$ = "sse" or l$ = "she" or l$ = "che" then y$ = left$(y$,len(y$)-1)
+				if my_matched_plural = false then
+					if len(y$) >= 3 and right$(y$,3) = "men" then
+						y$ = left$(y$,len(y$)-2)+"an"
+						x$ = fnAPPEND$(x$, y$)
+					else
+						l$ = right$(y$,1)
+						if l$ = "s" then
+							if len(y$) > 1 then
+								l$ = right$(y$,2)
+								if l$ <> "ss" and l$ <> "us" and l$ <> "is" and l$ <> "'s" then
+									y$ = left$(y$,len(y$)-1)
+									if len(y$) > 1 then
+										l$ = right$(y$,2)
+										if l$ = "xe" then
+											y$ = left$(y$,len(y$)-1)
+										elseif l$ = "ie" and len(y$) > 3 then
+											y$ = left$(y$,len(y$)-2)
+											y$ = y$+"y"
+										elseif len(y$) > 2 then
+											l$ = right$(y$,3)
+											if l$ = "sse" or l$ = "she" or l$ = "che" then y$ = left$(y$,len(y$)-1)
+										endif
 									endif
 								endif
 							endif
 						endif
+						x$ = fnAPPEND$(x$, y$)
 					endif
-					x$ = fnAPPEND$(x$, y$)
 				endif
-4480			n = n+1
+				n = n+1
 				i = m+i
 			endif
 		loop
