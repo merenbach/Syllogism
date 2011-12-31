@@ -246,23 +246,23 @@ rem Scan : rem [am] 2520
 		elseif s$ = "someone" or s$ = "everyone" or s$ = "everybody" or s$ = "everything" then
 			gosub 2670
 			goto 2885
-		endif
-		if s$ = "all" or s$ = "some" then
+		elseif s$ = "all" or s$ = "some" then
 			if t(j) = 6 then
 				gosub 2670
 				goto 2885
+			else
+				t(j) = 3
+				goto 2840
 			endif
-			t(j) = 3
-			goto 2840
 		elseif s$ = "no" or s$ = "not" then
 			if t(j) = 6 then
 				gosub 2670
 				goto 2885
+			else
+				t(j) = 4
+				goto 2840
 			endif
-			t(j) = 4
-			goto 2840
-		endif
-		if s$ = "is" or s$ = "are" then
+		elseif s$ = "is" or s$ = "are" then
 			if t(j) = 6 then
 				if not (t(j-1) = 5 or t(j-2) = 5) then
 					j = j+1
@@ -272,11 +272,8 @@ rem Scan : rem [am] 2520
 			endif
 			gosub 2670
 			goto 2885
-		endif
-		if t(j) <> 6 then
-			if t(j-1) <> 5 and t(j-2) <> 5 then
-				gosub 2790
-			else
+		elseif t(j) <> 6 then
+			if t(j-1) = 5 or t(j-2) = 5 then
 				if s$ = "a" or s$ = "an" or s$ = "sm" then
 					if i <> l then
 						if s$ = "a" then
@@ -294,6 +291,8 @@ rem Scan : rem [am] 2520
 					if s$ = "the" then p1 = 2
 					gosub 2790
 				endif
+			else
+				gosub 2790
 			endif
 		else
 			s$(j) = s$(j)+" "+s$
