@@ -1079,7 +1079,7 @@ def fnISBLANK(string$, index)
 	l = len(string$)
 
 	for i = index to l
-		if mid$(w$,i,1) <> " " then
+		if mid$(w$, i, 1) <> " " then
 			isblank = false
 			exit for
 		endif
