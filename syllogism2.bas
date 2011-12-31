@@ -416,7 +416,7 @@ rem Scan : rem [am] 2520
 				exit do
 			endif
 			if g = 0 then
-				if not(g(i1) = 0 and  not msg) then
+				if not(g(i1) = 0 and not msg) then
 					print "Note: predicate term '";w$;"'";
 					print " taken as the ";g$(g(i1));" used earlier"
 				endif
@@ -428,9 +428,7 @@ rem Scan : rem [am] 2520
 				exit do
 			endif
 			if g = g(i1) then exit do
-			if msg then
-				print "Warning: ";g$(g);" '";w$;"' has also occurred as a ";g$(3-g)
-			endif
+			if msg then print "Warning: ";g$(g);" '";w$;"' has also occurred as a ";g$(3-g)
 			i1 = i1+1
 		loop
 		if e(j) > 0 or not (b(i1) > 0 or w$ = w$(j)) then
