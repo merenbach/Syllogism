@@ -490,15 +490,10 @@ rem Scan : rem [am] 2520
 		i = 1
 		n = 1
 		do
-			do
-				if i > l then
-					w$ = x$
-					goto 4520
-				endif
-				s$ = mid$(w$,i,1)
-				if s$ <> " " then exit do
-				i = i+1
-			loop
+			if fnISBLANK(w$, i) = true then
+				w$ = x$
+				exit do
+			endif
 			for m = 1 to (l - i)
 				s$ = mid$(w$,i+m,1)
 				if s$ = " " then exit for
@@ -544,12 +539,16 @@ rem Scan : rem [am] 2520
 					endif
 				endif
 			endif
-	4470	if len(x$) = 0 then x$ = y$ :  else x$ = x$+" "+y$
+	4470	if len(x$) = 0 then
+				x$ = y$
+			else
+				x$ = x$+" "+y$
+			endif
 			n = n+1
 			i = m+i
 		loop
 	endif
-4520 return
+	return
 4530 rem---Enter line into list---
 	n = val(s$(1))
 	s = len(s$(1))+1
@@ -1072,3 +1071,19 @@ rem Scan : rem [am] 2520
 	print "Exit from substitution routine"
 	return
 end
+
+def fnISBLANK(string$, index)
+	local isblank
+	local i
+	local l
+	
+	isblank = true
+	l = len(string$)
+
+	for i = index to l
+		if mid$(w$,i,1) <> " " then
+			isblank = false
+			exit for
+		endif
+	next i
+	=isblank
