@@ -385,12 +385,12 @@ rem---Input line--- : rem 1080
 			endif
 			i1 = i1+1
 		loop
-		if e(j) > 0 then
-			b(i1) = e(j) : rem [am] duplicate from below
-		elseif not (b(i1) > 0 or w$ = w$(j)) then
-			a$ = left$(w$,1)
-			if a$ = "a" or a$ = "e" or a$ = "i" or a$ = "o" or a$ = "u" then e(j) = 2 : else e(j) = 1
-			b(i1) = e(j) : rem [am] duplicate from above
+		if e(j) > 0 or not (b(i1) > 0 or w$ = w$(j)) then
+			if not (e(j) > 0) and not (b(i1) > 0 or w$ = w$(j)) then
+				a$ = left$(w$,1)
+				if a$ = "a" or a$ = "e" or a$ = "i" or a$ = "o" or a$ = "u" then e(j) = 2 : else e(j) = 1
+			endif
+			b(i1) = e(j)
 		endif
 		o(i1) = o(i1)+1
 		if o(i1) >= 3 then
