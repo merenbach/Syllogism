@@ -200,27 +200,35 @@ rem---Input line--- : rem 1080
 	for j = 1 to 6 : s$(j) = "" : t(j) = 0 : next j
 	p1 = 0 : e(2) = 0 : j = 1 : i = 1
 	l = len(l1$)
+	do
 2180 if i > l then 2885
 		s$ = mid$(l1$,i,1)
-		if s$ = " " then i = i+1 : goto 2180
-	k = 1
-2240 if i+k > l then 2290
+		if s$ = " " then
+			i = i+1
+			goto 2180
+		endif
+	for k = 1 to (l - i)
 		s$ = mid$(l1$,i+k,1)
-		if s$ <> " " then k = k+1 : goto 2240
-2290 s$ = mid$(l1$,i,k) : rem S$ is set to next word
+		if s$ = " " then exit for
+	next k
+	s$ = mid$(l1$,i,k) : rem S$ is set to next word
 	if j > 1 then 2520
-		if s$ <> "/" then 2400
-		t(1) = 2
-		goto 2840
-2400 n = len(s$)
-	if n > 4 then 2460
-		n = 1
-2430	t$ = mid$(s$,n,1)
-		if asc(t$) <= 57 and asc(t$) >= 48 then 2480
-2460		print left$(tb$,i+n);"^   Invalid numeral or command"
+		if s$ = "/" then
+			t(1) = 2
+			goto 2840
+		endif
+	n = len(s$)
+	if n > 4 then
+		gosub 2460
+		goto 2885
+	endif
+	for n = 1 to len(s$)
+		t$ = mid$(s$,n,1)
+		if asc(t$) > 57 or asc(t$) < 48 then
+			gosub 2460
 			goto 2885
-2480	n = n+1
-		if n <= len(s$) then 2430
+		endif
+	next n
 	t(1) = 1
 	goto 2840
 2520 rem Scan
@@ -260,8 +268,11 @@ rem---Input line--- : rem 1080
 2840 s$(j) = s$
 	j = j+1
 2860 i = k+i
-	if j <= 6 then 2180
+	loop until j > 6
 2885 return
+2460 rem [am] subroutine from 2020
+	print left$(tb$,i+n);"^   Invalid numeral or command"
+	return
 2890 rem---Parse line in S$()---
 	d1 = -1
 	if s$(2) = "all" then
