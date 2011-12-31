@@ -496,35 +496,33 @@ rem Scan : rem [am] 2520
 						goto 4480
 					endif
 				next k
-				if len(y$) >= 3 then
-					if right$(y$,3) = "men" then
-						y$ = left$(y$,len(y$)-2)+"an"
-						x$ = fnAPPEND$(x$, y$)
-						goto 4480
-					endif
-				endif
-				l$ = right$(y$,1)
-				if l$ = "s" then
-					if len(y$) > 1 then
-						l$ = right$(y$,2)
-						if l$ <> "ss" and l$ <> "us" and l$ <> "is" and l$ <> "'s" then
-							y$ = left$(y$,len(y$)-1)
-							if len(y$) > 1 then
-								l$ = right$(y$,2)
-								if l$ = "xe" then
-									y$ = left$(y$,len(y$)-1)
-								elseif l$ = "ie" and len(y$) > 3 then
-									y$ = left$(y$,len(y$)-2)
-									y$ = y$+"y"
-								elseif len(y$) > 2 then
-									l$ = right$(y$,3)
-									if l$ = "sse" or l$ = "she" or l$ = "che" then y$ = left$(y$,len(y$)-1)
+				if len(y$) >= 3 and right$(y$,3) = "men" then
+					y$ = left$(y$,len(y$)-2)+"an"
+					x$ = fnAPPEND$(x$, y$)
+				else
+					l$ = right$(y$,1)
+					if l$ = "s" then
+						if len(y$) > 1 then
+							l$ = right$(y$,2)
+							if l$ <> "ss" and l$ <> "us" and l$ <> "is" and l$ <> "'s" then
+								y$ = left$(y$,len(y$)-1)
+								if len(y$) > 1 then
+									l$ = right$(y$,2)
+									if l$ = "xe" then
+										y$ = left$(y$,len(y$)-1)
+									elseif l$ = "ie" and len(y$) > 3 then
+										y$ = left$(y$,len(y$)-2)
+										y$ = y$+"y"
+									elseif len(y$) > 2 then
+										l$ = right$(y$,3)
+										if l$ = "sse" or l$ = "she" or l$ = "che" then y$ = left$(y$,len(y$)-1)
+									endif
 								endif
 							endif
 						endif
 					endif
+					x$ = fnAPPEND$(x$, y$)
 				endif
-				x$ = fnAPPEND$(x$, y$)
 4480			n = n+1
 				i = m+i
 			endif
