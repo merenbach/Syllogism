@@ -212,26 +212,28 @@ rem---Input line--- : rem 1080
 		if s$ = " " then exit for
 	next k
 	s$ = mid$(l1$,i,k) : rem S$ is set to next word
-	if j > 1 then 2520
+	if j <= 1 then
 		if s$ = "/" then
 			t(1) = 2
-			goto 2840
+		else
+			n = len(s$)
+			if n > 4 then
+				gosub 2460
+				goto 2885
+			else
+				for n = 1 to len(s$)
+					t$ = mid$(s$,n,1)
+					if asc(t$) > 57 or asc(t$) < 48 then
+						gosub 2460
+						goto 2885
+					endif
+				next n
+				t(1) = 1
+			endif
 		endif
-	n = len(s$)
-	if n > 4 then
-		gosub 2460
-		goto 2885
+		goto 2840
 	endif
-	for n = 1 to len(s$)
-		t$ = mid$(s$,n,1)
-		if asc(t$) > 57 or asc(t$) < 48 then
-			gosub 2460
-			goto 2885
-		endif
-	next n
-	t(1) = 1
-	goto 2840
-2520 rem Scan
+rem Scan : rem [am] 2520
 	if s$ = "somebody" or s$ = "something" or s$ = "nobody" or s$ = "nothing" then 2670
 	if s$ = "someone" or s$ = "everyone" or s$ = "everybody" or s$ = "everything" then 2670
 	if s$ <> "all" and s$ <> "some" then 2570
