@@ -478,7 +478,7 @@ rem Scan : rem [am] 2520
 	return
 4040 rem---Convert W$ to singular---
 	l = len(w$)
-	if not (l >= 4 and left$(w$,4) = "the ") then
+	if l < 4 or left$(w$,4) <> "the " then
 		x$ = ""
 		i = 1
 		n = 1
@@ -486,47 +486,48 @@ rem Scan : rem [am] 2520
 			if fnIS_BLANK(w$, i) = true then
 				w$ = x$
 				exit do
-			endif
-			m = fnNEXT_SPACE(w$, i)
-			y$ = mid$(w$, i, m)
-			for k = 1 to u1
-				if y$ = u$(k) then
-					y$ = v$(k)
-					x$ = fnAPPEND$(x$, y$)
-					goto 4480
+			else
+				m = fnNEXT_SPACE(w$, i)
+				y$ = mid$(w$, i, m)
+				for k = 1 to u1
+					if y$ = u$(k) then
+						y$ = v$(k)
+						x$ = fnAPPEND$(x$, y$)
+						goto 4480
+					endif
+				next k
+				if len(y$) >= 3 then
+					if right$(y$,3) = "men" then
+						y$ = left$(y$,len(y$)-2)+"an"
+						x$ = fnAPPEND$(x$, y$)
+						goto 4480
+					endif
 				endif
-			next k
-			if len(y$) >= 3 then
-				if right$(y$,3) = "men" then
-					y$ = left$(y$,len(y$)-2)+"an"
-					x$ = fnAPPEND$(x$, y$)
-					goto 4480
-				endif
-			endif
-			l$ = right$(y$,1)
-			if l$ = "s" then
-				if len(y$) > 1 then
-					l$ = right$(y$,2)
-					if l$ <> "ss" and l$ <> "us" and l$ <> "is" and l$ <> "'s" then
-						y$ = left$(y$,len(y$)-1)
-						if len(y$) > 1 then
-							l$ = right$(y$,2)
-							if l$ = "xe" then
-								y$ = left$(y$,len(y$)-1)
-							elseif l$ = "ie" and len(y$) > 3 then
-								y$ = left$(y$,len(y$)-2)
-								y$ = y$+"y"
-							elseif len(y$) > 2 then
-								l$ = right$(y$,3)
-								if l$ = "sse" or l$ = "she" or l$ = "che" then y$ = left$(y$,len(y$)-1)
+				l$ = right$(y$,1)
+				if l$ = "s" then
+					if len(y$) > 1 then
+						l$ = right$(y$,2)
+						if l$ <> "ss" and l$ <> "us" and l$ <> "is" and l$ <> "'s" then
+							y$ = left$(y$,len(y$)-1)
+							if len(y$) > 1 then
+								l$ = right$(y$,2)
+								if l$ = "xe" then
+									y$ = left$(y$,len(y$)-1)
+								elseif l$ = "ie" and len(y$) > 3 then
+									y$ = left$(y$,len(y$)-2)
+									y$ = y$+"y"
+								elseif len(y$) > 2 then
+									l$ = right$(y$,3)
+									if l$ = "sse" or l$ = "she" or l$ = "che" then y$ = left$(y$,len(y$)-1)
+								endif
 							endif
 						endif
 					endif
 				endif
+				x$ = fnAPPEND$(x$, y$)
+4480			n = n+1
+				i = m+i
 			endif
-			x$ = fnAPPEND$(x$, y$)
-4480		n = n+1
-			i = m+i
 		loop
 	endif
 	return
