@@ -197,7 +197,10 @@ rem---Input line--- : rem 1080
 	rem T(): 1:line num., 2:"/", 3:quantifier, 4:no/not, 5:is/are, 6:term
 	rem                     10 SOME  FRIED COCONUTS   ARE  NOT  TASTY
 	rem                      1   3        6            5    4     6
-	for j = 1 to 6 : s$(j) = "" : t(j) = 0 : next j
+	for j = 1 to 6
+		s$(j) = ""
+		t(j) = 0
+	next j
 	p1 = 0
 	e(2) = 0
 	j = 1
@@ -237,14 +240,25 @@ rem---Input line--- : rem 1080
 			goto 2840
 		endif
 rem Scan : rem [am] 2520
-		if s$ = "somebody" or s$ = "something" or s$ = "nobody" or s$ = "nothing" then 2670
-		if s$ = "someone" or s$ = "everyone" or s$ = "everybody" or s$ = "everything" then 2670
+		if s$ = "somebody" or s$ = "something" or s$ = "nobody" or s$ = "nothing" then
+			gosub 2670
+			goto 2885
+		elseif s$ = "someone" or s$ = "everyone" or s$ = "everybody" or s$ = "everything" then
+			gosub 2670
+			goto 2885
+		endif
 		if s$ = "all" or s$ = "some" then
-			if t(j) = 6 then 2670
+			if t(j) = 6 then
+				gosub 2670
+				goto 2885
+			endif
 			t(j) = 3
 			goto 2840
 		elseif s$ = "no" or s$ = "not" then
-			if t(j) = 6 then 2670
+			if t(j) = 6 then
+				gosub 2670
+				goto 2885
+			endif
 			t(j) = 4
 			goto 2840
 		endif
@@ -256,25 +270,34 @@ rem Scan : rem [am] 2520
 					goto 2840
 				endif
 			endif
-2670		print left$(tb$,i+k-1);"^"
-			print "Reserved word '";s$;"' may not occur within a term"
-			t(1) = 0
+			gosub 2670
 			goto 2885
 		endif
 		if t(j) <> 6 then
-			if t(j-1) <> 5 and t(j-2) <> 5 then 2790
-			if s$ = "a" or s$ = "an" or s$ = "sm" then
-				if i = l then 2790
-				if s$ = "a" then e(2) = 1 :  else if s$ = "an" then e(2) = 2 :  else e(2) = 3
-				p1 = 1
+			if t(j-1) <> 5 and t(j-2) <> 5 then
+				gosub 2790
 			else
-				if s$ = "the" then p1 = 2
-2790			s$(j) = s$
-				t(j) = 6
+				if s$ = "a" or s$ = "an" or s$ = "sm" then
+					if i <> l then
+						if s$ = "a" then
+							e(2) = 1
+						elseif s$ = "an" then
+							e(2) = 2
+						else
+							e(2) = 3
+						endif
+						p1 = 1
+					else
+						gosub 2790
+					endif
+				else
+					if s$ = "the" then p1 = 2
+					gosub 2790
+				endif
 			endif
-			goto 2860
+		else
+			s$(j) = s$(j)+" "+s$
 		endif
-		s$(j) = s$(j)+" "+s$
 		goto 2860
 2840	s$(j) = s$
 		j = j+1
@@ -283,6 +306,15 @@ rem Scan : rem [am] 2520
 2885 return
 2460 rem [am] subroutine from 2020
 	print left$(tb$,i+n);"^   Invalid numeral or command"
+	return
+2670 rem [am] subroutine from 2020
+	print left$(tb$,i+k-1);"^"
+	print "Reserved word '";s$;"' may not occur within a term"
+	t(1) = 0
+	return
+2790 rem [am] subroutine from 2020
+	s$(j) = s$
+	t(j) = 6
 	return
 2890 rem---Parse line in S$()---
 	d1 = -1
