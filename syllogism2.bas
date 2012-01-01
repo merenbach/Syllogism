@@ -95,9 +95,9 @@ rem---Input line--- : rem 1080
 					exit do
 				elseif l1$ = "new" then
 					print "Begin new syllogism"
-					gosub 1840
+					procNEW
 				elseif l1$ = "sample" then
-					gosub 1840
+					procNEW
 					gosub 8980
 				elseif l1$ = "help" then
 					procLIST_VALID_INPUTS
@@ -127,7 +127,7 @@ rem---Input line--- : rem 1080
 					if l(0) = 0 then
 						gosub 1612
 					else
-						gosub 7460
+						procLIST
 					endif
 				else
 					gosub 1570
@@ -147,7 +147,7 @@ rem---Input line--- : rem 1080
 			endif
 		else
 			if l(0) then
-				gosub 4760 : rem delete line
+				procDELETE_LINE : rem delete line
 			else
 				gosub 1612
 			endif
@@ -173,7 +173,8 @@ rem---Input line--- : rem 1080
 1612 rem [am] subroutine for no premises
 	print "No premises"
 	return
-1840 rem---New---
+rem---New--- : rem [am] 1840
+def procNEW
 	if l(0) <> 0 then
 		for i = 1 to l1
 			d(i) = 0 : t$(i) = "" : b(i) = 0 : o(i) = 0 : g(i) = 0
@@ -187,7 +188,7 @@ rem---Input line--- : rem 1080
 		loop until not (j > 0)
 		l(0) = 0
 	endif
-	return
+	endproc
 2020 rem---L1$ into array S$()---
 	rem T(): 1:line num., 2:"/", 3:quantifier, 4:no/not, 5:is/are, 6:term
 	rem                     10 SOME  FRIED COCONUTS   ARE  NOT  TASTY
@@ -408,7 +409,7 @@ rem Scan : rem [am] 2520
 		w$ = fnCONVERT_WSTR_TO_SINGULAR$(w$)
 		i1 = 1
 		do
-	 		gosub 3950
+	 		procSEARCH_TSTR_FOR_WSTR
 			if i1 > l1 then
 				if b1 > 0 then i1 = b1 : else l1 = l1+1
 				t$(i1) = w$
@@ -466,7 +467,8 @@ rem Scan : rem [am] 2520
 		print "Note: earlier use of '";w$;"' taken as the ";g$(g);" used here"
 	endif
 	return
-3950 rem---Search T$() for W$ from I1 to L1---
+rem---Search T$() for W$ from I1 to L1--- : rem [am] 3950
+def procSEARCH_TSTR_FOR_WSTR
 	rem If found, I1 = L1; else I1 = L1+1. B1 set to 1st empty loc.
 	b1 = 0
 	do
@@ -475,7 +477,7 @@ rem Scan : rem [am] 2520
 		if o(i1) = 0 and b1 = 0 then b1 = i1
 		i1 = i1+1
 	loop
-	return
+	endproc
 rem---Convert W$ to singular--- : rem [am] 4040
 def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 	local x$, y$
@@ -535,7 +537,7 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 			gosub 4690
 			exit do
 		elseif n = n(j1) then
-			gosub 4890
+			procDECREMENT_TABLE_ENTRIES
 			l$(j1) = l$
 			a1 = j1
 			exit do
@@ -555,7 +557,8 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 	l(a1) = j1
 	a(0) = a(0)+1
 	return
-4760 rem---Delete a line---
+rem---Delete a line--- : rem [am] 4760
+def procDELETE_LINE
 	n = val(s$(1))
 	i = 0
 	do
@@ -567,14 +570,15 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 			a(0) = a(0) - 1
 			a(a(0)) = j1
 			l(i) = l(j1)
-			gosub 4890
+			procDECREMENT_TABLE_ENTRIES
 			exit do
 		else
 			i = l(i)
 		endif
 	loop
-	return
-4890 rem---Decrement table entries---
+	endproc
+rem---Decrement table entries--- : rem [am] 4890
+def procDECREMENT_TABLE_ENTRIES
 	j(1) = p(j1)
 	j(2) = q(j1)
 	if r(j1) mod 2 <> 0 then
@@ -593,7 +597,7 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 		endif
 		d(j(k)) = d(j(k))-j(k+2)
 	next k
-	return
+	endproc
 5070 rem---See if syllogism---
 	j1 = 0
 	v1 = 0 : rem flag for modern validity
@@ -887,7 +891,8 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 7180 rem [am] subroutine from 6630
 	print "   may not be distributed in conclusion."
 	return
-7460 rem---list---
+rem---list--- : rem [am] 7460
+def procLIST
 	i = l(0)
 	while not (i = 0)
 		print n(i);" ";
@@ -900,7 +905,7 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 		endif
 		i = l(i)
 	wend
-	return
+	endproc
 rem---List valid inputs--- : rem [am] 7660
 def procLIST_VALID_INPUTS
 	cls : print "Valid commands are:"
