@@ -140,7 +140,7 @@ rem---Input line--- : rem 1080
 	gosub 2020
 	if t(1) = 1 then
 		if t(2) then
-			gosub 2890 : rem parse the line in S$()
+			procPARSE_LINE : rem parse the line in S$()
 			if d1 >= 0 then
 				gosub 4530 : rem enter line into list
 				procADD_TABLE_STRINGS : rem add terms to symbol table
@@ -311,15 +311,16 @@ rem Scan : rem [am] 2520
 	s$(j) = s$
 	t(j) = 6
 	return
-2890 rem---Parse line in S$()---
+rem---Parse line in S$()--- : rem [am] 2890
+def procPARSE_LINE
 	d1 = -1
 	if s$(2) = "all" then
 		if t(3) <> 6 then
-			gosub 3350
+			procERR_MISSING_SUBJECT_TERM
 		elseif t(4) <> 5 then
-			gosub 3330
+			procERR_MISSING_COPULA
 		elseif t(5) <> 6 then
-			gosub 3370
+			procERR_MISSING_PREDICATE
 		else
 			w$(1) = s$(3)
 			w$(2) = s$(5)
@@ -327,12 +328,12 @@ rem Scan : rem [am] 2520
 		endif
 	elseif s$(2) = "some" then
 		if t(3) <> 6 then
-			gosub 3350
+			procERR_MISSING_SUBJECT_TERM
 		elseif t(4) <> 5 then
-			gosub 3330
+			procERR_MISSING_COPULA
 		elseif s$(5) <> "not" then
 			if t(5) <> 6 then
-				gosub 3370
+				procERR_MISSING_PREDICATE
 			else
 				w$(1) = s$(3)
 				w$(2) = s$(5)
@@ -340,7 +341,7 @@ rem Scan : rem [am] 2520
 			endif
 		else
 			if t(6) <> 6 then
-				gosub 3370
+				procERR_MISSING_PREDICATE
 			else
 				w$(1) = s$(3)
 				w$(2) = s$(6)
@@ -349,54 +350,58 @@ rem Scan : rem [am] 2520
 		endif
 	elseif s$(2) = "no" then
 		if t(3) <> 6 then
-			gosub 3350
+			procERR_MISSING_SUBJECT_TERM
 		elseif t(4) <> 5 then
-			gosub 3330
+			procERR_MISSING_COPULA
 		elseif t(5) <> 6 then
-			gosub 3370
-			gosub 3380
+			procERR_MISSING_PREDICATE
+			procERR_HELP
 		else
 			w$(1) = s$(3)
 			w$(2) = s$(5)
 			d1 = 3 : rem no A is B
 		endif
 	elseif t(2) <> 6 then
-		gosub 3350
+		procERR_MISSING_SUBJECT_TERM
 	elseif t(3) = 5 then
 		w$(1) = s$(2)
 		if s$(4) <> "not" then
 			if t(4) <> 6 then
-			gosub 3370
+			procERR_MISSING_PREDICATE
 		endif
 			d1 = 4 : rem a is T
 			w$(2) = s$(4)
 		else
 			if t(5) <> 6 then
-				gosub 3370
+				procERR_MISSING_PREDICATE
 			else
 				d1 = 5 : rem a is not T
 				w$(2) = s$(5)
 			endif
 		endif
 	else
-		gosub 3330
+		procERR_MISSING_COPULA
 	endif
-	return
-3330 rem [am] subroutine from 2890
+	endproc
+rem [am] 3330 : rem subroutine from 2890
+def procERR_MISSING_COPULA
 	print "** Missing copula is/are"
-	gosub 3380
-	return
-3350 rem [am] subroutine from 2890
+	procERR_HELP
+	endproc
+rem [am] 3350 : rem subroutine from 2890
+def procERR_MISSING_SUBJECT_TERM
 	print "** Subject term bad or missing"
-	gosub 3380
-	return
-3370 rem [am] subroutine from 2890
+	procERR_HELP
+	endproc
+rem [am] 3370 : rem subroutine from 2890
+def procERR_MISSING_PREDICATE
 	print "** Predicate term bad or missing"
-	gosub 3380
-	return
-3380 rem [am] subroutine from 2890
+	procERR_HELP
+	endproc
+rem [am] 3380 : rem subroutine from 2890
+def procERR_HELP
 	if msg then print "Enter SYNTAX for help with statements"
-	return
+	endproc
 rem---Add W$(1), W$(2) to table T$()--- : rem [am] 3400
 def procADD_TABLE_STRINGS
 	if (d1 mod 2) <> 0 then
@@ -792,7 +797,7 @@ def procDECREMENT_TABLE_ENTRIES
 	return
 6630 rem---test offered conclusion---
 	rem--conc. poss, line in s$()
-	gosub 2890
+	procPARSE_LINE
 	if not (d1 < 0) then
 		if d1 < 4 then g1 = 1 : g2 = 1 : else g1 = 2 : g2 = p1
 		if g2 = 2 and d1 < 6 and d1 > 3 then d1 = d1+2
@@ -994,7 +999,7 @@ def procINFO
 	return
 8980 rem--sample--
 	for z8 = 1 to 10 : read l1$ : print l1$
-	gosub 2020 : gosub 2890 : gosub 4530 : procADD_TABLE_STRINGS
+	gosub 2020 : procPARSE_LINE : gosub 4530 : procADD_TABLE_STRINGS
 	next z8
 9004 data "10 all mortals are fools"
 	data "20 all athenians are men"
