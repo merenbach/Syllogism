@@ -220,13 +220,13 @@ def procNEW
 			else
 				n = len(s$)
 				if n > 4 then
-					gosub 2460
+					procERROR_INVALID_CMD(i + n)
 					goto 2885
 				else
 					for n = 1 to len(s$)
 						t$ = mid$(s$,n,1)
 						if asc(t$) > 57 or asc(t$) < 48 then
-							gosub 2460
+							procERROR_INVALID_CMD(i + n)
 							goto 2885
 						endif
 					next n
@@ -237,14 +237,17 @@ def procNEW
 		endif
 rem Scan : rem [am] 2520
 		if s$ = "somebody" or s$ = "something" or s$ = "nobody" or s$ = "nothing" then
-			gosub 2670
+			procERR_RESERVED_WORD(s$, i + k - 1)
+			t(1) = 0
 			goto 2885
 		elseif s$ = "someone" or s$ = "everyone" or s$ = "everybody" or s$ = "everything" then
-			gosub 2670
+			procERR_RESERVED_WORD(s$, i + k - 1)
+			t(1) = 0
 			goto 2885
 		elseif s$ = "all" or s$ = "some" then
 			if t(j) = 6 then
-				gosub 2670
+				procERR_RESERVED_WORD(s$, i + k - 1)
+				t(1) = 0
 				goto 2885
 			else
 				t(j) = 3
@@ -252,7 +255,8 @@ rem Scan : rem [am] 2520
 			endif
 		elseif s$ = "no" or s$ = "not" then
 			if t(j) = 6 then
-				gosub 2670
+				procERR_RESERVED_WORD(s$, i + k - 1)
+				t(1) = 0
 				goto 2885
 			else
 				t(j) = 4
@@ -266,7 +270,8 @@ rem Scan : rem [am] 2520
 					goto 2840
 				endif
 			endif
-			gosub 2670
+			procERR_RESERVED_WORD(s$, i + k - 1)
+			t(1) = 0
 			goto 2885
 		elseif t(j) <> 6 then
 			if t(j-1) = 5 or t(j-2) = 5 then
@@ -299,14 +304,15 @@ rem Scan : rem [am] 2520
 2860	i = k+i
 	loop until j > 6
 2885 return
-2460 rem [am] subroutine from 2020
-	print space$(i+n);"^   Invalid numeral or command"
-	return
-2670 rem [am] subroutine from 2020
-	print space$(i+k-1);"^"
-	print "Reserved word '";s$;"' may not occur within a term"
-	t(1) = 0
-	return
+rem [am] 2460 : rem subroutine from 2020
+def procERROR_INVALID_CMD(spaces)
+	print space$(spaces);"^   Invalid numeral or command"
+	endproc
+rem [am] 2670 : rem subroutine from 2020
+def procERR_RESERVED_WORD(string$, spaces)
+	print space$(spaces);"^"
+	print "Reserved word '";string$;"' may not occur within a term"
+	endproc
 2790 rem [am] subroutine from 2020
 	s$(j) = s$
 	t(j) = 6
