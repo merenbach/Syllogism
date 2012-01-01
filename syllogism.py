@@ -8,6 +8,29 @@ import os
 #
 # This port is under active development by Andrew Merenbach
 
+#xyz = list()
+#xyz.append("some", "  is", "<null>", "some", "  is not", "*")
+#xyz.append("all", "*  is", "<null>", "no", "*  is", "*")
+#xyz.append("<null>", "+  is", "<null>", "<null>", "+  is not", "*")
+#xyz.append("<null>", "+  = ", "+", "<null>", "+   = / = ", "*")
+
+sample = (
+	"10 all mortals are fools",
+	"20 all athenians are men",
+	"30 all philosophers are geniuses",
+	"40 all people with good taste are philosophers",
+	"50 richter is a diamond broker",
+	"60 richter is the most hedonistic person in florida",
+	"70 all men are mortal",
+	"80 no genius is a fool",
+	"90 all diamond brokers are people with good taste",
+	"100 the most hedonistic person in florida is a decision-theorist",
+)
+
+x_array = ('some', 'some', 'all', 'no', '', '', '', '')
+y_array = ("  is", "  is not", "*  is", "*  is", "+  is", "+  is not", "+  = ", "+   = / = ")
+z_array = ("", "*", "", "*", "", "*", "+", "*")
+
 # prepopulated plurals that might otherwise confuse the program
 plurals = dict(
 	[
