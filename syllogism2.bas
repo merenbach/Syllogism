@@ -817,8 +817,9 @@ def procDECREMENT_TABLE_ENTRIES
 					if not (g(c(j)) > 0) then
 						print "Note: '";t$(c(j));"' used in premises taken to be ";g$(g1)
 						exit for
+					elseif g1 = g(c(j)) then
+						exit for
 					endif
-					if g1 = g(c(j)) then exit for
 				endif
 			next j
 			if j > 2 then
@@ -832,8 +833,9 @@ def procDECREMENT_TABLE_ENTRIES
 			if w$ = w$(1) then
 				if d1 <> 4 or g2 = 0 then
 					goto 7120
+				else
+					print "** Subject is a ";g$(2);", predicate is a ";g$(1);" -- but"
 				endif
-				print "** Subject is a ";g$(2);", predicate is a ";g$(1);" -- but"
 			endif
 			gosub 6880
 		else
@@ -850,8 +852,9 @@ def procDECREMENT_TABLE_ENTRIES
 						if not (n1 = 0 or (d1 mod 2) = 1) then
 							print "** Negative conclusion required."
 							goto 7370
+						else
+							goto 7120
 						endif
-						goto 7120
 					endif
 				endif
 				print "** Conclusion may not contain ";g$(g2);" '";w$;"';"
