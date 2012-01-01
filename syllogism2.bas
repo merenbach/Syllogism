@@ -502,24 +502,16 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 				if my_matched_plural = false then
 					if fnHAS_SUFFIX(y$, "men") then
 						y$ = left$(y$,len(y$)-2)+"an"
-					else
-						l$ = right$(y$,1)
-						if l$ = "s" then
-							if len(y$) > 1 then
-								l$ = right$(y$,2)
-								if l$ <> "ss" and l$ <> "us" and l$ <> "is" and l$ <> "'s" then
-									y$ = left$(y$,len(y$)-1)
-									if len(y$) > 1 then
-										if fnHAS_SUFFIX(y$, "xe") then
-											y$ = left$(y$,len(y$)-1)
-										elseif fnHAS_SUFFIX(y$, "ie") then
-											y$ = left$(y$,len(y$)-2)
-											y$ = y$+"y"
-										elseif fnHAS_SUFFIX(y$, "sse") or fnHAS_SUFFIX(y$, "she") or fnHAS_SUFFIX(y$, "che") then
-											y$ = left$(y$,len(y$)-1)
-										endif
-									endif
-								endif
+					elseif fnHAS_SUFFIX(y$, "s") then
+						if not (fnHAS_SUFFIX(y$, "ss") or fnHAS_SUFFIX(y$, "us") or fnHAS_SUFFIX(y$, "is") or fnHAS_SUFFIX(y$, "'s")) then
+							y$ = left$(y$,len(y$)-1)
+							if fnHAS_SUFFIX(y$, "xe") then
+								y$ = left$(y$,len(y$)-1)
+							elseif fnHAS_SUFFIX(y$, "ie") then
+								y$ = left$(y$,len(y$)-2)
+								y$ = y$+"y"
+							elseif fnHAS_SUFFIX(y$, "sse") or fnHAS_SUFFIX(y$, "she") or fnHAS_SUFFIX(y$, "che") then
+								y$ = left$(y$,len(y$)-1)
 							endif
 						endif
 					endif
