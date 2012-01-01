@@ -17,11 +17,11 @@ rem Peace. Ben Sharvy. luvnpeas99@yahoo.com
 cls : print "Syllogism Program Copyright (c) 1988 Richard Sharvy"
 print "Syllogism 1.0 (c) 2002 Richard Sharvy's estate"
 print "Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org" : print
-dim a(63),c(63),d(63),g(63),l(63),n(63),o(63),p(63),q(63)
-dim r(63),b(63),k(63),j(4),t(7),e(2),h(2)
-dim a$(3),l$(63),t$(65)
+dim a(63),c(63),term_dist_count(63),term_type(63),l(63),line_numbers(63),term_occurrences(63),p(63),q(63)
+dim r(63),term_article(63),k(63),j(4),t(7),recent_article_types(2),h(2)
+dim article_strings$(3),line_strings$(63),term_strings$(65)
 dim g$(2),s$(6),w$(2),x$(7),y$(7),z$(7)
-read a$(1),a$(2),a$(3),g$(0),g$(1),g$(2)
+read article_strings$(1),article_strings$(2),article_strings$(3),g$(0),g$(1),g$(2)
 data "a ","an ","sm ","undetermined type","general term","designator"
 for i = 0 to 7
 	read x$(i),y$(i),z$(i)
@@ -176,10 +176,10 @@ rem---Input line--- : rem 1080
 rem---New--- : rem [am] 1840
 def procNEW
 	if l(0) <> 0 then
-		for i = 1 to l1
-			d(i) = 0 : t$(i) = "" : b(i) = 0 : o(i) = 0 : g(i) = 0
+		for i = 1 to length_of_symbol_table
+			term_dist_count(i) = 0 : term_strings$(i) = "" : term_article(i) = 0 : term_occurrences(i) = 0 : term_type(i) = 0
 		next i
-		l1 = 0 : n1 = 0
+		length_of_symbol_table = 0 : negative_premise_count = 0
 		j = l(0)
 		do
 			a(0) = a(0)-1
@@ -198,7 +198,7 @@ def procNEW
 		t(j) = 0
 	next j
 	p1 = 0
-	e(2) = 0
+	recent_article_types(2) = 0
 	j = 1
 	i = 1
 	l = len(l1$)
@@ -278,11 +278,11 @@ rem Scan : rem [am] 2520
 				if s$ = "a" or s$ = "an" or s$ = "sm" then
 					if i <> l then
 						if s$ = "a" then
-							e(2) = 1
+							recent_article_types(2) = 1
 						elseif s$ = "an" then
-							e(2) = 2
+							recent_article_types(2) = 2
 						else
-							e(2) = 3
+							recent_article_types(2) = 3
 						endif
 						p1 = 1
 					else
@@ -408,13 +408,13 @@ rem [am] 3380 : rem subroutine from 2890
 def procERR_HELP
 	if msg then print "Enter SYNTAX for help with statements"
 	endproc
-rem---Add W$(1), W$(2) to table T$()--- : rem [am] 3400
+rem---Add W$(1), W$(2) to table term_strings$()--- : rem [am] 3400
 def procADD_TABLE_STRINGS
 	if (d1 mod 2) <> 0 then
-		n1 = n1+1
-		if n1 > 1 and msg then print "Warning: ";n1;" negative premises"
+		negative_premise_count = negative_premise_count+1
+		if negative_premise_count > 1 and msg then print "Warning: ";negative_premise_count;" negative premises"
 	endif
-	e(1) = 0
+	recent_article_types(1) = 0
 	for j = 1 to 2
 		w$ = w$(j)
 		if d1 < 4 then g = 1 :  else if j = 1 then g = 2 :  else g = p1
@@ -422,66 +422,66 @@ def procADD_TABLE_STRINGS
 		i1 = 1
 		do
 	 		procSEARCH_TSTR_FOR_WSTR
-			if i1 > l1 then
-				if b1 > 0 then i1 = b1 : else l1 = l1+1
-				t$(i1) = w$
-				g(i1) = g
+			if i1 > length_of_symbol_table then
+				if b1 > 0 then i1 = b1 : else length_of_symbol_table = length_of_symbol_table + 1
+				term_strings$(i1) = w$
+				term_type(i1) = g
 				exit do
 			endif
 			if g = 0 then
-				if not(g(i1) = 0 and not msg) then
+				if not(term_type(i1) = 0 and not msg) then
 					print "Note: predicate term '";w$;"'";
-					print " taken as the ";g$(g(i1));" used earlier"
+					print " taken as the ";g$(term_type(i1));" used earlier"
 				endif
 				exit do
 			endif
-			if g(i1) = 0 then
+			if term_type(i1) = 0 then
 				if msg then print "Note: earlier use of '";w$;"' taken as the ";g$(g);" used here"
-				if g = 2 then d(i1) = o(i1)
+				if g = 2 then term_dist_count(i1) = term_occurrences(i1)
 				exit do
 			endif
-			if g = g(i1) then exit do
+			if g = term_type(i1) then exit do
 			if msg then print "Warning: ";g$(g);" '";w$;"' has also occurred as a ";g$(3-g)
 			i1 = i1+1
 		loop
-		if e(j) > 0 or not (b(i1) > 0 or w$ = w$(j)) then
-			if not (e(j) > 0) and not (b(i1) > 0 or w$ = w$(j)) then
+		if recent_article_types(j) > 0 or not (term_article(i1) > 0 or w$ = w$(j)) then
+			if not (recent_article_types(j) > 0) and not (term_article(i1) > 0 or w$ = w$(j)) then
 				a$ = left$(w$,1)
-				if a$ = "a" or a$ = "e" or a$ = "i" or a$ = "o" or a$ = "u" then e(j) = 2 : else e(j) = 1
+				if a$ = "a" or a$ = "e" or a$ = "i" or a$ = "o" or a$ = "u" then recent_article_types(j) = 2 : else recent_article_types(j) = 1
 			endif
-			b(i1) = e(j)
+			term_article(i1) = recent_article_types(j)
 		endif
-		o(i1) = o(i1)+1
-		if o(i1) >= 3 then
+		term_occurrences(i1) = term_occurrences(i1)+1
+		if term_occurrences(i1) >= 3 then
 			if msg then
-				print "Warning: ";g$(g(i1));" '";w$;"' has occurred";o(i1);"times"
+				print "Warning: ";g$(term_type(i1));" '";w$;"' has occurred";term_occurrences(i1);"times"
 			endif
 		endif
 		if j <> 2 then
 			p(a1) = i1
-			if d1 >= 2 then d(i1) = d(i1)+1
+			if d1 >= 2 then term_dist_count(i1) = term_dist_count(i1)+1
 		else
 			q(a1) = i1
 			if p(a1) = q(a1) then
 				if msg then print "Warning: same term occurs twice in line ";s$(1)
 			endif
-			if g(i1) = 2 then d1 = d1+2
-			if d1 = 6 or d1 mod 2 then d(i1) = d(i1)+1
+			if term_type(i1) = 2 then d1 = d1+2
+			if d1 = 6 or d1 mod 2 then term_dist_count(i1) = term_dist_count(i1)+1
 		endif
-		if not (o(i1) <> 2 or d(i1) > 0) then
-			if msg then print "Warning: undistributed middle term '";t$(i1);"'"
+		if not (term_occurrences(i1) <> 2 or term_dist_count(i1) > 0) then
+			if msg then print "Warning: undistributed middle term '";term_strings$(i1);"'"
 		endif
 	next j
 	r(a1) = d1
 	endproc
-rem---Search T$() for W$ from I1 to L1--- : rem [am] 3950
+rem---Search term_strings$() for W$ from I1 to length_of_symbol_table--- : rem [am] 3950
 def procSEARCH_TSTR_FOR_WSTR
-	rem If found, I1 = L1; else I1 = L1+1. B1 set to 1st empty loc.
+	rem If found, I1 = length_of_symbol_table; else I1 = length_of_symbol_table+1. B1 set to 1st empty loc.
 	b1 = 0
 	do
-		if i1 > l1 then exit do
-		if t$(i1) = w$ then exit do
-		if o(i1) = 0 and b1 = 0 then b1 = i1
+		if i1 > length_of_symbol_table then exit do
+		if term_strings$(i1) = w$ then exit do
+		if term_occurrences(i1) = 0 and b1 = 0 then b1 = i1
 		i1 = i1+1
 	loop
 	endproc
@@ -543,12 +543,12 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 		if j1 = 0 then
 			gosub 4690
 			exit do
-		elseif n = n(j1) then
+		elseif n = line_numbers(j1) then
 			procDECREMENT_TABLE_ENTRIES
-			l$(j1) = l$
+			line_strings$(j1) = l$
 			a1 = j1
 			exit do
-		elseif n < n(j1) then
+		elseif n < line_numbers(j1) then
 			gosub 4690
 			exit do
 		else
@@ -558,8 +558,8 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 	return
 4690 rem subroutine from 4530
 	a1 = a(a(0))
-	l$(a1) = l$
-	n(a1) = n
+	line_strings$(a1) = l$
+	line_numbers(a1) = n
 	l(i) = a1
 	l(a1) = j1
 	a(0) = a(0)+1
@@ -573,7 +573,7 @@ def procDELETE_LINE
 		if j1 = 0 then
 			print "Line ";n;" not found"
 			exit do
-		elseif n = n(j1) then
+		elseif n = line_numbers(j1) then
 			a(0) = a(0) - 1
 			a(a(0)) = j1
 			l(i) = l(j1)
@@ -589,20 +589,20 @@ def procDECREMENT_TABLE_ENTRIES
 	j(1) = p(j1)
 	j(2) = q(j1)
 	if r(j1) mod 2 <> 0 then
-		n1 = n1-1
+		negative_premise_count = negative_premise_count-1
 		j(4) = 1
 	else
-		if g(q(j1)) = 2 then j(4) = 1 : else j(4) = 0
+		if term_type(q(j1)) = 2 then j(4) = 1 : else j(4) = 0
 	endif
 	if r(j1) >= 2 then j(3) = 1 : else j(3) = 0
 	for k = 1 to 2
-		o(j(k)) = o(j(k))-1
-		if not (o(j(k)) > 0) then
-			t$(j(k)) = ""
-			b(j(k)) = 0
-			g(j(k)) = 0
+		term_occurrences(j(k)) = term_occurrences(j(k))-1
+		if not (term_occurrences(j(k)) > 0) then
+			term_strings$(j(k)) = ""
+			term_article(j(k)) = 0
+			term_type(j(k)) = 0
 		endif
-		d(j(k)) = d(j(k))-j(k+2)
+		term_dist_count(j(k)) = term_dist_count(j(k))-j(k+2)
 	next k
 	endproc
 5070 rem---See if syllogism---
@@ -610,9 +610,9 @@ def procDECREMENT_TABLE_ENTRIES
 	v1 = 0 : rem flag for modern validity
 	if l(0) then
 		c = 0
-		for i = 1 to l1
-			if not(o(i) = 0 or o(i) = 2) then
-				if o(i) = 1 then
+		for i = 1 to length_of_symbol_table
+			if not(term_occurrences(i) = 0 or term_occurrences(i) = 2) then
+				if term_occurrences(i) = 1 then
 					c = c+1
 					c(c) = i
 				else
@@ -620,7 +620,7 @@ def procDECREMENT_TABLE_ENTRIES
 						print "Not a syllogism:"
 						j1 = 2
 					endif
-					print "   ";g$(g(i));" '";t$(i);"' occurs ";o(i);" times in premises."
+					print "   ";g$(term_type(i));" '";term_strings$(i);"' occurs ";term_occurrences(i);" times in premises."
 				endif
 			endif
 		next i
@@ -632,7 +632,7 @@ def procDECREMENT_TABLE_ENTRIES
 			else
 				print "   ";c;" terms occur exactly once in premises."
 				for i = 1 to c
-					print space$(6);t$(c(i));" -- ";g$(g(c(i)))
+					print space$(6);term_strings$(c(i));" -- ";g$(term_type(c(i)))
 				next i
 			endif
 		endif
@@ -648,7 +648,7 @@ def procDECREMENT_TABLE_ENTRIES
 				i = l(i)
 			loop until i = 0
 			if l <> 1 then
-				if d(c(1)) = 0 and d(c(2)) = 1 then t = c(2) : else t = c(1)
+				if term_dist_count(c(1)) = 0 and term_dist_count(c(2)) = 1 then t = c(2) : else t = c(1)
 				for i = 1 to l
 					for k = i to l
 						if p(k(k)) = t or q(k(k)) = t then
@@ -687,13 +687,13 @@ def procDECREMENT_TABLE_ENTRIES
 				if l1$ = "link" or l1$ = "link*" then
 					print "Premises of syllogism in order of term links:"
 					for i = 1 to l
-						print n(k(i));" ";
+						print line_numbers(k(i));" ";
 						if l1$ <> "link" then
-							if r(k(i)) < 6 and g(q(k(i))) = 2 then r(k(i)) = r(k(i))+2
+							if r(k(i)) < 6 and term_type(q(k(i))) = 2 then r(k(i)) = r(k(i))+2
 							if r(k(i)) < 4 then print x$(r(k(i)));"  ";
-							print t$(p(k(i)));y$(r(k(i)));"  ";t$(q(k(i)));z$(r(k(i)))
+							print term_strings$(p(k(i)));y$(r(k(i)));"  ";term_strings$(q(k(i)));z$(r(k(i)))
 						else
-							print l$(k(i))
+							print line_strings$(k(i))
 						endif
 					next i
 				endif
@@ -704,40 +704,40 @@ def procDECREMENT_TABLE_ENTRIES
 	endif
 	return
 5710 rem [am] subroutine from 5070 see if syll
-	print n(k(i));
-	print l$(k(i))
+	print line_numbers(k(i));
+	print line_strings$(k(i))
 	return
 5880 rem---See if conclusion possible---
 	c1 = c(1)
 	c2 = c(2)
-	for i = 1 to l1
-		if o(i) >= 2 then
-			if not (d(i) > 0) then
+	for i = 1 to length_of_symbol_table
+		if term_occurrences(i) >= 2 then
+			if not (term_dist_count(i) > 0) then
 				if not (j1 > 0) then
 					print "Undistributed middle terms:"
 					j1 = 5
 				endif
-				print space$(5);t$(i)
+				print space$(5);term_strings$(i)
 			endif
-			if d(i) <> 1 and g(i) <> 2 then v1 = i
+			if term_dist_count(i) <> 1 and term_type(i) <> 2 then v1 = i
 		endif
 	next i
-	if n1 >= 2 then
+	if negative_premise_count >= 2 then
 		j1 = 6
 		print "More than one negative premise:"
 	endif
 	if j1 > 0 then
 		gosub 6180
 	else
-		if not (n1 = 0) then
-			if not (d(c1) > 0 or d(c2) > 0) then
-				print "Terms '";t$(c1);"' and '";t$(c2);"',";" one of which is"
+		if not (negative_premise_count = 0) then
+			if not (term_dist_count(c1) > 0 or term_dist_count(c2) > 0) then
+				print "Terms '";term_strings$(c1);"' and '";term_strings$(c2);"',";" one of which is"
 				gosub 6150
-			elseif not (d(c1) > 0 or g(c2) < 2) then
-				print "Term '";t$(c1);"'"
+			elseif not (term_dist_count(c1) > 0 or term_type(c2) < 2) then
+				print "Term '";term_strings$(c1);"'"
 				gosub 6150
-			elseif not (d(c2) > 0 or g(c1) < 2) then
-				print "Term '";t$(c2);"'"
+			elseif not (term_dist_count(c2) > 0 or term_type(c1) < 2) then
+				print "Term '";term_strings$(c2);"'"
 				gosub 6150
 			endif
 		endif
@@ -756,40 +756,40 @@ def procDECREMENT_TABLE_ENTRIES
 	if l(0) = 0 then
 		z$ = "A is A"
 	else
-		if not (n1 = 0) then
+		if not (negative_premise_count = 0) then
 			rem negative conclusion
-			if not (d(c2) > 0) then
-				z$ = "Some "+t$(c2)+" is not "+a$(b(c1))+t$(c1)
-			elseif not (d(c1) > 0) then
-				z$ = "Some "+t$(c1)+" is not "+a$(b(c2))+t$(c2)
-			elseif g(c1) >= 2 then
-				z$ = t$(c1)+" is not "+a$(b(c2))+t$(c2)
-			elseif g(c2) >= 2 then
-				z$ = t$(c2)+" is not "+a$(b(c1))+t$(c1)
-			elseif not (b(c1) > 0 or b(c2) = 0) then
-				z$ = "No "+t$(c2)+" is "+a$(b(c1))+t$(c1)
+			if not (term_dist_count(c2) > 0) then
+				z$ = "Some "+term_strings$(c2)+" is not "+article_strings$(term_article(c1))+term_strings$(c1)
+			elseif not (term_dist_count(c1) > 0) then
+				z$ = "Some "+term_strings$(c1)+" is not "+article_strings$(term_article(c2))+term_strings$(c2)
+			elseif term_type(c1) >= 2 then
+				z$ = term_strings$(c1)+" is not "+article_strings$(term_article(c2))+term_strings$(c2)
+			elseif term_type(c2) >= 2 then
+				z$ = term_strings$(c2)+" is not "+article_strings$(term_article(c1))+term_strings$(c1)
+			elseif not (term_article(c1) > 0 or term_article(c2) = 0) then
+				z$ = "No "+term_strings$(c2)+" is "+article_strings$(term_article(c1))+term_strings$(c1)
 			else
-				z$ = "No "+t$(c1)+" is "+a$(b(c2))+t$(c2)
+				z$ = "No "+term_strings$(c1)+" is "+article_strings$(term_article(c2))+term_strings$(c2)
 			endif
 		else
 			rem affirmative conclusion
-			if not (d(c1) = 0) then
-				if g(c1) <> 2 then
-					z$ = "All "+t$(c1)+" is "+t$(c2)
+			if not (term_dist_count(c1) = 0) then
+				if term_type(c1) <> 2 then
+					z$ = "All "+term_strings$(c1)+" is "+term_strings$(c2)
 				else
-					z$ = t$(c1)+" is "+a$(b(c2))+t$(c2)
+					z$ = term_strings$(c1)+" is "+article_strings$(term_article(c2))+term_strings$(c2)
 				endif
-			elseif not (d(c2) = 0) then
-				if g(c2) <> 2 then
-					z$ = "All "+t$(c2)+" is "+t$(c1)
+			elseif not (term_dist_count(c2) = 0) then
+				if term_type(c2) <> 2 then
+					z$ = "All "+term_strings$(c2)+" is "+term_strings$(c1)
 				else
-					z$ = t$(c2)+" is "+a$(b(c1))+t$(c1)
+					z$ = term_strings$(c2)+" is "+article_strings$(term_article(c1))+term_strings$(c1)
 				endif
 			else
-				if not (b(c1) > 0 or b(c2) = 0) then
-					z$ = "Some "+t$(c2)+" is "+a$(b(c1))+t$(c1)
+				if not (term_article(c1) > 0 or term_article(c2) = 0) then
+					z$ = "Some "+term_strings$(c2)+" is "+article_strings$(term_article(c1))+term_strings$(c1)
 				else
-					z$ = "Some "+t$(c1)+" is "+a$(b(c2))+t$(c2)
+					z$ = "Some "+term_strings$(c1)+" is "+article_strings$(term_article(c2))+term_strings$(c2)
 				endif
 			endif
 		endif
@@ -798,7 +798,7 @@ def procDECREMENT_TABLE_ENTRIES
 	print "  / ";z$
 	if not(v1 = 0) then
 		print "  * Aristotle-valid only, i.e. on requirement that term ";
-		print "'";t$(v1);"' denotes."
+		print "'";term_strings$(v1);"' denotes."
 	endif
 	return
 6630 rem---test offered conclusion---
@@ -813,11 +813,11 @@ def procDECREMENT_TABLE_ENTRIES
 			w$(1) = w$
 		else
 			for j = 1 to 2
-				if w$ = t$(c(j)) then
-					if not (g(c(j)) > 0) then
-						print "Note: '";t$(c(j));"' used in premises taken to be ";g$(g1)
+				if w$ = term_strings$(c(j)) then
+					if not (term_type(c(j)) > 0) then
+						print "Note: '";term_strings$(c(j));"' used in premises taken to be ";g$(g1)
 						exit for
-					elseif g1 = g(c(j)) then
+					elseif g1 = term_type(c(j)) then
 						exit for
 					endif
 				endif
@@ -840,16 +840,16 @@ def procDECREMENT_TABLE_ENTRIES
 			gosub 6880
 		else
 			if not (j > 0) then
-				if w$ = t$(c(1)) then t2 = c(2) : else t2 = c(1)
+				if w$ = term_strings$(c(1)) then t2 = c(2) : else t2 = c(1)
 			else
 				t1 = c(j)
 				t2 = c(3-j)
-				if w$ = t$(t2) then
-					if not (g(t2) > 0) or (g2 = 0 or g2 = g(t2)) then
-						if not (g(t2) > 0) and not (g2 = 0) then
-							print "Note: '";t$(t2);"' used in premises taken to be ";g$(g2)
+				if w$ = term_strings$(t2) then
+					if not (term_type(t2) > 0) or (g2 = 0 or g2 = term_type(t2)) then
+						if not (term_type(t2) > 0) and not (g2 = 0) then
+							print "Note: '";term_strings$(t2);"' used in premises taken to be ";g$(g2)
 						endif
-						if not (n1 = 0 or (d1 mod 2) = 1) then
+						if not (negative_premise_count = 0 or (d1 mod 2) = 1) then
 							print "** Negative conclusion required."
 							goto 7370
 						else
@@ -859,22 +859,22 @@ def procDECREMENT_TABLE_ENTRIES
 				endif
 				print "** Conclusion may not contain ";g$(g2);" '";w$;"';"
 			endif
-			print "** Conclusion must contain ";g$(g(t2));" '";t$(t2);"'."
+			print "** Conclusion must contain ";g$(term_type(t2));" '";term_strings$(t2);"'."
 		endif
 		goto 7370
-7120	if (n1 > 0 or d1 mod 2 = 0) then
+7120	if (negative_premise_count > 0 or d1 mod 2 = 0) then
 			print "** Affirmative conclusion required."
 			goto 7370
 		endif
 		if j1 <> 1 then
-			if not (d(t1) > 0 or d1 <= 1 or d1 >= 4) then
-				print "** Term '";t$(t1);"' not distributed in premises"
+			if not (term_dist_count(t1) > 0 or d1 <= 1 or d1 >= 4) then
+				print "** Term '";term_strings$(t1);"' not distributed in premises"
 				gosub 7180
 				goto 7370
 			endif
-			if not (d(t2) > 0) then
+			if not (term_dist_count(t2) > 0) then
 				if not (d1 mod 2 = 0 and d1 <> 6) then
-					print "** Term '";t$(t2);"' not distributed in premises"
+					print "** Term '";term_strings$(t2);"' not distributed in premises"
 					gosub 7180
 					goto 7370
 				endif
@@ -883,15 +883,15 @@ def procDECREMENT_TABLE_ENTRIES
 		print "-->  VALID!"
 		if not (j1 = 0) then
 			if d1 > 0 then goto 7370
-			t$(0) = w$
-		elseif not (d(t1) = 0 or d1 >= 2) then
+			term_strings$(0) = w$
+		elseif not (term_dist_count(t1) = 0 or d1 >= 2) then
 			v1 = t1
 		else
-			if d(t2) > 0 and d1 mod 2 = 0 and d1 <> 4 and d1 <> 6 then v1 = t2
+			if term_dist_count(t2) > 0 and d1 mod 2 = 0 and d1 <> 4 and d1 <> 6 then v1 = t2
 			if v1 = 0 then goto 7370
 		endif
 		print "    but on Aristotelian interpretation only, i.e. on requirement"
-		print "    that term '";t$(v1);"' denotes."
+		print "    that term '";term_strings$(v1);"' denotes."
 	endif
 7370 return
 6880 rem [am] subroutine from 6630
@@ -905,13 +905,13 @@ rem---list--- : rem [am] 7460
 def procLIST
 	i = l(0)
 	while not (i = 0)
-		print n(i);" ";
+		print line_numbers(i);" ";
 		if l1$ <> "list" then
-			if r(i) < 6 and g(q(i)) = 2 then r(i) = r(i)+2
+			if r(i) < 6 and term_type(q(i)) = 2 then r(i) = r(i)+2
 			if r(i) < 4 then print x$(r(i));"  ";
-			print t$(p(i));y$(r(i));"  ";t$(q(i));z$(r(i))
+			print term_strings$(p(i));y$(r(i));"  ";term_strings$(q(i));z$(r(i))
 		else
-			print l$(i)
+			print line_strings$(i)
 		endif
 		i = l(i)
 	wend
@@ -991,18 +991,18 @@ def procINFO
 	print "   ical Syllogisms,' Notre Dame J. of Formal Logic 14 (1973) 457-466."
 	endproc
 8890 rem---"Dump" values of variables---
-	print "Highest symbol table loc. used:";l1;"  Negative premises:";n1
-	if l1 <> 0 then
+	print "Highest symbol table loc. used:";length_of_symbol_table;"  Negative premises:";negative_premise_count
+	if length_of_symbol_table <> 0 then
 		print "Adr. art. term";space$(48-14);"type       occurs    dist. count"
-		for i = 1 to l1
+		for i = 1 to length_of_symbol_table
 			rem Metal's lack of tabbing gets difficult here...
 			itab = 7-len(str$(i))
-			astringtab = 11-len(a$(b(i)))-7
-			tstringtab = 49-len(t$(i))-11
-			gtab = 60-len(str$(g(i)))-49
-			otab = 71-len(str$(o(i)))-60
-			print i;space$(itab);a$(b(i));space$(astringtab);t$(i);space$(tstringtab);g(i);space$(gtab);
-			print o(i);space$(otab);d(i)
+			astringtab = 11-len(article_strings$(term_article(i)))-7
+			tstringtab = 49-len(term_strings$(i))-11
+			gtab = 60-len(str$(term_type(i)))-49
+			otab = 71-len(str$(term_occurrences(i)))-60
+			print i;space$(itab);article_strings$(term_article(i));space$(astringtab);term_strings$(i);space$(tstringtab);term_type(i);space$(gtab);
+			print term_occurrences(i);space$(otab);term_dist_count(i)
 		next i
 	endif
 	return
@@ -1046,12 +1046,12 @@ def procINFO
 					print "in the syllogism, the result will not make much sense.  However,"
 					print "this routine does not convert entered term to lower-case or singular."
 				else
-					if i1 > l1 then
-						print "Address ";i1;" too large.  Symbol table only of length ";l1
+					if i1 > length_of_symbol_table then
+						print "Address ";i1;" too large.  Symbol table only of length ";length_of_symbol_table
 					else
-						print "Enter new term to replace ";g$(g(i1));" '";t$(i1);"'"
+						print "Enter new term to replace ";g$(term_type(i1));" '";term_strings$(i1);"'"
 						input w$
-						t$(i1) = w$
+						term_strings$(i1) = w$
 						print "Replaced by '";w$;"'"
 					endif
 				endif
