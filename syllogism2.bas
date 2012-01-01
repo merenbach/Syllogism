@@ -483,7 +483,7 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 	if not fnHAS_PREFIX(word$, "the ") then
 		x$ = ""
 		i = 1
-		n = 1
+		rem [am] n = 1
 		do
 			if fnIS_BLANK(word$, i) = true then
 				word$ = x$
@@ -517,7 +517,7 @@ def fnCONVERT_WSTR_TO_SINGULAR$(word$)
 					endif
 					x$ = fnAPPEND$(x$, y$)
 				endif
-				n = n+1
+				rem [am] n = n+1
 				i = m+i
 			endif
 		loop
