@@ -143,7 +143,7 @@ rem---Input line--- : rem 1080
 			gosub 2890 : rem parse the line in S$()
 			if d1 >= 0 then
 				gosub 4530 : rem enter line into list
-				gosub 3400 : rem add terms to symbol table
+				procADD_TABLE_STRINGS : rem add terms to symbol table
 			endif
 		else
 			if l(0) then
@@ -397,7 +397,8 @@ rem Scan : rem [am] 2520
 3380 rem [am] subroutine from 2890
 	if msg then print "Enter SYNTAX for help with statements"
 	return
-3400 rem---Add W$(1), W$(2) to table T$()---
+rem---Add W$(1), W$(2) to table T$()--- : rem [am] 3400
+def procADD_TABLE_STRINGS
 	if (d1 mod 2) <> 0 then
 		n1 = n1+1
 		if n1 > 1 and msg then print "Warning: ";n1;" negative premises"
@@ -424,7 +425,7 @@ rem Scan : rem [am] 2520
 				exit do
 			endif
 			if g(i1) = 0 then
-				gosub 3620
+				if msg then print "Note: earlier use of '";w$;"' taken as the ";g$(g);" used here"
 				if g = 2 then d(i1) = o(i1)
 				exit do
 			endif
@@ -461,12 +462,7 @@ rem Scan : rem [am] 2520
 		endif
 	next j
 	r(a1) = d1
-	return
-3620 rem [am] subroutine from 3400 add strings
-	if msg then
-		print "Note: earlier use of '";w$;"' taken as the ";g$(g);" used here"
-	endif
-	return
+	endproc
 rem---Search T$() for W$ from I1 to L1--- : rem [am] 3950
 def procSEARCH_TSTR_FOR_WSTR
 	rem If found, I1 = L1; else I1 = L1+1. B1 set to 1st empty loc.
@@ -998,7 +994,7 @@ def procINFO
 	return
 8980 rem--sample--
 	for z8 = 1 to 10 : read l1$ : print l1$
-	gosub 2020 : gosub 2890 : gosub 4530 : gosub 3400
+	gosub 2020 : gosub 2890 : gosub 4530 : procADD_TABLE_STRINGS
 	next z8
 9004 data "10 all mortals are fools"
 	data "20 all athenians are men"
