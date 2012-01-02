@@ -544,8 +544,76 @@ class Syllogism:
 		# rem--scan line L1$ into array S$() : rem 2020
 		pass
 
-	def parse_line(self):
-		pass
+
+	# array indices need adjustment
+	# rem---Parse line in S$()--- : rem [am] 2890
+	def parse_line(self, premise):
+		self.syllogism_form = -1
+		if premise.symbol_string_with_index(2) == "all":
+			if premise.symbol_type_with_index(3) != 6:
+				show_parse_error_missing_subject_term()
+			elif premise.symbol_type_with_index(4) != 5:
+				show_parse_error_missing_copula()
+			elif premise.symbol_type_with_index(5) != 6:
+				show_parse_error_missing_predicate()
+			else:
+				recent_term_strings[MY_ONE] = premise.symbol_string_with_index(3)
+				recent_term_strings[MY_TWO] = premise.symbol_string_with_index(5)
+				# rem all A is B
+				self.syllogism_form = 2
+		elif premise.symbol_string_with_index(2) == "some":
+			if premise.symbol_type_with_index(3) != 6:
+				show_parse_error_missing_subject_term()
+			elif premise.symbol_type_with_index(4) != 5:
+				show_parse_error_missing_copula()
+			elif premise.symbol_string_with_index(5) != "not":
+				if premise.symbol_type_with_index(5) != 6:
+					show_parse_error_missing_predicate()
+				else:
+					recent_term_strings[MY_ONE] = premise.symbol_string_with_index(3)
+					recent_term_strings[MY_TWO] = premise.symbol_string_with_index(5)
+					# rem Some A is B
+					self.syllogism_form = 0
+			else:
+				if premise.symbol_type_with_index(6) != 6:
+					show_parse_error_missing_predicate()
+				else:
+					recent_term_strings[MY_ONE] = premise.symbol_string_with_index(3)
+					recent_term_strings[MY_TWO] = premise.symbol_string_with_index(6)
+					# rem some A is not B
+					self.syllogism_form = 1
+		elif premise.symbol_string_with_index(2) == "no":
+			if premise.symbol_type_with_index(3) != 6:
+				show_parse_error_missing_subject_term()
+			elif premise.symbol_type_with_index(4) != 5:
+				show_parse_error_missing_copula()
+			elif premise.symbol_type_with_index(5) != 6:
+				show_parse_error_missing_predicate()
+				show_parse_error_help()
+			else:
+				# rem no A is B
+				recent_term_strings[MY_ONE] = premise.symbol_string_with_index(3)
+				recent_term_strings[MY_TWO] = premise.symbol_string_with_index(5)
+				self.syllogism_form = 3
+		elif premise.symbol_type_with_index(2) != 6:
+			show_parse_error_missing_subject_term()
+		elif premise.symbol_type_with_index(3) == 5:
+			recent_term_strings[MY_ONE] = premise.symbol_string_with_index(2)
+			if premise.symbol_string_with_index(4) != "not":
+				if premise.symbol_type_with_index(4) != 6:
+					show_parse_error_missing_predicate()
+				# rem a is T
+				self.syllogism_form = 4
+				recent_term_strings[MY_TWO] = premise.symbol_string_with_index(4)
+			else:
+				if premise.symbol_type_with_index(5) != 6:
+					show_parse_error_missing_predicate()
+				else:
+					# rem a is not T
+					self.syllogism_form = 5
+					recent_term_strings[MY_TWO] = premise.symbol_string_with_index(5)
+		else:
+			show_parse_error_missing_copula()
 
 	def test_offered_conclusion(self):
 		# 6630 rem---test offered conclusion---
@@ -604,6 +672,9 @@ class Premise:
 	term_1 = ''
 	term_2 = ''
 
+	symbol_strings = []
+	symbol_types = []
+
 	def __init__(self, txt=''):
 		line_num = (-1)
 		line_txt = txt
@@ -616,84 +687,24 @@ class Premise:
 	def split_line(self):
 		pass
 
+
+	def symbol_string_with_index(self, idx):
+		r = ''
+		if idx < len(symbol_strings):
+			r = symbol_strings[idx]
+		return r
+	
+	def symbol_type_with_index(self, idx):
+		r = ''
+		if idx < len(symbol_types):
+			r = symbol_types[idx]
+		return r
+
 s = Syllogism()
 #test_line1 = '10 all men are mortal'
 #p = Premise(test_line1)
 
 #s.new_syllogism()
-
-# rem---Parse line in S$()--- : rem [am] 2890
-#def parse_line(self):
-#	d1 = -1
-#	if recent_symbol_strings[2] = "all" then
-#		if recent_symbol_types[3] != 6 then
-#			show_parse_error_missing_subject_term()
-#		elif recent_symbol_types[4] != 5 then
-#			show_parse_error_missing_copula()
-#		elif recent_symbol_types[5] != 6 then
-#			show_parse_error_missing_predicate()
-#		else
-#			recent_term_strings[MY_ONE] = recent_symbol_strings[3]
-#			recent_term_strings[MY_TWO] = recent_symbol_strings[5]
-#			d1 = 2 : rem all A is B
-#		endif
-#	elif recent_symbol_strings[2] = "some" then
-#		if recent_symbol_types[3] != 6 then
-#			show_parse_error_missing_subject_term()
-#		elif recent_symbol_types[4] != 5 then
-#			show_parse_error_missing_copula()
-#		elif recent_symbol_strings[5] != "not" then
-#			if recent_symbol_types[5] != 6 then
-#				show_parse_error_missing_predicate()
-#			else
-#				recent_term_strings[MY_ONE] = recent_symbol_strings[3]
-#				recent_term_strings[MY_TWO] = recent_symbol_strings[5]
-#				d1 = 0 : rem Some A is B
-#			endif
-#		else
-#			if recent_symbol_types[6] != 6 then
-#				show_parse_error_missing_predicate()
-#			else
-#				recent_term_strings[MY_ONE] = recent_symbol_strings[3]
-#				recent_term_strings[MY_TWO] = recent_symbol_strings[6]
-#				d1 = 1 : rem some A is not B
-#			endif
-#		endif
-#	elif recent_symbol_strings[2] = "no" then
-#		if recent_symbol_types[3] != 6 then
-#			show_parse_error_missing_subject_term()
-#		elif recent_symbol_types[4] != 5 then
-#			show_parse_error_missing_copula()
-#		elif recent_symbol_types[5] != 6 then
-#			show_parse_error_missing_predicate()
-#			show_parse_error_help()
-#		else
-#			recent_term_strings[MY_ONE] = recent_symbol_strings[3]
-#			recent_term_strings[MY_TWO] = recent_symbol_strings[5]
-#			d1 = 3 : rem no A is B
-#		endif
-#	elif recent_symbol_types[2] != 6 then
-#		show_parse_error_missing_subject_term()
-#	elif recent_symbol_types[3] = 5 then
-#		recent_term_strings[MY_ONE] = recent_symbol_strings[2]
-#		if recent_symbol_strings[4] != "not" then
-#			if recent_symbol_types[4] != 6 then
-#			show_parse_error_missing_predicate()
-#		endif
-#			d1 = 4 : rem a is T
-#			recent_term_strings[MY_TWO] = recent_symbol_strings[4]
-#		else
-#			if recent_symbol_types[5] != 6 then
-#				show_parse_error_missing_predicate()
-#			else
-#				d1 = 5 : rem a is not T
-#				recent_term_strings[MY_TWO] = recent_symbol_strings[5]
-#			endif
-#		endif
-#	else
-#		show_parse_error_missing_copula()
-#	endif
-#
 
 
 #def split_line(self, line=''):
