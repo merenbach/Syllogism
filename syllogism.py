@@ -117,6 +117,10 @@ class Syllogism:
 	show_messages = True
 
 	def __init__(self):
+		self.main()
+		#pass
+
+	def main(self):
 		self.intro()
 		self.print_hint()
 		self.request_input()
@@ -280,6 +284,7 @@ class Syllogism:
 		#words_out = [plurals[word] for word in words if word in plurals.keys()]
 		words_out = []
 		for word in words:
+			word = word.lower()
 			if word in plurals.keys():
 				words_out.append(plurals[word])
 			else:
@@ -298,4 +303,3 @@ class Syllogism:
 		return ' '.join(words_out)
 
 s = Syllogism()
-
