@@ -27,7 +27,7 @@ import os
 #rem a$(3) => article_strings[3)
 #rem g$(2) => term_type_name$(2) : rem hopefully this is right
 #rem l$(63) => line_strings$(63)
-#rem s$(6) => recent_symbol_strings$(6) : rem hopefully this is right
+#rem s$(6) => recent_symbol_stringrecent_symbol_strings[6] : rem hopefully this is right
 #rem t$(65) => term_strings$(65)
 #rem w$(2) => recent_term_strings
 
@@ -36,7 +36,7 @@ prompt = '>'
 articles = ("a ", "an ", "sm ")
 g_strings = ("undetermined type", "general term", "designator")
 
-sample = (
+sample_lines = (
 	"10 all mortals are fools",
 	"20 all athenians are men",
 	"30 all philosophers are geniuses",
@@ -143,12 +143,17 @@ class Syllogism:
 	conclusion_terms = []	# c()
 	neg_premises = 0		# n1
 	modern_valid = False	# v1
+	symbol_count = 0		# l1
+
+	recent_term_strings = []
+	recent_symbol_types = []
+	recent_symbol_strings = []
 
 	# length_of_symbol_table = len(term_strings)
 	#im a(63),c(63),term_dist_count(63),term_type(63),l(63),line_numbers(63),term_occurrences(63),p(63),q(63)
-	#dim r(63),term_article(63),k(63),j(4),t(7),recent_article_types(2),h(2)
+	#dim r(63),term_article(63),k(63),j(4),recent_symbol_types[7],recent_article_types(2),h(2)
 	#dim article_strings[3),line_strings$(63),term_strings$(65)
-	#dim g$(2),s$(6),w$(2),x$(7),y$(7),z(7)
+	#dim g$(2),recent_symbol_strings[6],w$(2),x$(7),y$(7),z(7)
 
 	def __init__(self):
 		self.main()
@@ -157,6 +162,7 @@ class Syllogism:
 	def main(self):
 		self.intro()
 		self.print_hint()
+		self.new_syllogism()
 		self.request_input()
 
 	def intro(self):
@@ -186,8 +192,8 @@ class Syllogism:
 
 	def request_input(self):
 		functions = {
-			#'new': self.new_syllogism(),
-			# 'sample': self.sample_syllogism()
+			'new': self.new_syllogism,
+			'sample': self.sample_syllogism,
 			'help': self.print_commands,
 			'syntax': self.print_syntax,
 			'info': self.print_info,
@@ -336,7 +342,21 @@ class Syllogism:
 				words_out.append(word);
 		return ' '.join(words_out)
 
+	def show_parse_error_missing_copula(self):
+		print "** Missing copula is/are"
+		show_parse_error_help()
+	def show_parse_error_missing_subject_term(self):
+		print "** Subject term bad or missing"
+		show_parse_error_help()
+	def show_parse_error_missing_predicate(self):
+		print "** Predicate term bad or missing"
+		show_parse_error_help()
+	def show_parse_error_help(self):
+		if self.show_messages:
+			print "Enter SYNTAX for help with statements"
+
 	# experimental; need sanity-checks
+	# should work, though!
 	def compute_conclusion(self):
 		#rem---Compute conclusion--- : rem 6200
 		c1 = self.conclusion_terms[0]
@@ -388,4 +408,115 @@ class Syllogism:
 		if modern_valid:
 			print "  * Aristotle-valid only, i.e. on requirement that term \"{}\" denotes.".format(self.term_strings[v1])
 
+	# not fully implemented
+	def new_syllogism(self):
+		if len(self.line_numbers) > 0:
+			self.term_dist_count = []
+			self.term_strings = []
+			self.term_article = []
+			self.term_occurrences = []
+			self.term_type = []
+
+			symbol_count = 0
+			neg_premises = 0
+
+			#j = l(0)
+			#do
+			#	a(0) = a(0)-1
+			#	a(a(0)) = j
+			#	j = l(j)
+			#loop until not (j > 0)
+			#l(0) = 0
+
+	# not fully implemented
+	def sample_syllogism(self):
+		# 8980 rem--sample--
+		self.new_syllogism()
+		for line in sample_lines:
+			print line
+			#gosub 2020
+			#procPARSE_LINE
+			#gosub 4530
+			#procADD_TABLE_STRINGS
+		if self.show_messages:
+			print "Suggestion: try the LINK or LINK* command."
+
 s = Syllogism()
+
+#s.new_syllogism()
+
+
+
+
+# rem---Parse line in S$()--- : rem [am] 2890
+#def parse_line(self):
+#	d1 = -1
+#	if recent_symbol_strings[2] = "all" then
+#		if recent_symbol_types[3] != 6 then
+#			show_parse_error_missing_subject_term()
+#		elif recent_symbol_types[4] != 5 then
+#			show_parse_error_missing_copula()
+#		elif recent_symbol_types[5] != 6 then
+#			show_parse_error_missing_predicate()
+#		else
+#			w$(1) = recent_symbol_strings[3]
+#			w$(2) = recent_symbol_strings[5]
+#			d1 = 2 : rem all A is B
+#		endif
+#	elif recent_symbol_strings[2] = "some" then
+#		if recent_symbol_types[3] != 6 then
+#			show_parse_error_missing_subject_term()
+#		elif recent_symbol_types[4] != 5 then
+#			show_parse_error_missing_copula()
+#		elif recent_symbol_strings[5] != "not" then
+#			if recent_symbol_types[5] != 6 then
+#				show_parse_error_missing_predicate()
+#			else
+#				w$(1) = recent_symbol_strings[3]
+#				w$(2) = recent_symbol_strings[5]
+#				d1 = 0 : rem Some A is B
+#			endif
+#		else
+#			if recent_symbol_types[6] != 6 then
+#				show_parse_error_missing_predicate()
+#			else
+#				w$(1) = recent_symbol_strings[3]
+#				w$(2) = recent_symbol_strings[6]
+#				d1 = 1 : rem some A is not B
+#			endif
+#		endif
+#	elif recent_symbol_strings[2] = "no" then
+#		if recent_symbol_types[3] != 6 then
+#			show_parse_error_missing_subject_term()
+#		elif recent_symbol_types[4] != 5 then
+#			show_parse_error_missing_copula()
+#		elif recent_symbol_types[5] != 6 then
+#			show_parse_error_missing_predicate()
+#			show_parse_error_help()
+#		else
+#			w$(1) = recent_symbol_strings[3]
+#			w$(2) = recent_symbol_strings[5]
+#			d1 = 3 : rem no A is B
+#		endif
+#	elif recent_symbol_types[2] != 6 then
+#		show_parse_error_missing_subject_term()
+#	elif recent_symbol_types[3] = 5 then
+#		w$(1) = recent_symbol_strings[2]
+#		if recent_symbol_strings[4] != "not" then
+#			if recent_symbol_types[4] != 6 then
+#			show_parse_error_missing_predicate()
+#		endif
+#			d1 = 4 : rem a is T
+#			w$(2) = recent_symbol_strings[4]
+#		else
+#			if recent_symbol_types[5] != 6 then
+#				show_parse_error_missing_predicate()
+#			else
+#				d1 = 5 : rem a is not T
+#				w$(2) = recent_symbol_strings[5]
+#			endif
+#		endif
+#	else
+#		show_parse_error_missing_copula()
+#	endif
+#
