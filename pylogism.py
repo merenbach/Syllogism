@@ -27,7 +27,7 @@ import os
 #rem a$(3) => article_strings[3)
 #rem g$(2) => term_type_name$(2) : rem hopefully this is right
 #rem l$(63) => line_strings$(63)
-#rem s$(6) => recent_symbol_stringrecent_symbol_strings[6] : rem hopefully this is right
+#rem s$(6) => recent_symbol_strings[6] : rem hopefully this is right
 #rem t$(65) => term_strings$(65)
 #rem w$( 2 ) => recent_term_strings
 
@@ -500,8 +500,9 @@ class Syllogism:
 
 	def list_lines(self, analyze=False):
 		# rem---list--- : rem [am] 7460
-		i = self.lowest_line
-		while i != 0:
+		out_list = []
+		i = lowest_line
+		while i > 0:
 			out = ''
 			out += self.line_numbers_arranged[i] + " "
 			if analyze:
@@ -513,8 +514,9 @@ class Syllogism:
 				out += self.term_strings[p_array[i]] + y_array[r_array[i]] + "  " + self.term_strings[q_array[i]] + z_array[r_array[i]]
 			else:
 				out += line_strings[i]
-			print out
-			i = self.line_numbers_arranged[i]
+			out_list.append(out)
+			i += 1
+		print "\n".join(out_list)
 
 	# implemented but a_array is not entirely clear
 	def new_syllogism(self):
@@ -596,7 +598,27 @@ class Syllogism:
 							self.compute_conclusion()
 
 
+class Premise:
+	line_num = ''
+	line_txt = ''
+	term_1 = ''
+	term_2 = ''
+
+	def __init__(self, txt=''):
+		line_num = (-1)
+		line_txt = txt
+		term_1 = ''
+		term_2 = ''
+	
+	def parse_line(self):
+		pass
+
+	def split_line(self):
+		pass
+
 s = Syllogism()
+#test_line1 = '10 all men are mortal'
+#p = Premise(test_line1)
 
 #s.new_syllogism()
 
@@ -674,15 +696,54 @@ s = Syllogism()
 #
 
 
-
-#2020 rem---L1$ into array S$()---
-#	rem T(): 1:line num., 2:"/", 3:quantifier, 4:no/not, 5:is/are, 6:term
-#	rem                     10 SOME  FRIED COCONUTS   ARE  NOT  TASTY
-#	rem                      1   3        6            5    4     6
-#	for j = 1 to 6
-#		s$(j) = ""
-#		t(j) = 0
-#	next j
+#def split_line(self, line=''):
+#	# 2020 rem---L1$ into array S$()---
+#	# rem T(): 1:line num., 2:"/", 3:quantifier, 4:no/not, 5:is/are, 6:term
+#	# rem                     10 SOME  FRIED COCONUTS   ARE  NOT  TASTY
+#	# rem                      1   3        6            5    4     6
+#	self.term_strings = filter(None, line.split())
+#	self.term_types = list()
+#	
+#	for word in self.term_strings:
+#		if len(self.term_strings) == 1:
+#			if word == '/':
+#				#self.term_types[1] = 2
+#				pass
+#			else:
+#				if len(word) > 4:
+#					#show_error_invalid_cmd(i + n)
+#					break
+#				else:
+#					if (has_invalid_chars):
+#						#show_error_invalid_cmd(i + n)
+#						pass
+#					else:
+#						#self.term_types[1] = 1
+#						pass
+#					pass
+#				#n = len(s$)
+#				#if n > 4 then
+#				#	procERROR_INVALID_CMD(i + n)
+#				#	goto 2885
+#				#else
+#				#	for n = 1 to len(s$)
+#				#		t$ = mid$(s$,n,1)
+#				#		if asc(t$) > 57 or asc(t$) < 48 then
+#				#			procERROR_INVALID_CMD(i + n)
+#				#			goto 2885
+#				#		endif
+#				#	next n
+#				#	t(1) = 1
+#				#endif
+#				#if len(self.term_strings) == 6:
+#				#	
+#				#		pass
+#
+#
+#	#for j = 1 to 6
+#	#	s$(j) = ""
+#	#	t(j) = 0
+#	#next j
 #	p1 = 0
 #	recent_article_types(2) = 0
 #	j = 1
@@ -692,7 +753,7 @@ s = Syllogism()
 #		do
 #			if i > l then 2885
 #			s$ = mid$(l1$,i,1)
-#			if s$ <> " " then exit do
+#			if s$ != " " then exit do
 #			i = i+1
 #		loop
 #		for k = 1 to (l - i)
@@ -790,3 +851,20 @@ s = Syllogism()
 #2860	i = k+i
 #	loop until j > 6
 #2885 return
+#
+#
+#def contains_any(str, set):
+#	flag = False
+#    for c in set:
+#        if c in str:
+#	        flag = True
+#	        break
+#    return flag
+#
+#def contains_all(str, set):
+#	flag = True
+#    for c in set:
+#        if c not in str:
+#	        flag = False
+#	        break
+#    return flag#
