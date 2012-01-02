@@ -14,6 +14,8 @@ import os
 #xyz.append("<null>", "+  is", "<null>", "<null>", "+  is not", "*")
 #xyz.append("<null>", "+  = ", "+", "<null>", "+   = / = ", "*")
 
+prompt = '>'
+
 sample = (
 	"10 all mortals are fools",
 	"20 all athenians are men",
@@ -112,8 +114,12 @@ plurals = dict(
 )
 
 class Syllogism:
+	show_messages = True
+
 	def __init__(self):
 		self.intro()
+		self.print_hint()
+		self.request_input()
 
 	def intro(self):
 		self.cls()
@@ -125,6 +131,7 @@ class Syllogism:
 	def cls(self):
 		# clear the screen
 		os.system("clear")
+
 	def spaces(self, space_count):
 		# print a specified number of space
 		return (space_count * ' ')
@@ -135,7 +142,61 @@ class Syllogism:
 		#s = ''.join(str_list)
 		#s = ''.join([' ' for n in range(space_count)])
 
-	def printCommands(self):
+	def print_hint(self):
+		if self.show_messages:
+			print "Enter HELP for list of commands"
+
+	def request_input(self):
+		functions = {
+			#'new': self.new_syllogism(),
+			# 'sample': self.sample_syllogism()
+			'help': self.print_commands,
+			'syntax': self.print_syntax,
+			'info': self.print_info,
+			#'dump': print_dump(),
+			'msg': self.toggle_messages,
+			#'substitute': substitute(),
+			#'link': link(),
+			#'link*': link(),
+			#'list': list(),
+			#'list*': list(),
+		}
+
+		line = ''
+		while line != 'stop':
+			line = raw_input(prompt).lower()
+			line = self.strip_string(line)
+			if line == '':
+				self.print_hint()
+			else:
+				if line in functions.keys():
+					function = functions[line]
+					function()
+					
+		if self.show_messages:
+			print "(Some versions support typing CONT to continue)"	
+	
+	def toggle_messages(self):
+		self.show_messages = not self.show_messages
+		state = ''
+		if self.show_messages:
+			state = 'on'
+		else:
+			state = 'off'
+		print 'Messages turned ' + state
+
+	def strip_string(self, string):
+		punctuation = ('.', '?', '!')
+		string = string.rstrip()
+		while string[-1:] in punctuation:
+			print self.spaces(len(string)) + "^   Punctuation mark ignored"
+			#line = line.rstrip('.?!')
+			string = string[:-1]
+			string = string.rstrip()
+		string = string.lstrip()
+		return string
+
+	def print_commands(self):
 		# rem---List valid inputs--- : rem [am] 7660
 		self.cls()
 		print "Valid commands are:"
@@ -161,7 +222,7 @@ class Syllogism:
 		print "  /  <statement>" + self.spaces(5) + "Tests  <statement>  as conclusion"
 		print self.spaces(25) + "Note: this can be done even if there are no premises"
 	
-	def printSyntax(self):
+	def print_syntax(self):
 		# rem--"syntax"-- : rem [am] 7960
 		self.cls()
 		print "Valid statement forms:"
@@ -188,7 +249,7 @@ class Syllogism:
 		print "(e.g. 'This puddle is sm ink') to ensure that the mass term is taken"
 		print "as a general term rather than as a designator."
 	
-	def printInfo(self):
+	def print_info(self):
 		# rem---Info--- : rem [am] 8290
 		self.cls()
 		print "   To use this program, enter a syllogism, one line at a time,"
@@ -236,4 +297,5 @@ class Syllogism:
 				words_out.append(word);
 		return ' '.join(words_out)
 
-#s = Syllogism()
+s = Syllogism()
+
