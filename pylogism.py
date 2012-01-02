@@ -34,7 +34,7 @@ import os
 prompt = '>'
 
 articles = ("a ", "an ", "sm ")
-g_strings = ("undetermined type", "general term", "designator")
+term_type_names = ("undetermined type", "general term", "designator")
 
 sample_lines = (
 	"10 all mortals are fools",
@@ -205,7 +205,7 @@ class Syllogism:
 			'info': self.print_info,
 			'dump': self.show_dump,
 			'msg': self.toggle_messages,
-			#'substitute': substitute(),
+			'substitute': self.substitute_terms,
 			#'link': link(),
 			#'link*': link(),
 			#'list': list(),
@@ -393,6 +393,47 @@ class Syllogism:
 				print i + self.spaces(itab) + article_strings[term_article[i]] + self.spaces(astringtab) + term_strings[i] + self.spaces(tstringtab) + term_type[i] + self.spaces(gtab);
 				print self.term_occurrences[i] + self.spaces(otab) + self.term_dist_count[i]
 
+	# should work, but not fully tested
+	def substitute_terms(self):
+		#9060 rem---Substitute terms---
+		address = 0
+		while address != (-1):
+			skip = False
+			print 'Enter address of old term; or 0 for help, -1 to exit, -2 for dump'
+			address = raw_input(prompt)
+			try:
+				address = int(address)
+			except:
+				skip = True
+			if address != -1 and skip == False:
+				if address == -2:
+					self.show_dump()
+				else:
+					if address == 0:
+						print "   This subroutine allows a term in a syllogism to be uniformly"
+						print "replaced by another term.  This is useful e.g. for finding an"
+						print "interpretation which actually makes the premises true, to produce as"
+						print "an obvious example of invalidity an argument having exactly the same"
+						print "logical form.  The substitution does not take place in the premises"
+						print "as originally entered; it takes place in the terms as stored within"
+						print "the program.  Thus, the LINK and LIST commands will display the"
+						print "original premises; to see the changed ones, use the LIST* and LINK*"
+						print "commands."
+						print "   To find the 'addresses' of the terms, enter -2 to run the DUMP."
+						print "   Warning: if you replace a term with another one already occurring"
+						print "in the syllogism, the result will not make much sense.  However,"
+						print "this routine does not convert entered term to lower-case or singular."
+					else:
+						if address >= self.symbol_count:
+							print "Address {} too large.  Symbol table only of length ".format(address, self.symbol_count)
+						else:
+							print "Enter new term to replace {} '".format(term_type_names[self.term_type[address]], self.term_strings[address])
+							new_term = raw_input(prompt)
+							self.term_strings[address] = new_term
+							print "Replaced by \"{}\"".format(new_term)
+					print
+		print "Exit from substitution routine"
+	
 	# experimental; need sanity-checks
 	# should work, though!
 	def compute_conclusion(self):
@@ -480,7 +521,6 @@ class Syllogism:
 
 	def scan_line(self):
 		pass
-
 s = Syllogism()
 
 #s.new_syllogism()
