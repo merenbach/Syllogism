@@ -14,7 +14,27 @@ import os
 #xyz.append("<null>", "+  is", "<null>", "<null>", "+  is not", "*")
 #xyz.append("<null>", "+  = ", "+", "<null>", "+   = / = ", "*")
 
+#rem l1 => length_of_symbol_table
+#rem n1 => negative_premise_count
+#rem b(63) => term_article(63)
+#rem d(63) => term_dist_count(63)
+#rem e(2) => recent_article_types(2)
+#rem g(63) => term_type(63)
+#rem k(63) => link_order(63) : rem this may be right
+#rem n(63) => line_numbers(63)
+#rem o(63) => term_occurrences(63)
+#rem t(7) => recent_symbol_types(7) : rem this should be right--see (former) line 2020
+#rem a$(3) => article_strings[3)
+#rem g$(2) => term_type_name$(2) : rem hopefully this is right
+#rem l$(63) => line_strings$(63)
+#rem s$(6) => recent_symbol_strings$(6) : rem hopefully this is right
+#rem t$(65) => term_strings$(65)
+#rem w$(2) => recent_term_strings
+
 prompt = '>'
+
+articles = ("a ", "an ", "sm ")
+g_strings = ("undetermined type", "general term", "designator")
 
 sample = (
 	"10 all mortals are fools",
@@ -115,6 +135,20 @@ plurals = dict(
 
 class Syllogism:
 	show_messages = True
+	line_numbers = []		# l(), with l(0) representing total number of lines
+	line_strings = []		# l$()
+	term_article = []		# b()
+	term_strings = []		# t$()
+	term_type = []			# g()
+	conclusion_terms = []	# c()
+	neg_premises = 0		# n1
+	modern_valid = False	# v1
+
+	# length_of_symbol_table = len(term_strings)
+	#im a(63),c(63),term_dist_count(63),term_type(63),l(63),line_numbers(63),term_occurrences(63),p(63),q(63)
+	#dim r(63),term_article(63),k(63),j(4),t(7),recent_article_types(2),h(2)
+	#dim article_strings[3),line_strings$(63),term_strings$(65)
+	#dim g$(2),s$(6),w$(2),x$(7),y$(7),z(7)
 
 	def __init__(self):
 		self.main()
@@ -301,5 +335,57 @@ class Syllogism:
 							y = word[:-1]
 				words_out.append(word);
 		return ' '.join(words_out)
+
+	# experimental; need sanity-checks
+	def compute_conclusion(self):
+		#rem---Compute conclusion--- : rem 6200
+		c1 = self.conclusion_terms[0]
+		c2 = self.conclusion_terms[1]
+		term_article_c1 = self.term_article[c1]
+		term_article_c2 = self.term_article[c2]
+		term_strings_c1 = self.term_strings[c1]
+		term_strings_c2 = self.term_strings[c2]
+		article_strings_c1 = self.article_strings[term_article_c1]
+		article_strings_c2 = self.article_strings[term_article_c2]
+		term_dist_count_c1 = self.term_dist_count[c1]
+		term_dist_count_c2 = self.term_dist_count[c2]
+
+		z = 'A is A'
+		if len(line_strings) > 0:
+			if neg_premises > 0:
+				# negative conclusion
+				if term_dist_count_c2 == 0:
+					z = "Some {} is not {}{}".format(term_strings_c2, article_strings_c1, term_strings_c1)
+				elif term_dist_count_c1 == 0:
+					z = "Some {} is not {}{}".format(term_strings_c1, article_strings_c2, term_strings_c2)
+				elif self.term_type[c1] >= 2:
+					z = "{} is not {}{}".format(term_strings_c1, article_strings_c2, term_strings_c2)
+				elif self.term_type[c2] >= 2:
+					z = "{} is not {}{}".format(term_strings_c2, article_strings_c1, term_strings_c1)
+				elif term_article_c1 == 0 and term_article_c2 > 0:
+					z = "No {} is {}{}".format(term_strings_c2, article_strings_c1, term_strings_c1)
+				else:
+					z = "No {} is {}{}".format(term_strings_c1, article_strings_c2, term_strings_c2)
+			else:
+				# affirmative conclusion
+				if term_dist_count_c1 > 0:
+					if self.term_type[c1] != 2:
+						z = "All {} is {}".format(term_strings_c1, term_strings_c2)
+					else:
+						z = "{} is {}{}".format(term_strings_c1, article_strings_c2, term_strings_c2)
+				elif term_dist_count_c2 > 0:
+					if self.term_type[c2] != 2:
+						z = "All {} is {}".format(term_strings_c2, term_strings_c1)
+					else:
+						z = "{} is {}{}".format(term_strings_c2, article_strings_c1, term_strings_c1)
+				else:
+					if term_article_c1 == 0 and term_article_c2 > 0:
+						z = "Some {} is {}{}".format(term_strings_c2, article_strings_c1, term_strings_c1)
+					else:
+						z = "Some {} is {}{}".format(term_strings_c1, article_strings_c2, term_strings_c2)
+		# PRINT  conclusion
+		print '  / ' + z
+		if modern_valid:
+			print "  * Aristotle-valid only, i.e. on requirement that term \"{}\" denotes.".format(self.term_strings[v1])
 
 s = Syllogism()
