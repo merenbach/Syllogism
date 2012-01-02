@@ -135,7 +135,7 @@ plurals = dict(
 
 class Syllogism:
 	show_messages = True
-	line_numbers = []		# l(), with l(0) representing total number of lines
+	line_numbers_arranged = []		# l()
 	line_strings = []		# l$()
 	term_article = []		# b()
 	term_strings = []		# t$()
@@ -144,6 +144,7 @@ class Syllogism:
 	neg_premises = 0		# n1
 	modern_valid = False	# v1
 	symbol_count = 0		# l1
+	lowest_line = 0			# l(0)
 
 	recent_term_strings = []	# w$()
 	recent_symbol_types = []	# t()
@@ -153,6 +154,9 @@ class Syllogism:
 
 	a_array_0 = 0	# a(0)
 	a_array = []	# a()
+
+	q_array = []
+	r_array = []
 
 	# length_of_symbol_table = len(term_strings)
 	#im a(63),c(63),term_dist_count(63),term_type(63),l(63),line_numbers(63),term_occurrences(63),p(63),q(63)
@@ -208,8 +212,8 @@ class Syllogism:
 			'substitute': self.substitute_terms,
 			#'link': link(),
 			#'link*': link(),
-			#'list': list(),
-			#'list*': list(),
+			'list': self.list_lines,
+			'list*': self.list_lines,
 		}
 
 		line = ''
@@ -222,7 +226,10 @@ class Syllogism:
 			else:
 				if line in functions.keys():
 					function = functions[line]
-					function()
+					if not line.endswith('*'):
+						function()
+					else:
+						function(True)
 					
 		if self.show_messages:
 			print "(Some versions support typing CONT to continue)"	
@@ -491,9 +498,27 @@ class Syllogism:
 		# rem---Enter line into list--- : rem 4530
 		pass
 
+	def list_lines(self, analyze=False):
+		# rem---list--- : rem [am] 7460
+		i = self.lowest_line
+		while i != 0:
+			out = ''
+			out += self.line_numbers_arranged[i] + " "
+			if analyze:
+				# distribution analysis format
+				if r_array[i] < 6 and self.term_type[q_array[i]] == 2:
+					r_array[i] += 2
+				if r_array[i] < 4:
+					out += x_array[r_array[i]] + "  "
+				out += self.term_strings[p_array[i]] + y_array[r_array[i]] + "  " + self.term_strings[q_array[i]] + z_array[r_array[i]]
+			else:
+				out += line_strings[i]
+			print out
+			i = self.line_numbers_arranged[i]
+
 	# implemented but a_array is not entirely clear
 	def new_syllogism(self):
-		if len(self.line_numbers) > 0:
+		if self.lowest_line > 0:
 			self.term_dist_count = []
 			self.term_strings = []
 			self.term_article = []
@@ -501,12 +526,13 @@ class Syllogism:
 			self.term_type = []
 			self.symbol_count = 0
 			self.neg_premises = 0
-			j = len(self.line_numbers)
+			j = self.lowest_line
 			while j > 0:
 				self.a_array_0 -= 1
 				self.a_array[a_array_0] = j
-				j = self.line_numbers[j]
-			self.line_numbers = []
+				j = self.line_numbers_arranged[j]
+			#self.line_numbers_arranged = []
+			self.lowest_line = 0
 
 	def insert_terms(self):
 		# rem---Add recent_term_strings[MY_ONE], recent_term_strings[MY_TWO] to table term_strings$()--- : rem [am] 3400
@@ -546,7 +572,7 @@ class Syllogism:
 					# add terms to symbol tablosue
 					self.insert_terms()
 			else:
-				if len(line_numbers) > 0:
+				if lowest_line > 0:
 					# delete line
 					self.delete_line()
 				else:
@@ -646,3 +672,121 @@ s = Syllogism()
 #		show_parse_error_missing_copula()
 #	endif
 #
+
+
+
+#2020 rem---L1$ into array S$()---
+#	rem T(): 1:line num., 2:"/", 3:quantifier, 4:no/not, 5:is/are, 6:term
+#	rem                     10 SOME  FRIED COCONUTS   ARE  NOT  TASTY
+#	rem                      1   3        6            5    4     6
+#	for j = 1 to 6
+#		s$(j) = ""
+#		t(j) = 0
+#	next j
+#	p1 = 0
+#	recent_article_types(2) = 0
+#	j = 1
+#	i = 1
+#	l = len(l1$)
+#	do
+#		do
+#			if i > l then 2885
+#			s$ = mid$(l1$,i,1)
+#			if s$ <> " " then exit do
+#			i = i+1
+#		loop
+#		for k = 1 to (l - i)
+#			s$ = mid$(l1$,i+k,1)
+#			if s$ = " " then exit for
+#		next k
+#		s$ = mid$(l1$,i,k) : rem S$ is set to next word
+#		if j <= 1 then
+#			if s$ = "/" then
+#				t(1) = 2
+#			else
+#				n = len(s$)
+#				if n > 4 then
+#					procERROR_INVALID_CMD(i + n)
+#					goto 2885
+#				else
+#					for n = 1 to len(s$)
+#						t$ = mid$(s$,n,1)
+#						if asc(t$) > 57 or asc(t$) < 48 then
+#							procERROR_INVALID_CMD(i + n)
+#							goto 2885
+#						endif
+#					next n
+#					t(1) = 1
+#				endif
+#			endif
+#			goto 2840
+#		endif
+#rem Scan : rem [am] 2520
+#		if s$ = "somebody" or s$ = "something" or s$ = "nobody" or s$ = "nothing" then
+#			procERR_RESERVED_WORD(s$, i + k - 1)
+#			t(1) = 0
+#			goto 2885
+#		elseif s$ = "someone" or s$ = "everyone" or s$ = "everybody" or s$ = "everything" then
+#			procERR_RESERVED_WORD(s$, i + k - 1)
+#			t(1) = 0
+#			goto 2885
+#		elseif s$ = "all" or s$ = "some" then
+#			if t(j) = 6 then
+#				procERR_RESERVED_WORD(s$, i + k - 1)
+#				t(1) = 0
+#				goto 2885
+#			else
+#				t(j) = 3
+#				goto 2840
+#			endif
+#		elseif s$ = "no" or s$ = "not" then
+#			if t(j) = 6 then
+#				procERR_RESERVED_WORD(s$, i + k - 1)
+#				t(1) = 0
+#				goto 2885
+#			else
+#				t(j) = 4
+#				goto 2840
+#			endif
+#		elseif s$ = "is" or s$ = "are" then
+#			if t(j) = 6 then
+#				if not (t(j-1) = 5 or t(j-2) = 5) then
+#					j = j+1
+#					t(j) = 5
+#					goto 2840
+#				endif
+#			endif
+#			procERR_RESERVED_WORD(s$, i + k - 1)
+#			t(1) = 0
+#			goto 2885
+#		elseif t(j) <> 6 then
+#			if t(j-1) = 5 or t(j-2) = 5 then
+#				if s$ = "a" or s$ = "an" or s$ = "sm" then
+#					if i <> l then
+#						if s$ = "a" then
+#							recent_article_types(2) = 1
+#						elseif s$ = "an" then
+#							recent_article_types(2) = 2
+#						else
+#							recent_article_types(2) = 3
+#						endif
+#						p1 = 1
+#					else
+#						gosub 2790
+#					endif
+#				else
+#					if s$ = "the" then p1 = 2
+#					gosub 2790
+#				endif
+#			else
+#				gosub 2790
+#			endif
+#		else
+#			s$(j) = s$(j)+" "+s$
+#		endif
+#		goto 2860
+#2840	s$(j) = s$
+#		j = j+1
+#2860	i = k+i
+#	loop until j > 6
+#2885 return
