@@ -145,9 +145,14 @@ class Syllogism:
 	modern_valid = False	# v1
 	symbol_count = 0		# l1
 
-	recent_term_strings = []
-	recent_symbol_types = []
-	recent_symbol_strings = []
+	recent_term_strings = []	# w$()
+	recent_symbol_types = []	# t()
+	recent_symbol_strings = []	# s$()
+
+	syllogism_form = (-1)		# d1
+
+	a_array_0 = 0	# a(0)
+	a_array = []	# a()
 
 	# length_of_symbol_table = len(term_strings)
 	#im a(63),c(63),term_dist_count(63),term_type(63),l(63),line_numbers(63),term_occurrences(63),p(63),q(63)
@@ -156,6 +161,7 @@ class Syllogism:
 	#dim g$(2),recent_symbol_strings[6],w$(2),x$(7),y$(7),z(7)
 
 	def __init__(self):
+		a_array = range(64)
 		self.main()
 		#pass
 
@@ -197,7 +203,7 @@ class Syllogism:
 			'help': self.print_commands,
 			'syntax': self.print_syntax,
 			'info': self.print_info,
-			#'dump': print_dump(),
+			'dump': self.show_dump,
 			'msg': self.toggle_messages,
 			#'substitute': substitute(),
 			#'link': link(),
@@ -208,6 +214,7 @@ class Syllogism:
 
 		line = ''
 		while line != 'stop':
+			print
 			line = raw_input(prompt).lower()
 			line = self.strip_string(line)
 			if line == '':
@@ -219,6 +226,7 @@ class Syllogism:
 					
 		if self.show_messages:
 			print "(Some versions support typing CONT to continue)"	
+		print
 	
 	def toggle_messages(self):
 		self.show_messages = not self.show_messages
@@ -342,6 +350,9 @@ class Syllogism:
 				words_out.append(word);
 		return ' '.join(words_out)
 
+	def show_error_no_premises(self):
+		print "No premises"
+
 	def show_parse_error_missing_copula(self):
 		print "** Missing copula is/are"
 		show_parse_error_help()
@@ -354,6 +365,33 @@ class Syllogism:
 	def show_parse_error_help(self):
 		if self.show_messages:
 			print "Enter SYNTAX for help with statements"
+
+	def sample_syllogism(self):
+		# 8980 rem--sample--
+		self.new_syllogism()
+		for line in sample_lines:
+			print line
+			self.split_line()
+			self.parse_line()
+			self.enter_line()
+			self.insert_terms()
+		if self.show_messages:
+			print "Suggestion: try the LINK or LINK* command."
+			
+	def show_dump(self):
+		# 8890 rem---"Dump" values of variables---
+		print "Highest symbol table loc. used: {}  Negative premises: {}".format(self.symbol_count, self.neg_premises)
+		if self.symbol_count > 0:
+			print "Adr. art. term {} type       occurs    dist. count".format(self.spaces(48-14))
+			for i in range(self.symbol_count):
+				# rem Metal's lack of tabbing gets difficult here...
+				itab = 7-len(str(i))
+				astringtab = 11-len(self.article_strings[self.term_article[i]])-7
+				tstringtab = 49-len(self.term_strings[i])-11
+				gtab = 60-len(str(self.term_type[i]))-49
+				otab = 71-len(str(self.term_occurrences[i]))-60
+				print i + self.spaces(itab) + article_strings[term_article[i]] + self.spaces(astringtab) + term_strings[i] + self.spaces(tstringtab) + term_type[i] + self.spaces(gtab);
+				print self.term_occurrences[i] + self.spaces(otab) + self.term_dist_count[i]
 
 	# experimental; need sanity-checks
 	# should work, though!
@@ -408,7 +446,11 @@ class Syllogism:
 		if modern_valid:
 			print "  * Aristotle-valid only, i.e. on requirement that term \"{}\" denotes.".format(self.term_strings[v1])
 
-	# not fully implemented
+	def enter_line(self):
+		# rem---Enter line into list--- : rem 4530
+		pass
+
+	# implemented but a_array is not entirely clear
 	def new_syllogism(self):
 		if len(self.line_numbers) > 0:
 			self.term_dist_count = []
@@ -416,37 +458,66 @@ class Syllogism:
 			self.term_article = []
 			self.term_occurrences = []
 			self.term_type = []
+			self.symbol_count = 0
+			self.neg_premises = 0
+			j = len(self.line_numbers)
+			while j > 0:
+				self.a_array_0 -= 1
+				self.a_array[a_array_0] = j
+				j = self.line_numbers[j]
+			self.line_numbers = []
 
-			symbol_count = 0
-			neg_premises = 0
+	def insert_terms(self):
+		# rem---Add W$(1), W$(2) to table term_strings$()--- : rem [am] 3400
+		pass
+	
+	def split_line(self):
+		# rem--scan line L1$ into array S$() : rem 2020
+		pass
 
-			#j = l(0)
-			#do
-			#	a(0) = a(0)-1
-			#	a(a(0)) = j
-			#	j = l(j)
-			#loop until not (j > 0)
-			#l(0) = 0
+	def parse_line(self):
+		pass
 
-	# not fully implemented
-	def sample_syllogism(self):
-		# 8980 rem--sample--
-		self.new_syllogism()
-		for line in sample_lines:
-			print line
-			#gosub 2020
-			#procPARSE_LINE
-			#gosub 4530
-			#procADD_TABLE_STRINGS
-		if self.show_messages:
-			print "Suggestion: try the LINK or LINK* command."
+	def scan_line(self):
+		pass
 
 s = Syllogism()
 
 #s.new_syllogism()
 
-
-
+#def scan_line(self, line_string):
+## 1570 rem--scan line L1$ into array S$()
+#	gosub 2020
+#	if self.recent_symbol_types[MY_ONE] == 1:
+#		if self.recent_symbol_types[MY_TWO] > 0:
+#			# rem parse the line in S$()
+#			self.parse_line()
+#			if syllogism_form >= 0:
+#				gosub 4530 : rem enter line into list
+#				procADD_TABLE_STRINGS : rem add terms to symbol table
+#		else:
+#			if len(line_numbers) > 0:
+#				# delete line
+#				self.delete_line()
+#			else:
+#				self.show_error_no_premises()
+#	else
+#		if self.recent_symbol_types[MY_ONE] == 0:
+#			gosub 1070
+#		else:
+#			# draw/test conclusion
+#			# is it a syl?
+#			gosub 5070
+#			if j1 <= 1:
+#				if j1 == 0:
+#					# poss. conclusion?
+#					gosub 5880
+#				if j1 <= 1:
+#					if self.recent_symbol_types[MY_TWO]:
+#						gosub 6630
+#					else:
+#						# test/draw conclusion
+#						gosub 6200
 
 # rem---Parse line in S$()--- : rem [am] 2890
 #def parse_line(self):
