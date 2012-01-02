@@ -29,7 +29,7 @@ import os
 #rem l$(63) => line_strings$(63)
 #rem s$(6) => recent_symbol_stringrecent_symbol_strings[6] : rem hopefully this is right
 #rem t$(65) => term_strings$(65)
-#rem w$(2) => recent_term_strings
+#rem w$( 2 ) => recent_term_strings
 
 prompt = '>'
 
@@ -158,7 +158,7 @@ class Syllogism:
 	#im a(63),c(63),term_dist_count(63),term_type(63),l(63),line_numbers(63),term_occurrences(63),p(63),q(63)
 	#dim r(63),term_article(63),k(63),j(4),recent_symbol_types[7],recent_article_types(2),h(2)
 	#dim article_strings[3),line_strings$(63),term_strings$(65)
-	#dim g$(2),recent_symbol_strings[6],w$(2),x$(7),y$(7),z(7)
+	#dim g$(2),recent_symbol_strings[6],recent_term_strings[MY_TWO],x$(7),y$(7),z(7)
 
 	def __init__(self):
 		a_array = range(64)
@@ -509,7 +509,7 @@ class Syllogism:
 			self.line_numbers = []
 
 	def insert_terms(self):
-		# rem---Add W$(1), W$(2) to table term_strings$()--- : rem [am] 3400
+		# rem---Add recent_term_strings[MY_ONE], recent_term_strings[MY_TWO] to table term_strings$()--- : rem [am] 3400
 		pass
 	
 	def split_line(self):
@@ -519,45 +519,60 @@ class Syllogism:
 	def parse_line(self):
 		pass
 
-	def scan_line(self):
+	def test_offered_conclusion(self):
+		# 6630 rem---test offered conclusion---
+		# rem--conc. poss, line in s$()
 		pass
+	
+	def see_if_conclusion_possible(self):
+		# 5880 rem---See if conclusion possible---
+		pass
+	
+	def see_if_syllogism(self):
+		# 5070 rem---See if syllogism---
+		return (-1)
+
+	# still being reworked
+	def scan_line(self):
+		# 1570 rem--scan line L1$ into array S$()
+		self.split_line()
+		if self.recent_symbol_types[MY_ONE] == 1:
+			if self.recent_symbol_types[MY_TWO] > 0:
+				# rem parse the line in S$()
+				self.parse_line()
+				if syllogism_form >= 0:
+					# enter line into list
+					self.enter_line()
+					# add terms to symbol tablosue
+					self.insert_terms()
+			else:
+				if len(line_numbers) > 0:
+					# delete line
+					self.delete_line()
+				else:
+					self.show_error_no_premises()
+		else:
+			if self.recent_symbol_types[MY_ONE] == 0:
+				self.print_hint()
+			else:
+				# draw/test conclusion
+				# is it a syl?
+				j1 = self.see_if_syllogism()
+				if j1 <= 1:
+					if j1 == 0:
+						# poss. conclusion?
+						self.see_if_conclusion_possible()
+					if j1 <= 1:
+						if self.recent_symbol_types[MY_TWO]:
+							self.test_offered_conclusion()
+						else:
+							# test/draw conclusion
+							self.compute_conclusion()
+
+
 s = Syllogism()
 
 #s.new_syllogism()
-
-#def scan_line(self, line_string):
-## 1570 rem--scan line L1$ into array S$()
-#	gosub 2020
-#	if self.recent_symbol_types[MY_ONE] == 1:
-#		if self.recent_symbol_types[MY_TWO] > 0:
-#			# rem parse the line in S$()
-#			self.parse_line()
-#			if syllogism_form >= 0:
-#				gosub 4530 : rem enter line into list
-#				procADD_TABLE_STRINGS : rem add terms to symbol table
-#		else:
-#			if len(line_numbers) > 0:
-#				# delete line
-#				self.delete_line()
-#			else:
-#				self.show_error_no_premises()
-#	else
-#		if self.recent_symbol_types[MY_ONE] == 0:
-#			gosub 1070
-#		else:
-#			# draw/test conclusion
-#			# is it a syl?
-#			gosub 5070
-#			if j1 <= 1:
-#				if j1 == 0:
-#					# poss. conclusion?
-#					gosub 5880
-#				if j1 <= 1:
-#					if self.recent_symbol_types[MY_TWO]:
-#						gosub 6630
-#					else:
-#						# test/draw conclusion
-#						gosub 6200
 
 # rem---Parse line in S$()--- : rem [am] 2890
 #def parse_line(self):
@@ -570,8 +585,8 @@ s = Syllogism()
 #		elif recent_symbol_types[5] != 6 then
 #			show_parse_error_missing_predicate()
 #		else
-#			w$(1) = recent_symbol_strings[3]
-#			w$(2) = recent_symbol_strings[5]
+#			recent_term_strings[MY_ONE] = recent_symbol_strings[3]
+#			recent_term_strings[MY_TWO] = recent_symbol_strings[5]
 #			d1 = 2 : rem all A is B
 #		endif
 #	elif recent_symbol_strings[2] = "some" then
@@ -583,16 +598,16 @@ s = Syllogism()
 #			if recent_symbol_types[5] != 6 then
 #				show_parse_error_missing_predicate()
 #			else
-#				w$(1) = recent_symbol_strings[3]
-#				w$(2) = recent_symbol_strings[5]
+#				recent_term_strings[MY_ONE] = recent_symbol_strings[3]
+#				recent_term_strings[MY_TWO] = recent_symbol_strings[5]
 #				d1 = 0 : rem Some A is B
 #			endif
 #		else
 #			if recent_symbol_types[6] != 6 then
 #				show_parse_error_missing_predicate()
 #			else
-#				w$(1) = recent_symbol_strings[3]
-#				w$(2) = recent_symbol_strings[6]
+#				recent_term_strings[MY_ONE] = recent_symbol_strings[3]
+#				recent_term_strings[MY_TWO] = recent_symbol_strings[6]
 #				d1 = 1 : rem some A is not B
 #			endif
 #		endif
@@ -605,26 +620,26 @@ s = Syllogism()
 #			show_parse_error_missing_predicate()
 #			show_parse_error_help()
 #		else
-#			w$(1) = recent_symbol_strings[3]
-#			w$(2) = recent_symbol_strings[5]
+#			recent_term_strings[MY_ONE] = recent_symbol_strings[3]
+#			recent_term_strings[MY_TWO] = recent_symbol_strings[5]
 #			d1 = 3 : rem no A is B
 #		endif
 #	elif recent_symbol_types[2] != 6 then
 #		show_parse_error_missing_subject_term()
 #	elif recent_symbol_types[3] = 5 then
-#		w$(1) = recent_symbol_strings[2]
+#		recent_term_strings[MY_ONE] = recent_symbol_strings[2]
 #		if recent_symbol_strings[4] != "not" then
 #			if recent_symbol_types[4] != 6 then
 #			show_parse_error_missing_predicate()
 #		endif
 #			d1 = 4 : rem a is T
-#			w$(2) = recent_symbol_strings[4]
+#			recent_term_strings[MY_TWO] = recent_symbol_strings[4]
 #		else
 #			if recent_symbol_types[5] != 6 then
 #				show_parse_error_missing_predicate()
 #			else
 #				d1 = 5 : rem a is not T
-#				w$(2) = recent_symbol_strings[5]
+#				recent_term_strings[MY_TWO] = recent_symbol_strings[5]
 #			endif
 #		endif
 #	else
