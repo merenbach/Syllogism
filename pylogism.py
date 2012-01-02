@@ -457,7 +457,7 @@ class Syllogism:
 		term_dist_count_c2 = self.term_dist_count[c2]
 
 		z = 'A is A'
-		if len(line_strings) > 0:
+		if lowest_line > 0:
 			if neg_premises > 0:
 				# negative conclusion
 				if term_dist_count_c2 == 0:
