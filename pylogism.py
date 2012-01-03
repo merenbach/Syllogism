@@ -485,8 +485,8 @@ class Syllogism:
 		term_dist_count_c2 = self.term_dist_count[c2]
 
 		z = 'A is A'
-		if lowest_line > 0:
-			if neg_premises > 0:
+		if self.lowest_line > 0:
+			if self.neg_premises > 0:
 				# negative conclusion
 				if term_dist_count_c2 == 0:
 					z = "Some {} is not {}{}".format(term_strings_c2, article_strings_c1, term_strings_c1)
@@ -573,7 +573,7 @@ class Syllogism:
 		j_array[0] = p(j1)
 		j_array[1] = q(j1)
 		if self.r_array[j1] % 2 != 0:
-			self.negative_premise_count -= 1
+			self.neg_premises -= 1
 			j_array[3] = 1
 		else:
 			if self.term_types[q_array[j1]] == 2:
@@ -654,10 +654,168 @@ class Syllogism:
 	def insert_terms(self):
 		# rem---Add self.recent_term_1, self.recent_term_2 to table term_strings$()--- : rem [am] 3400
 		pass
-	
+
+	def show_error_invalid_cmd(self, i):
+		print self.spaces(spaces) + "^   Invalid numeral or command"
+
 	def split_line(self, line=''):
-		# rem--scan line L1$ into array S$() : rem 2020
 		pass
+		# rem--scan line L1$ into array S$() : rem 2020
+		# 2020 rem---L1$ into array S$()---
+		#	# rem T(): 1:line num., 2:"/", 3:quantifier, 4:no/not, 5:is/are, 6:term
+		#	# rem                     10 SOME  FRIED COCONUTS   ARE  NOT  TASTY
+		#	# rem                      1   3        6            5    4     6
+		#	self.term_strings = filter(None, line.split())
+		#	self.term_types = list()
+		recent_symbol_strings = [''] * 6
+		recent_symbol_types = [0] * 6
+		for word in self.term_strings:
+			if len(self.term_strings) == 1:
+				if word == '/':
+					self.recent_symbol_types[0] = 2
+					pass
+				else:
+					if len(word) > 4:
+						#show_error_invalid_cmd(i + n)
+						break
+					else:
+						if (has_invalid_chars):
+							#show_error_invalid_cmd(i + n)
+							pass
+						else:
+							#self.term_types[1] = 1
+							pass
+						pass
+					n = len(recent_symbol_strings)
+					#if n > 4 then
+					#	procERROR_INVALID_CMD(i + n)
+					#	goto 2885
+					#else
+					#	for n in range(len(recent_symbol_strings)):
+					#		t$ = mid$(s$,n,1)
+					#		if asc(t$) > 57 or asc(t$) < 48 then
+					#			procERROR_INVALID_CMD(i + n)
+					#			goto 2885
+					#		endif
+					#	next n
+					#	t(1) = 1
+					#endif
+					#if len(self.term_strings) == 6:
+					#	
+					#		pass
+	
+	
+		#	#for j = 1 to 6
+		#	#	s$(j) = ""
+		#	#	t(j) = 0
+		#	#next j
+		#	p1 = 0
+		#	recent_article_types(2) = 0
+		#	j = 1
+		#	i = 1
+		#	l = len(l1$)
+		#	do
+		#		do
+		#			if i > l then 2885
+		#			s$ = mid$(l1$,i,1)
+		#			if s$ != " " then exit do
+		#			i = i+1
+		#		loop
+		#		for k = 1 to (l - i)
+		#			s$ = mid$(l1$,i+k,1)
+		#			if s$ = " " then exit for
+		#		next k
+		#		s$ = mid$(l1$,i,k) : rem S$ is set to next word
+		#		if j <= 1 then
+		#			if s$ = "/" then
+		#				t(1) = 2
+		#			else
+		#				n = len(s$)
+		#				if n > 4 then
+		#					procERROR_INVALID_CMD(i + n)
+		#					goto 2885
+		#				else
+		#					for n = 1 to len(s$)
+		#						t$ = mid$(s$,n,1)
+		#						if asc(t$) > 57 or asc(t$) < 48 then
+		#							procERROR_INVALID_CMD(i + n)
+		#							goto 2885
+		#						endif
+		#					next n
+		#					t(1) = 1
+		#				endif
+		#			endif
+		#			goto 2840
+		#		endif
+		#rem Scan : rem [am] 2520
+		#		if s$ = "somebody" or s$ = "something" or s$ = "nobody" or s$ = "nothing" then
+		#			procERR_RESERVED_WORD(s$, i + k - 1)
+		#			t(1) = 0
+		#			goto 2885
+		#		elseif s$ = "someone" or s$ = "everyone" or s$ = "everybody" or s$ = "everything" then
+		#			procERR_RESERVED_WORD(s$, i + k - 1)
+		#			t(1) = 0
+		#			goto 2885
+		#		elseif s$ = "all" or s$ = "some" then
+		#			if t(j) = 6 then
+		#				procERR_RESERVED_WORD(s$, i + k - 1)
+		#				t(1) = 0
+		#				goto 2885
+		#			else
+		#				t(j) = 3
+		#				goto 2840
+		#			endif
+		#		elseif s$ = "no" or s$ = "not" then
+		#			if t(j) = 6 then
+		#				procERR_RESERVED_WORD(s$, i + k - 1)
+		#				t(1) = 0
+		#				goto 2885
+		#			else
+		#				t(j) = 4
+		#				goto 2840
+		#			endif
+		#		elseif s$ = "is" or s$ = "are" then
+		#			if t(j) = 6 then
+		#				if not (t(j-1) = 5 or t(j-2) = 5) then
+		#					j = j+1
+		#					t(j) = 5
+		#					goto 2840
+		#				endif
+		#			endif
+		#			procERR_RESERVED_WORD(s$, i + k - 1)
+		#			t(1) = 0
+		#			goto 2885
+		#		elseif t(j) <> 6 then
+		#			if t(j-1) = 5 or t(j-2) = 5 then
+		#				if s$ = "a" or s$ = "an" or s$ = "sm" then
+		#					if i <> l then
+		#						if s$ = "a" then
+		#							recent_article_types(2) = 1
+		#						elseif s$ = "an" then
+		#							recent_article_types(2) = 2
+		#						else
+		#							recent_article_types(2) = 3
+		#						endif
+		#						p1 = 1
+		#					else
+		#						gosub 2790
+		#					endif
+		#				else
+		#					if s$ = "the" then p1 = 2
+		#					gosub 2790
+		#				endif
+		#			else
+		#				gosub 2790
+		#			endif
+		#		else
+		#			s$(j) = s$(j)+" "+s$
+		#		endif
+		#		goto 2860
+		#2840	s$(j) = s$
+		#		j = j+1
+		#2860	i = k+i
+		#	loop until j > 6
+		#2885 return
 
 
 	# array indices need adjustment
@@ -757,7 +915,7 @@ class Syllogism:
 					# add terms to symbol tablosue
 					self.insert_terms()
 			else:
-				if lowest_line > 0:
+				if self.lowest_line > 0:
 					# delete line
 					self.delete_line()
 				else:
@@ -824,163 +982,6 @@ s = Syllogism()
 #s.new_syllogism()
 
 
-#def split_line(self, line=''):
-#	# 2020 rem---L1$ into array S$()---
-#	# rem T(): 1:line num., 2:"/", 3:quantifier, 4:no/not, 5:is/are, 6:term
-#	# rem                     10 SOME  FRIED COCONUTS   ARE  NOT  TASTY
-#	# rem                      1   3        6            5    4     6
-#	self.term_strings = filter(None, line.split())
-#	self.term_types = list()
-#	
-#	for word in self.term_strings:
-#		if len(self.term_strings) == 1:
-#			if word == '/':
-#				#self.term_types[1] = 2
-#				pass
-#			else:
-#				if len(word) > 4:
-#					#show_error_invalid_cmd(i + n)
-#					break
-#				else:
-#					if (has_invalid_chars):
-#						#show_error_invalid_cmd(i + n)
-#						pass
-#					else:
-#						#self.term_types[1] = 1
-#						pass
-#					pass
-#				#n = len(recent_symbol_strings)
-#				#if n > 4 then
-#				#	procERROR_INVALID_CMD(i + n)
-#				#	goto 2885
-#				#else
-#				#	for n in range(len(recent_symbol_strings)):
-#				#		t$ = mid$(s$,n,1)
-#				#		if asc(t$) > 57 or asc(t$) < 48 then
-#				#			procERROR_INVALID_CMD(i + n)
-#				#			goto 2885
-#				#		endif
-#				#	next n
-#				#	t(1) = 1
-#				#endif
-#				#if len(self.term_strings) == 6:
-#				#	
-#				#		pass
-#
-#
-#	#for j = 1 to 6
-#	#	s$(j) = ""
-#	#	t(j) = 0
-#	#next j
-#	p1 = 0
-#	recent_article_types(2) = 0
-#	j = 1
-#	i = 1
-#	l = len(l1$)
-#	do
-#		do
-#			if i > l then 2885
-#			s$ = mid$(l1$,i,1)
-#			if s$ != " " then exit do
-#			i = i+1
-#		loop
-#		for k = 1 to (l - i)
-#			s$ = mid$(l1$,i+k,1)
-#			if s$ = " " then exit for
-#		next k
-#		s$ = mid$(l1$,i,k) : rem S$ is set to next word
-#		if j <= 1 then
-#			if s$ = "/" then
-#				t(1) = 2
-#			else
-#				n = len(s$)
-#				if n > 4 then
-#					procERROR_INVALID_CMD(i + n)
-#					goto 2885
-#				else
-#					for n = 1 to len(s$)
-#						t$ = mid$(s$,n,1)
-#						if asc(t$) > 57 or asc(t$) < 48 then
-#							procERROR_INVALID_CMD(i + n)
-#							goto 2885
-#						endif
-#					next n
-#					t(1) = 1
-#				endif
-#			endif
-#			goto 2840
-#		endif
-#rem Scan : rem [am] 2520
-#		if s$ = "somebody" or s$ = "something" or s$ = "nobody" or s$ = "nothing" then
-#			procERR_RESERVED_WORD(s$, i + k - 1)
-#			t(1) = 0
-#			goto 2885
-#		elseif s$ = "someone" or s$ = "everyone" or s$ = "everybody" or s$ = "everything" then
-#			procERR_RESERVED_WORD(s$, i + k - 1)
-#			t(1) = 0
-#			goto 2885
-#		elseif s$ = "all" or s$ = "some" then
-#			if t(j) = 6 then
-#				procERR_RESERVED_WORD(s$, i + k - 1)
-#				t(1) = 0
-#				goto 2885
-#			else
-#				t(j) = 3
-#				goto 2840
-#			endif
-#		elseif s$ = "no" or s$ = "not" then
-#			if t(j) = 6 then
-#				procERR_RESERVED_WORD(s$, i + k - 1)
-#				t(1) = 0
-#				goto 2885
-#			else
-#				t(j) = 4
-#				goto 2840
-#			endif
-#		elseif s$ = "is" or s$ = "are" then
-#			if t(j) = 6 then
-#				if not (t(j-1) = 5 or t(j-2) = 5) then
-#					j = j+1
-#					t(j) = 5
-#					goto 2840
-#				endif
-#			endif
-#			procERR_RESERVED_WORD(s$, i + k - 1)
-#			t(1) = 0
-#			goto 2885
-#		elseif t(j) <> 6 then
-#			if t(j-1) = 5 or t(j-2) = 5 then
-#				if s$ = "a" or s$ = "an" or s$ = "sm" then
-#					if i <> l then
-#						if s$ = "a" then
-#							recent_article_types(2) = 1
-#						elseif s$ = "an" then
-#							recent_article_types(2) = 2
-#						else
-#							recent_article_types(2) = 3
-#						endif
-#						p1 = 1
-#					else
-#						gosub 2790
-#					endif
-#				else
-#					if s$ = "the" then p1 = 2
-#					gosub 2790
-#				endif
-#			else
-#				gosub 2790
-#			endif
-#		else
-#			s$(j) = s$(j)+" "+s$
-#		endif
-#		goto 2860
-#2840	s$(j) = s$
-#		j = j+1
-#2860	i = k+i
-#	loop until j > 6
-#2885 return
-#
-#
 #def contains_any(str, set):
 #	flag = False
 #    for c in set:
@@ -995,4 +996,4 @@ s = Syllogism()
 #        if c not in str:
 #	        flag = False
 #	        break
-#    return flag#
+#    return flag##
