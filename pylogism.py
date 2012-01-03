@@ -154,8 +154,8 @@ class Syllogism:
 	recent_term_2 = ''
 	recent_term_type_1 = (-1)
 	recent_term_type_2 = (-1)
-	#recent_symbol_types = []	# t()
-	#recent_symbol_strings = []	# s$()
+	recent_symbol_types = []	# t()
+	recent_symbol_strings = []	# s$()
 
 	syllogism_form = (-1)		# d1
 
@@ -180,6 +180,9 @@ class Syllogism:
 		self.term_article = [0] * 64		# b()
 		self.term_strings = [''] * 64		# t$()
 		self.term_types = [0] * 64			# g()
+		self.recent_symbol_types = [0] * 64	# t()
+		self.recent_symbol_strings = [''] * 64	# s$()
+
 
 		q_array = [0] * 64
 		r_array = [0] * 64
@@ -399,7 +402,7 @@ class Syllogism:
 		for line in sample_lines:
 			print line
 			self.split_line(line)
-			self.parse_line(line)
+			self.parse_line()
 			self.enter_line(line)
 			self.insert_terms()
 			
@@ -521,7 +524,54 @@ class Syllogism:
 
 	def enter_line(self, line=''):
 		# rem---Enter line into list--- : rem 4530
-		pass
+		if (self.recent_symbol_strings[0].isdigit()):
+			n = int(self.recent_symbol_strings[0])
+			s = len(self.recent_symbol_strings[1]) + 1
+			l = len(line)
+			l_string = line[s + 1 : l - s]
+			i = 0
+			while True:
+				j1 = line_numbers_arranged[i]
+				if j1 == 0:
+					self.sub_enter_line(a1, j1)
+					break
+				elif n == line_numbers_arranged[j1]:
+					#procDECREMENT_TABLE_ENTRIES
+					self.line_strings[j1] = l_string
+					a1 = j1
+					break
+				elif n < line_numbers_arranged[j1]:
+					self.sub_enter_line(a1, j1)
+					break
+				else:
+					i = j1
+
+	def delete_line(self):
+		# rem---Delete a line--- : rem [am] 4760
+		if (self.recent_symbol_strings[0].isdigit()):
+			n = int(self.recent_symbol_strings[0])
+			i = lowest_line
+			while True:
+				j1 = line_numbers_arranged[i]
+				if j1 == 0:
+					print "Line " + n + " not found"
+					break
+				elif n == line_numbers_arranged[j1]:
+					a_array_0 -= 1
+					a_array[a_array_0] = j1
+					line_numbers_arranged[i] = line_numbers_arranged[j1]
+					#procDECREMENT_TABLE_ENTRIES
+					break
+				else:
+					i = line_numbers_arranged[i]
+
+	def sub_enter_line(self, a1, j1):
+		a1 = self.a_array[self.a_array_0]
+		self.line_strings[a1] = l_string
+		self.line_numbers[a1] = n
+		self.line_numbers_arranged[i] = a1
+		self.line_numbers_arranged[a1] = j1
+		self.a_array_0 += 1
 
 	def list_lines(self, analyze=False):
 		# rem---list--- : rem [am] 7460
@@ -544,10 +594,9 @@ class Syllogism:
 		if len(out_list) > 0:
 			print "\n".join(out_list)
 
-	def list_premises(self, analyze=False):
-		for p in self.premise_list:
-			print p
-
+	#def list_premises(self, analyze=False):
+	#	for p in self.premise_list:
+	#		print p
 
 	# implemented but a_array is not entirely clear
 	def new_syllogism(self):
@@ -585,7 +634,7 @@ class Syllogism:
 
 	# array indices need adjustment
 	# rem---Parse line in S$()--- : rem [am] 2890
-	def parse_line(self, premise):
+	def parse_line(self):
 		self.syllogism_form = -1
 		if self.term_strings[1] == "all":
 			if self.term_strings[2] != 6:
@@ -772,12 +821,12 @@ s = Syllogism()
 #						#self.term_types[1] = 1
 #						pass
 #					pass
-#				#n = len(s$)
+#				#n = len(recent_symbol_strings)
 #				#if n > 4 then
 #				#	procERROR_INVALID_CMD(i + n)
 #				#	goto 2885
 #				#else
-#				#	for n = 1 to len(s$)
+#				#	for n in range(len(recent_symbol_strings)):
 #				#		t$ = mid$(s$,n,1)
 #				#		if asc(t$) > 57 or asc(t$) < 48 then
 #				#			procERROR_INVALID_CMD(i + n)
