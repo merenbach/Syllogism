@@ -529,18 +529,18 @@ class Syllogism:
 			s = len(self.recent_symbol_strings[1]) + 1
 			l = len(line)
 			l_string = line[s + 1 : l - s]
-			i = 0
+			i = self.lowest_line
 			while True:
-				j1 = line_numbers_arranged[i]
+				j1 = self.line_numbers_arranged[i]
 				if j1 == 0:
 					self.sub_enter_line(a1, j1)
 					break
-				elif n == line_numbers_arranged[j1]:
+				elif n == self.line_numbers_arranged[j1]:
 					self.decrement_table_entries()
 					self.line_strings[j1] = l_string
 					a1 = j1
 					break
-				elif n < line_numbers_arranged[j1]:
+				elif n < self.line_numbers_arranged[j1]:
 					self.sub_enter_line(a1, j1)
 					break
 				else:
@@ -550,20 +550,20 @@ class Syllogism:
 		# rem---Delete a line--- : rem [am] 4760
 		if (self.recent_symbol_strings[0].isdigit()):
 			n = int(self.recent_symbol_strings[0])
-			i = lowest_line
+			i = self.lowest_line
 			while True:
-				j1 = line_numbers_arranged[i]
+				j1 = self.line_numbers_arranged[i]
 				if j1 == 0:
 					print "Line " + n + " not found"
 					break
-				elif n == line_numbers_arranged[j1]:
-					a_array_0 -= 1
-					a_array[a_array_0] = j1
-					line_numbers_arranged[i] = line_numbers_arranged[j1]
+				elif n == self.line_numbers_arranged[j1]:
+					self.a_array_0 -= 1
+					self.a_array[a_array_0] = j1
+					self.line_numbers_arranged[i] = self.line_numbers_arranged[j1]
 					self.decrement_table_entries()
 					break
 				else:
-					i = line_numbers_arranged[i]
+					i = self.line_numbers_arranged[i]
 
 	def decrement_table_entries(self):
 		# rem---Decrement table entries--- : rem [am] 4890
@@ -592,7 +592,6 @@ class Syllogism:
 				self.term_type[j_array[k]] = 0
 			endif
 			self.term_dist_count[j_array[k]] -= j_array[k+2]
-
 
 	def sub_enter_line(self, a1, j1):
 		a1 = self.a_array[self.a_array_0]
@@ -630,7 +629,7 @@ class Syllogism:
 	# implemented but a_array is not entirely clear
 	def new_syllogism(self):
 		if self.lowest_line > 0:
-			for i in range(symbol_count):
+			for i in range(self.symbol_count):
 				self.term_dist_count[i] = 0
 				self.term_strings[i] = ''
 				self.term_article[i] = 0
@@ -647,7 +646,7 @@ class Syllogism:
 			j = self.lowest_line
 			while j > 0:
 				self.a_array_0 -= 1
-				self.a_array[a_array_0] = j
+				self.a_array[self.a_array_0] = j
 				j = self.line_numbers_arranged[j]
 			#self.line_numbers_arranged = []
 			self.lowest_line = 0
