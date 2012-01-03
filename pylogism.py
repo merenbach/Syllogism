@@ -536,7 +536,7 @@ class Syllogism:
 					self.sub_enter_line(a1, j1)
 					break
 				elif n == line_numbers_arranged[j1]:
-					#procDECREMENT_TABLE_ENTRIES
+					self.decrement_table_entries()
 					self.line_strings[j1] = l_string
 					a1 = j1
 					break
@@ -560,10 +560,39 @@ class Syllogism:
 					a_array_0 -= 1
 					a_array[a_array_0] = j1
 					line_numbers_arranged[i] = line_numbers_arranged[j1]
-					#procDECREMENT_TABLE_ENTRIES
+					self.decrement_table_entries()
 					break
 				else:
 					i = line_numbers_arranged[i]
+
+	def decrement_table_entries(self):
+		# rem---Decrement table entries--- : rem [am] 4890
+		# local
+		j_array = [0] * 4
+
+		j_array[0] = p(j1)
+		j_array[1] = q(j1)
+		if self.r_array[j1] % 2 != 0:
+			self.negative_premise_count -= 1
+			j_array[3] = 1
+		else:
+			if self.term_types[q_array[j1]] == 2:
+				j_array[3] = 1
+			else:
+				j_array[3] = 0
+		if self.r_array[j1] >= 2:
+			j_array[2] = 1
+		else:
+			j_array[2] = 0
+		for k in range(2):
+			self.term_occurrences[j_array[k]] -= 1
+			if self.term_occurrences[j_array[k]] == 0:
+				self.term_strings[j_array[k]] = ""
+				self.term_article[j_array[k]] = 0
+				self.term_type[j_array[k]] = 0
+			endif
+			self.term_dist_count[j_array[k]] -= j_array[k+2]
+
 
 	def sub_enter_line(self, a1, j1):
 		a1 = self.a_array[self.a_array_0]
