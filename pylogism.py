@@ -135,20 +135,27 @@ plurals = dict(
 
 class Syllogism:
 	show_messages = True
+	premise_list = []
+
+
 	line_numbers_arranged = []		# l()
 	line_strings = []		# l$()
 	term_article = []		# b()
 	term_strings = []		# t$()
-	term_type = []			# g()
+	term_types = []			# g()
 	conclusion_terms = []	# c()
 	neg_premises = 0		# n1
 	modern_valid = False	# v1
 	symbol_count = 0		# l1
 	lowest_line = 0			# l(0)
 
-	recent_term_strings = []	# w$()
-	recent_symbol_types = []	# t()
-	recent_symbol_strings = []	# s$()
+	#recent_term_strings = []	# w$()
+	recent_term_1 = ''
+	recent_term_2 = ''
+	recent_term_type_1 = (-1)
+	recent_term_type_2 = (-1)
+	#recent_symbol_types = []	# t()
+	#recent_symbol_strings = []	# s$()
 
 	syllogism_form = (-1)		# d1
 
@@ -165,7 +172,18 @@ class Syllogism:
 	#dim g$(2),recent_symbol_strings[6],recent_term_strings[MY_TWO],x$(7),y$(7),z(7)
 
 	def __init__(self):
-		a_array = range(64)
+		self.a_array = range(64)
+		self.a_array_0 = 0
+
+		self.line_numbers_arranged = [0] * 64		# l()
+		self.line_strings = [''] * 64		# l$()
+		self.term_article = [0] * 64		# b()
+		self.term_strings = [''] * 64		# t$()
+		self.term_types = [0] * 64			# g()
+
+		q_array = [0] * 64
+		r_array = [0] * 64
+		
 		self.main()
 		#pass
 
@@ -230,6 +248,8 @@ class Syllogism:
 						function()
 					else:
 						function(True)
+				else:
+					self.scan_line(line)
 					
 		if self.show_messages:
 			print "(Some versions support typing CONT to continue)"	
@@ -362,13 +382,13 @@ class Syllogism:
 
 	def show_parse_error_missing_copula(self):
 		print "** Missing copula is/are"
-		show_parse_error_help()
+		self.show_parse_error_help()
 	def show_parse_error_missing_subject_term(self):
 		print "** Subject term bad or missing"
-		show_parse_error_help()
+		self.show_parse_error_help()
 	def show_parse_error_missing_predicate(self):
 		print "** Predicate term bad or missing"
-		show_parse_error_help()
+		self.show_parse_error_help()
 	def show_parse_error_help(self):
 		if self.show_messages:
 			print "Enter SYNTAX for help with statements"
@@ -378,10 +398,15 @@ class Syllogism:
 		self.new_syllogism()
 		for line in sample_lines:
 			print line
-			self.split_line()
-			self.parse_line()
-			self.enter_line()
+			self.split_line(line)
+			self.parse_line(line)
+			self.enter_line(line)
 			self.insert_terms()
+			
+			# new
+			#p = Premise(line)
+			#self.premise_list.append(p)
+
 		if self.show_messages:
 			print "Suggestion: try the LINK or LINK* command."
 			
@@ -494,14 +519,14 @@ class Syllogism:
 		if modern_valid:
 			print "  * Aristotle-valid only, i.e. on requirement that term \"{}\" denotes.".format(self.term_strings[v1])
 
-	def enter_line(self):
+	def enter_line(self, line=''):
 		# rem---Enter line into list--- : rem 4530
 		pass
 
 	def list_lines(self, analyze=False):
 		# rem---list--- : rem [am] 7460
 		out_list = []
-		i = lowest_line
+		i = self.lowest_line
 		while i > 0:
 			out = ''
 			out += self.line_numbers_arranged[i] + " "
@@ -516,18 +541,31 @@ class Syllogism:
 				out += line_strings[i]
 			out_list.append(out)
 			i += 1
-		print "\n".join(out_list)
+		if len(out_list) > 0:
+			print "\n".join(out_list)
+
+	def list_premises(self, analyze=False):
+		for p in self.premise_list:
+			print p
+
 
 	# implemented but a_array is not entirely clear
 	def new_syllogism(self):
 		if self.lowest_line > 0:
-			self.term_dist_count = []
-			self.term_strings = []
-			self.term_article = []
-			self.term_occurrences = []
-			self.term_type = []
+			for i in range(symbol_count):
+				self.term_dist_count[i] = 0
+				self.term_strings[i] = ''
+				self.term_article[i] = 0
+				self.term_occurrences[i] = 0
+				self.term_type[i] = 0
 			self.symbol_count = 0
 			self.neg_premises = 0
+			
+			#self.term_dist_count = []
+			#self.term_strings = []
+			#self.term_article = []
+			#self.term_occurrences = []
+			#self.term_type = []
 			j = self.lowest_line
 			while j > 0:
 				self.a_array_0 -= 1
@@ -537,10 +575,10 @@ class Syllogism:
 			self.lowest_line = 0
 
 	def insert_terms(self):
-		# rem---Add recent_term_strings[MY_ONE], recent_term_strings[MY_TWO] to table term_strings$()--- : rem [am] 3400
+		# rem---Add self.recent_term_1, self.recent_term_2 to table term_strings$()--- : rem [am] 3400
 		pass
 	
-	def split_line(self):
+	def split_line(self, line=''):
 		# rem--scan line L1$ into array S$() : rem 2020
 		pass
 
@@ -549,71 +587,71 @@ class Syllogism:
 	# rem---Parse line in S$()--- : rem [am] 2890
 	def parse_line(self, premise):
 		self.syllogism_form = -1
-		if premise.symbol_string_with_index(2) == "all":
-			if premise.symbol_type_with_index(3) != 6:
-				show_parse_error_missing_subject_term()
-			elif premise.symbol_type_with_index(4) != 5:
-				show_parse_error_missing_copula()
-			elif premise.symbol_type_with_index(5) != 6:
-				show_parse_error_missing_predicate()
+		if self.term_strings[1] == "all":
+			if self.term_strings[2] != 6:
+				self.show_parse_error_missing_subject_term()
+			elif self.term_types[3] != 5:
+				self.show_parse_error_missing_copula()
+			elif self.term_types[4] != 6:
+				self.show_parse_error_missing_predicate()
 			else:
-				recent_term_strings[MY_ONE] = premise.symbol_string_with_index(3)
-				recent_term_strings[MY_TWO] = premise.symbol_string_with_index(5)
+				self.recent_term_1 = self.term_strings[2]
+				self.recent_term_2 = self.term_strings[4]
 				# rem all A is B
 				self.syllogism_form = 2
-		elif premise.symbol_string_with_index(2) == "some":
-			if premise.symbol_type_with_index(3) != 6:
-				show_parse_error_missing_subject_term()
-			elif premise.symbol_type_with_index(4) != 5:
-				show_parse_error_missing_copula()
-			elif premise.symbol_string_with_index(5) != "not":
-				if premise.symbol_type_with_index(5) != 6:
-					show_parse_error_missing_predicate()
+		elif self.term_strings[1] == "some":
+			if self.term_types[2] != 6:
+				self.show_parse_error_missing_subject_term()
+			elif self.term_types[3] != 5:
+				self.show_parse_error_missing_copula()
+			elif self.term_strings[4] != "not":
+				if self.term_types[4] != 6:
+					self.show_parse_error_missing_predicate()
 				else:
-					recent_term_strings[MY_ONE] = premise.symbol_string_with_index(3)
-					recent_term_strings[MY_TWO] = premise.symbol_string_with_index(5)
+					self.recent_term_1 = self.term_strings[2]
+					self.recent_term_2 = self.term_strings[4]
 					# rem Some A is B
 					self.syllogism_form = 0
 			else:
-				if premise.symbol_type_with_index(6) != 6:
-					show_parse_error_missing_predicate()
+				if self.term_types[5] != 6:
+					self.show_parse_error_missing_predicate()
 				else:
-					recent_term_strings[MY_ONE] = premise.symbol_string_with_index(3)
-					recent_term_strings[MY_TWO] = premise.symbol_string_with_index(6)
+					self.recent_term_1 = self.term_strings[2]
+					self.recent_term_2 = self.term_strings[5]
 					# rem some A is not B
 					self.syllogism_form = 1
-		elif premise.symbol_string_with_index(2) == "no":
-			if premise.symbol_type_with_index(3) != 6:
-				show_parse_error_missing_subject_term()
-			elif premise.symbol_type_with_index(4) != 5:
-				show_parse_error_missing_copula()
-			elif premise.symbol_type_with_index(5) != 6:
-				show_parse_error_missing_predicate()
-				show_parse_error_help()
+		elif self.term_strings[1] == "no":
+			if self.term_types[2] != 6:
+				self.show_parse_error_missing_subject_term()
+			elif self.term_types[3] != 5:
+				self.show_parse_error_missing_copula()
+			elif self.term_types[4] != 6:
+				self.show_parse_error_missing_predicate()
+				self.show_parse_error_help()
 			else:
 				# rem no A is B
-				recent_term_strings[MY_ONE] = premise.symbol_string_with_index(3)
-				recent_term_strings[MY_TWO] = premise.symbol_string_with_index(5)
+				self.recent_term_1 = self.term_strings[2]
+				self.recent_term_2 = self.term_strings[4]
 				self.syllogism_form = 3
-		elif premise.symbol_type_with_index(2) != 6:
-			show_parse_error_missing_subject_term()
-		elif premise.symbol_type_with_index(3) == 5:
-			recent_term_strings[MY_ONE] = premise.symbol_string_with_index(2)
-			if premise.symbol_string_with_index(4) != "not":
-				if premise.symbol_type_with_index(4) != 6:
-					show_parse_error_missing_predicate()
+		elif self.term_types[1] != 6:
+			self.show_parse_error_missing_subject_term()
+		elif self.term_types[2] == 5:
+			self.recent_term_1 = self.term_strings[1]
+			if self.term_strings[3] != "not":
+				if self.term_types[3] != 6:
+					self.show_parse_error_missing_predicate()
 				# rem a is T
 				self.syllogism_form = 4
-				recent_term_strings[MY_TWO] = premise.symbol_string_with_index(4)
+				self.recent_term_2 = self.term_strings[3]
 			else:
-				if premise.symbol_type_with_index(5) != 6:
-					show_parse_error_missing_predicate()
+				if self.term_types[4] != 6:
+					self.show_parse_error_missing_predicate()
 				else:
 					# rem a is not T
 					self.syllogism_form = 5
-					recent_term_strings[MY_TWO] = premise.symbol_string_with_index(5)
+					self.recent_term_2 = self.term_strings[4]
 		else:
-			show_parse_error_missing_copula()
+			self.show_parse_error_missing_copula()
 
 	def test_offered_conclusion(self):
 		# 6630 rem---test offered conclusion---
@@ -629,11 +667,11 @@ class Syllogism:
 		return (-1)
 
 	# still being reworked
-	def scan_line(self):
+	def scan_line(self, line=''):
 		# 1570 rem--scan line L1$ into array S$()
-		self.split_line()
-		if self.recent_symbol_types[MY_ONE] == 1:
-			if self.recent_symbol_types[MY_TWO] > 0:
+		self.split_line(line)
+		if self.recent_term_type_1 == 1:
+			if self.recent_term_type_2 > 0:
 				# rem parse the line in S$()
 				self.parse_line()
 				if syllogism_form >= 0:
@@ -648,7 +686,7 @@ class Syllogism:
 				else:
 					self.show_error_no_premises()
 		else:
-			if self.recent_symbol_types[MY_ONE] == 0:
+			if self.recent_term_type_1 == 0:
 				self.print_hint()
 			else:
 				# draw/test conclusion
@@ -659,46 +697,48 @@ class Syllogism:
 						# poss. conclusion?
 						self.see_if_conclusion_possible()
 					if j1 <= 1:
-						if self.recent_symbol_types[MY_TWO]:
+						if self.recent_term_type_2:
 							self.test_offered_conclusion()
 						else:
 							# test/draw conclusion
 							self.compute_conclusion()
 
 
-class Premise:
-	line_num = ''
-	line_txt = ''
-	term_1 = ''
-	term_2 = ''
-
-	symbol_strings = []
-	symbol_types = []
-
-	def __init__(self, txt=''):
-		line_num = (-1)
-		line_txt = txt
-		term_1 = ''
-		term_2 = ''
-	
-	def parse_line(self):
-		pass
-
-	def split_line(self):
-		pass
-
-
-	def symbol_string_with_index(self, idx):
-		r = ''
-		if idx < len(symbol_strings):
-			r = symbol_strings[idx]
-		return r
-	
-	def symbol_type_with_index(self, idx):
-		r = ''
-		if idx < len(symbol_types):
-			r = symbol_types[idx]
-		return r
+#class Premise:
+#	line_num = ''
+#	line_txt = ''
+#	term_1 = ''
+#	term_2 = ''
+#	term_1_type = (-1)
+#	term_2_type = (-1)
+#
+#	symbol_strings = []
+#	symbol_types = []
+#
+#	def __init__(self, txt=''):
+#		line_num = (-1)
+#		line_txt = txt
+#		term_1 = ''
+#		term_2 = ''
+#	
+#	def parse_line(self):
+#		pass
+#
+#	def split_line(self):
+#		pass
+#
+#
+#	def symbol_string_with_index(self, idx):
+#		r = ''
+#		if idx < len(symbol_strings):
+#			r = symbol_strings[idx]
+#		return r
+#	
+#	def symbol_type_with_index(self, idx):
+#		r = ''
+#		if idx < len(symbol_types):
+#			r = symbol_types[idx]
+#		return r
 
 s = Syllogism()
 #test_line1 = '10 all men are mortal'
