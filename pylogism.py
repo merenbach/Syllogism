@@ -420,9 +420,9 @@ class Syllogism:
 			
 	def show_dump(self):
 		# 8890 rem---"Dump" values of variables---
-		print("Highest symbol table loc. used: {}  Negative premises: {}".format(self.symbol_count, self.neg_premises))
+		print("Highest symbol table loc. used: {0}  Negative premises: {1}".format(self.symbol_count, self.neg_premises))
 		if self.symbol_count > 0:
-			print("Adr. art. term {} type       occurs    dist. count".format(self.spaces(48-14)))
+			print("Adr. art. term {0} type       occurs    dist. count".format(self.spaces(48-14)))
 			for i in range(self.symbol_count):
 				# rem Metal's lack of tabbing gets difficult here...
 				itab = 7-len(str(i))
@@ -465,12 +465,12 @@ class Syllogism:
 						print("this routine does not convert entered term to lower-case or singular.")
 					else:
 						if address >= self.symbol_count:
-							print("Address {} too large.  Symbol table only of length ".format(address, self.symbol_count))
+							print("Address {0} too large.  Symbol table only of length ".format(address, self.symbol_count))
 						else:
-							print("Enter new term to replace {} '".format(term_type_names[self.term_type[address]], self.term_strings[address]))
+							print("Enter new term to replace {0} '".format(term_type_names[self.term_type[address]], self.term_strings[address]))
 							new_term = raw_input(prompt)
 							self.term_strings[address] = new_term
-							print("Replaced by \"{}\"".format(new_term))
+							print('Replaced by "{0}"'.format(new_term))
 					print
 		print("Exit from substitution routine")
 	
@@ -494,38 +494,38 @@ class Syllogism:
 			if self.neg_premises > 0:
 				# negative conclusion
 				if term_dist_count_c2 == 0:
-					z = "Some {} is not {}{}".format(term_strings_c2, article_strings_c1, term_strings_c1)
+					z = "Some {0} is not {1}{2}".format(term_strings_c2, article_strings_c1, term_strings_c1)
 				elif term_dist_count_c1 == 0:
-					z = "Some {} is not {}{}".format(term_strings_c1, article_strings_c2, term_strings_c2)
+					z = "Some {0} is not {1}{2}".format(term_strings_c1, article_strings_c2, term_strings_c2)
 				elif self.term_type[c1] >= 2:
-					z = "{} is not {}{}".format(term_strings_c1, article_strings_c2, term_strings_c2)
+					z = "{0} is not {1}{2}".format(term_strings_c1, article_strings_c2, term_strings_c2)
 				elif self.term_type[c2] >= 2:
-					z = "{} is not {}{}".format(term_strings_c2, article_strings_c1, term_strings_c1)
+					z = "{0} is not {1}{2}".format(term_strings_c2, article_strings_c1, term_strings_c1)
 				elif term_article_c1 == 0 and term_article_c2 > 0:
-					z = "No {} is {}{}".format(term_strings_c2, article_strings_c1, term_strings_c1)
+					z = "No {0} is {1}{2}".format(term_strings_c2, article_strings_c1, term_strings_c1)
 				else:
-					z = "No {} is {}{}".format(term_strings_c1, article_strings_c2, term_strings_c2)
+					z = "No {0} is {1}{2}".format(term_strings_c1, article_strings_c2, term_strings_c2)
 			else:
 				# affirmative conclusion
 				if term_dist_count_c1 > 0:
 					if self.term_type[c1] != 2:
-						z = "All {} is {}".format(term_strings_c1, term_strings_c2)
+						z = "All {0} is {1}".format(term_strings_c1, term_strings_c2)
 					else:
-						z = "{} is {}{}".format(term_strings_c1, article_strings_c2, term_strings_c2)
+						z = "{0} is {1}{2}".format(term_strings_c1, article_strings_c2, term_strings_c2)
 				elif term_dist_count_c2 > 0:
 					if self.term_type[c2] != 2:
-						z = "All {} is {}".format(term_strings_c2, term_strings_c1)
+						z = "All {0} is {1}".format(term_strings_c2, term_strings_c1)
 					else:
-						z = "{} is {}{}".format(term_strings_c2, article_strings_c1, term_strings_c1)
+						z = "{0} is {1}{2}".format(term_strings_c2, article_strings_c1, term_strings_c1)
 				else:
 					if term_article_c1 == 0 and term_article_c2 > 0:
-						z = "Some {} is {}{}".format(term_strings_c2, article_strings_c1, term_strings_c1)
+						z = "Some {0} is {1}{2}".format(term_strings_c2, article_strings_c1, term_strings_c1)
 					else:
-						z = "Some {} is {}{}".format(term_strings_c1, article_strings_c2, term_strings_c2)
+						z = "Some {0} is {1}{2}".format(term_strings_c1, article_strings_c2, term_strings_c2)
 		# PRINT  conclusion
 		print('  / ' + z)
 		if modern_valid:
-			print("  * Aristotle-valid only, i.e. on requirement that term \"{}\" denotes.".format(self.term_strings[v1]))
+			print('  * Aristotle-valid only, i.e. on requirement that term "{0}" denotes.'.format(self.term_strings[v1]))
 
 	def enter_line(self, line=''):
 		# rem---Enter line into list--- : rem 4530
