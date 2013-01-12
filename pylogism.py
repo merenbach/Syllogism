@@ -1,4 +1,9 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import os
+
+
 
 # from the latest BASIC distribution:
 #	Syllogism 1.0. November 8, 2002
@@ -198,9 +203,9 @@ class Syllogism:
 
 	def intro(self):
 		self.cls()
-		print "Syllogism Program Copyright (c) 1988 Richard Sharvy"
-		print "Syllogism 1.0 (c) 2002 Richard Sharvy's estate"
-		print "Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org"
+		print("Syllogism Program Copyright (c) 1988 Richard Sharvy")
+		print("Syllogism 1.0 (c) 2002 Richard Sharvy's estate")
+		print("Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org")
 		print
 
 	def cls(self):
@@ -219,7 +224,7 @@ class Syllogism:
 
 	def print_hint(self):
 		if self.show_messages:
-			print "Enter HELP for list of commands"
+			print("Enter HELP for list of commands")
 
 	def request_input(self):
 		functions = {
@@ -255,7 +260,7 @@ class Syllogism:
 					self.scan_line(line)
 					
 		if self.show_messages:
-			print "(Some versions support typing CONT to continue)"	
+			print("(Some versions support typing CONT to continue)")
 		print
 	
 	def toggle_messages(self):
@@ -265,13 +270,13 @@ class Syllogism:
 			state = 'on'
 		else:
 			state = 'off'
-		print 'Messages turned ' + state
+		print('Messages turned {0}'.format(state))
 
 	def strip_string(self, string):
 		punctuation = ('.', '?', '!')
 		string = string.rstrip()
 		while string[-1:] in punctuation:
-			print self.spaces(len(string)) + "^   Punctuation mark ignored"
+			print(self.spaces(len(string)) + "^   Punctuation mark ignored")
 			#line = line.rstrip('.?!')
 			string = string[:-1]
 			string = string.rstrip()
@@ -281,80 +286,80 @@ class Syllogism:
 	def print_commands(self):
 		# rem---List valid inputs--- : rem [am] 7660
 		self.cls()
-		print "Valid commands are:"
-		print "   <n>  [ <statement> ]   Insert, delete, or replace premise number  <n> "
-		print self.spaces(28) + "Examples:   10  All men are mortal"
-		print self.spaces(40) + "10"
-		print "  DUMP" + self.spaces(15) + "Prints symbol table, distribution count, etc."
-		print "  HELP" + self.spaces(15) + "Prints this list"
-		print "  INFO" + self.spaces(15) + "Gives information about syllogisms"
-		print "  LIST" + self.spaces(15) + "Lists premises"
-		print "  LIST*" + self.spaces(14) + "Same, but displays distribution analysis:"
-		print self.spaces(25) + "distributed positions marked with '*', "
-		print self.spaces(25) + "designators marked with '+'"
-		print "  LINK" + self.spaces(15) + "Lists premises in order of term-links (if possible)"
-		print "  LINK*" + self.spaces(14) + "Same, but in distribution-analysis format"
-		print "  MSG" + self.spaces(16) + "Turns on/off Printing of certain messages and warnings"
-		print "  NEW" + self.spaces(16) + "Erases current syllogism"
-		print "  SAMPLE" + self.spaces(13) + "Erases current syllogism and enters sample syllogism"
-		print "  STOP" + self.spaces(15) + "Stops entire program"
-		print "  SUBSTITUTE" + self.spaces(9) + "Allows uniform substitution of new terms in old premises"
-		print "  SYNTAX" + self.spaces(13) + "Explains statement syntax, with examples"
-		print "  /" + self.spaces(18) + "Asks program to draw conclusion"
-		print "  /  <statement>" + self.spaces(5) + "Tests  <statement>  as conclusion"
-		print self.spaces(25) + "Note: this can be done even if there are no premises"
+		print("Valid commands are:")
+		print("   <n>  [ <statement> ]   Insert, delete, or replace premise number  <n> ")
+		print(self.spaces(28) + "Examples:   10  All men are mortal")
+		print(self.spaces(40) + "10")
+		print("  DUMP" + self.spaces(15) + "Prints symbol table, distribution count, etc.")
+		print("  HELP" + self.spaces(15) + "Prints this list")
+		print("  INFO" + self.spaces(15) + "Gives information about syllogisms")
+		print("  LIST" + self.spaces(15) + "Lists premises")
+		print("  LIST*" + self.spaces(14) + "Same, but displays distribution analysis:")
+		print(self.spaces(25) + "distributed positions marked with '*', ")
+		print(self.spaces(25) + "designators marked with '+'")
+		print("  LINK" + self.spaces(15) + "Lists premises in order of term-links (if possible)")
+		print("  LINK*" + self.spaces(14) + "Same, but in distribution-analysis format")
+		print("  MSG" + self.spaces(16) + "Turns on/off Printing of certain messages and warnings")
+		print("  NEW" + self.spaces(16) + "Erases current syllogism")
+		print("  SAMPLE" + self.spaces(13) + "Erases current syllogism and enters sample syllogism")
+		print("  STOP" + self.spaces(15) + "Stops entire program")
+		print("  SUBSTITUTE" + self.spaces(9) + "Allows uniform substitution of new terms in old premises")
+		print("  SYNTAX" + self.spaces(13) + "Explains statement syntax, with examples")
+		print("  /" + self.spaces(18) + "Asks program to draw conclusion")
+		print("  /  <statement>" + self.spaces(5) + "Tests  <statement>  as conclusion")
+		print(self.spaces(25) + "Note: this can be done even if there are no premises")
 	
 	def print_syntax(self):
 		# rem--"syntax"-- : rem [am] 7960
 		self.cls()
-		print "Valid statement forms:"
-		print "  All    <general term #1>   is/are       <general term #2>"
-		print "  Some   <general term #1>   is/are       <general term #2>"
-		print "  Some   <general term #1>   is/are not   <general term #2>"
-		print "  No     <general term #1>   is/are       <general term #2>"
-		print 
-		print "   <designator>      is/are       <general term>"
-		print "   <designator>      is/are not   <general term>"
-		print "   <designator A>    is/are       <designator B>"
-		print "   <designator A>    is/are not   <designator B>"
-		print 
-		print "Examples:"
-		print "  All tall men are Greek gods             The teacher of Plato is wise"
-		print "  Some cheese is tasty                    Socrates is not handsome"
-		print "  Some cheese is not soft                 The teacher of Plato is Socrates"
-		print "  No libertarians are cringing wimps      Socrates is not the teacher of Thales"
-		print 
-		print "Since e.g. 'Socrates is grunch' is ambiguous ('grunch' could be"
-		print "either a designator or a general term), the program will try to"
-		print "resolve the ambiguity from other uses of the term in the syllogism."
-		print "The indefinite article 'sm' may be used with mass terms in predicates"
-		print "(e.g. 'This puddle is sm ink') to ensure that the mass term is taken"
-		print "as a general term rather than as a designator."
+		print("Valid statement forms:")
+		print("  All    <general term #1>   is/are       <general term #2>")
+		print("  Some   <general term #1>   is/are       <general term #2>")
+		print("  Some   <general term #1>   is/are not   <general term #2>")
+		print("  No     <general term #1>   is/are       <general term #2>")
+		print
+		print("   <designator>      is/are       <general term>")
+		print("   <designator>      is/are not   <general term>")
+		print("   <designator A>    is/are       <designator B>")
+		print("   <designator A>    is/are not   <designator B>")
+		print
+		print("Examples:")
+		print("  All tall men are Greek gods             The teacher of Plato is wise")
+		print("  Some cheese is tasty                    Socrates is not handsome")
+		print("  Some cheese is not soft                 The teacher of Plato is Socrates")
+		print("  No libertarians are cringing wimps      Socrates is not the teacher of Thales")
+		print
+		print("Since e.g. 'Socrates is grunch' is ambiguous ('grunch' could be")
+		print("either a designator or a general term), the program will try to")
+		print("resolve the ambiguity from other uses of the term in the syllogism.")
+		print("The indefinite article 'sm' may be used with mass terms in predicates")
+		print("(e.g. 'This puddle is sm ink') to ensure that the mass term is taken")
+		print("as a general term rather than as a designator.")
 	
 	def print_info(self):
 		# rem---Info--- : rem [am] 8290
 		self.cls()
-		print "   To use this program, enter a syllogism, one line at a time,"
-		print "and  THEN  test conclusions or ask the program to draw a conclusion."
+		print("   To use this program, enter a syllogism, one line at a time,")
+		print("and  THEN  test conclusions or ask the program to draw a conclusion.")
 		print
-		print "   A syllogism as (mis)defined here is a (possibly empty) set of"
-		print "numbered premises, each of a form specified in the SYNTAX list."
-		print "No term may occur more than twice.  Exactly two terms must occur"
-		print "exactly once: these are the two 'end' terms, which will appear in"
-		print "the conclusion.  Furthermore, each premise must have exactly one"
-		print "term in common with its successor, for some ordering of the premises."
-		print "Example:"
-		print "   10 Socrates is a Greek"
-		print "   20 All men are mortal"
-		print "   30 All Greeks are men"
-		print "   40 No gods are mortal"
+		print("   A syllogism as (mis)defined here is a (possibly empty) set of")
+		print("numbered premises, each of a form specified in the SYNTAX list.")
+		print("No term may occur more than twice.  Exactly two terms must occur")
+		print("exactly once: these are the two 'end' terms, which will appear in")
+		print("the conclusion.  Furthermore, each premise must have exactly one")
+		print("term in common with its successor, for some ordering of the premises.")
+		print("Example:")
+		print("   10 Socrates is a Greek")
+		print("   20 All men are mortal")
+		print("   30 All Greeks are men")
+		print("   40 No gods are mortal")
 		print
-		print "Note: using a '/' command to draw or test a conclusion does not"
-		print "require you to stop.  You can continue, adding or deleting premises"
-		print "and drawing and testing more conclusions."
+		print("Note: using a '/' command to draw or test a conclusion does not")
+		print("require you to stop.  You can continue, adding or deleting premises")
+		print("and drawing and testing more conclusions.")
 		print
-		print "Reference:  H. Gensler, 'A Simplified Decision Procedure for Categor-"
-		print "   ical Syllogisms,' Notre Dame J. of Formal Logic 14 (1973) 457-466."
+		print("Reference:  H. Gensler, 'A Simplified Decision Procedure for Categor-")
+		print("   ical Syllogisms,' Notre Dame J. of Formal Logic 14 (1973) 457-466.")
 
 	def singularize(self, string):
 		# divide by whitespace and remove blank items
@@ -381,26 +386,26 @@ class Syllogism:
 		return ' '.join(words_out)
 
 	def show_error_no_premises(self):
-		print "No premises"
+		print("No premises")
 
 	def show_parse_error_missing_copula(self):
-		print "** Missing copula is/are"
+		print("** Missing copula is/are")
 		self.show_parse_error_help()
 	def show_parse_error_missing_subject_term(self):
-		print "** Subject term bad or missing"
+		print("** Subject term bad or missing")
 		self.show_parse_error_help()
 	def show_parse_error_missing_predicate(self):
-		print "** Predicate term bad or missing"
+		print("** Predicate term bad or missing")
 		self.show_parse_error_help()
 	def show_parse_error_help(self):
 		if self.show_messages:
-			print "Enter SYNTAX for help with statements"
+			print("Enter SYNTAX for help with statements")
 
 	def sample_syllogism(self):
 		# 8980 rem--sample--
 		self.new_syllogism()
 		for line in sample_lines:
-			print line
+			print(line)
 			self.split_line(line)
 			self.parse_line()
 			self.enter_line(line)
@@ -411,13 +416,13 @@ class Syllogism:
 			#self.premise_list.append(p)
 
 		if self.show_messages:
-			print "Suggestion: try the LINK or LINK* command."
+			print("Suggestion: try the LINK or LINK* command.")
 			
 	def show_dump(self):
 		# 8890 rem---"Dump" values of variables---
-		print "Highest symbol table loc. used: {}  Negative premises: {}".format(self.symbol_count, self.neg_premises)
+		print("Highest symbol table loc. used: {}  Negative premises: {}".format(self.symbol_count, self.neg_premises))
 		if self.symbol_count > 0:
-			print "Adr. art. term {} type       occurs    dist. count".format(self.spaces(48-14))
+			print("Adr. art. term {} type       occurs    dist. count".format(self.spaces(48-14)))
 			for i in range(self.symbol_count):
 				# rem Metal's lack of tabbing gets difficult here...
 				itab = 7-len(str(i))
@@ -425,8 +430,8 @@ class Syllogism:
 				tstringtab = 49-len(self.term_strings[i])-11
 				gtab = 60-len(str(self.term_type[i]))-49
 				otab = 71-len(str(self.term_occurrences[i]))-60
-				print i + self.spaces(itab) + article_strings[term_article[i]] + self.spaces(astringtab) + term_strings[i] + self.spaces(tstringtab) + term_type[i] + self.spaces(gtab);
-				print self.term_occurrences[i] + self.spaces(otab) + self.term_dist_count[i]
+				print(i + self.spaces(itab) + article_strings[term_article[i]] + self.spaces(astringtab) + term_strings[i] + self.spaces(tstringtab) + term_type[i] + self.spaces(gtab))
+				print(self.term_occurrences[i] + self.spaces(otab) + self.term_dist_count[i])
 
 	# should work, but not fully tested
 	def substitute_terms(self):
@@ -434,7 +439,7 @@ class Syllogism:
 		address = 0
 		while address != (-1):
 			skip = False
-			print 'Enter address of old term; or 0 for help, -1 to exit, -2 for dump'
+			print('Enter address of old term; or 0 for help, -1 to exit, -2 for dump')
 			address = raw_input(prompt)
 			try:
 				address = int(address)
@@ -445,29 +450,29 @@ class Syllogism:
 					self.show_dump()
 				else:
 					if address == 0:
-						print "   This subroutine allows a term in a syllogism to be uniformly"
-						print "replaced by another term.  This is useful e.g. for finding an"
-						print "interpretation which actually makes the premises true, to produce as"
-						print "an obvious example of invalidity an argument having exactly the same"
-						print "logical form.  The substitution does not take place in the premises"
-						print "as originally entered; it takes place in the terms as stored within"
-						print "the program.  Thus, the LINK and LIST commands will display the"
-						print "original premises; to see the changed ones, use the LIST* and LINK*"
-						print "commands."
-						print "   To find the 'addresses' of the terms, enter -2 to run the DUMP."
-						print "   Warning: if you replace a term with another one already occurring"
-						print "in the syllogism, the result will not make much sense.  However,"
-						print "this routine does not convert entered term to lower-case or singular."
+						print("   This subroutine allows a term in a syllogism to be uniformly")
+						print("replaced by another term.  This is useful e.g. for finding an")
+						print("interpretation which actually makes the premises true, to produce as")
+						print("an obvious example of invalidity an argument having exactly the same")
+						print("logical form.  The substitution does not take place in the premises")
+						print("as originally entered; it takes place in the terms as stored within")
+						print("the program.  Thus, the LINK and LIST commands will display the")
+						print("original premises; to see the changed ones, use the LIST* and LINK*")
+						print("commands.")
+						print("   To find the 'addresses' of the terms, enter -2 to run the DUMP.")
+						print("   Warning: if you replace a term with another one already occurring")
+						print("in the syllogism, the result will not make much sense.  However,")
+						print("this routine does not convert entered term to lower-case or singular.")
 					else:
 						if address >= self.symbol_count:
-							print "Address {} too large.  Symbol table only of length ".format(address, self.symbol_count)
+							print("Address {} too large.  Symbol table only of length ".format(address, self.symbol_count))
 						else:
-							print "Enter new term to replace {} '".format(term_type_names[self.term_type[address]], self.term_strings[address])
+							print("Enter new term to replace {} '".format(term_type_names[self.term_type[address]], self.term_strings[address]))
 							new_term = raw_input(prompt)
 							self.term_strings[address] = new_term
-							print "Replaced by \"{}\"".format(new_term)
+							print("Replaced by \"{}\"".format(new_term))
 					print
-		print "Exit from substitution routine"
+		print("Exit from substitution routine")
 	
 	# experimental; need sanity-checks
 	# should work, though!
@@ -518,9 +523,9 @@ class Syllogism:
 					else:
 						z = "Some {} is {}{}".format(term_strings_c1, article_strings_c2, term_strings_c2)
 		# PRINT  conclusion
-		print '  / ' + z
+		print('  / ' + z)
 		if modern_valid:
-			print "  * Aristotle-valid only, i.e. on requirement that term \"{}\" denotes.".format(self.term_strings[v1])
+			print("  * Aristotle-valid only, i.e. on requirement that term \"{}\" denotes.".format(self.term_strings[v1]))
 
 	def enter_line(self, line=''):
 		# rem---Enter line into list--- : rem 4530
@@ -554,7 +559,7 @@ class Syllogism:
 			while True:
 				j1 = self.line_numbers_arranged[i]
 				if j1 == 0:
-					print "Line " + n + " not found"
+					print("Line " + n + " not found")
 					break
 				elif n == self.line_numbers_arranged[j1]:
 					self.a_array_0 -= 1
@@ -620,7 +625,7 @@ class Syllogism:
 			out_list.append(out)
 			i += 1
 		if len(out_list) > 0:
-			print "\n".join(out_list)
+			print("\n".join(out_list))
 
 	#def list_premises(self, analyze=False):
 	#	for p in self.premise_list:
@@ -656,7 +661,7 @@ class Syllogism:
 		pass
 
 	def show_error_invalid_cmd(self, i):
-		print self.spaces(spaces) + "^   Invalid numeral or command"
+		print(self.spaces(spaces) + "^   Invalid numeral or command")
 
 	def split_line(self, line=''):
 		pass
