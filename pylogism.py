@@ -223,6 +223,7 @@ class Syllogism:
 		#s = ''.join([' ' for n in range(space_count)])
 
 	def print_hint(self):
+		""" Print usage hint """
 		if self.show_messages:
 			print("Enter HELP for list of commands")
 
@@ -284,6 +285,7 @@ class Syllogism:
 		return string
 
 	def print_commands(self):
+		""" List valid inputs """
 		# rem---List valid inputs--- : rem [am] 7660
 		self.cls()
 		print("Valid commands are:")
@@ -559,7 +561,7 @@ class Syllogism:
 			while True:
 				j1 = self.line_numbers_arranged[i]
 				if j1 == 0:
-					print("Line " + n + " not found")
+					print("Line {0} not found".format(n))
 					break
 				elif n == self.line_numbers_arranged[j1]:
 					self.a_array_0 -= 1
