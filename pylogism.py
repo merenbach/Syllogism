@@ -144,7 +144,7 @@ class Premise(object):
         self.raw = line.strip()
         tokens = line.strip().split()
         self.line_number = int(tokens[0])
-        self.statement = tokens[1:]
+        self.statement = u' '.join(tokens[1:])
     
     def empty(self):
         """ Check whether this premise actually contains a statement.
@@ -237,13 +237,24 @@ class Rubric(object):
                 return True
         return False
 
+    def p(self):
+        lines = []
+        last_premise = self.premises[-1:]
+        if len(last_premise) > 0:
+            max_padding_chars = len(str(last_premise[0].line_number))
+            # Format lines with nice spacing
+            premise_groups = ((p.line_number, p.statement) for p in self.premises)
+            for p in premise_groups:
+                lines.append(u'{0} {1}'.format(str(p[0]).rjust(max_padding_chars), p[1]))
+        return u'\n'.join(lines)
+
     def __repr__(self):
-        return u'\n'.join(repr(p) for p in self.premises)
+        return self.p()
 
 class Syllogism(object):
     pass
 
-class SyllogismController:
+class SyllogismController(object):
 	show_messages = True
 	premise_list = []
 
@@ -672,7 +683,11 @@ s = Rubric()
 s.enter_line("10 all men are mortal")
 s.enter_line("30 all men are mortal")
 s.enter_line("30 a no men are mortal")
+s.enter_line("401 all men are mortal")
+s.enter_line("41 all men are mortal")
 s.enter_line("4 all men are mortal")
+s.enter_line("4012 all men are mortal")
+s.enter_line("50 all men are mortal")
 
 print(s)
 
