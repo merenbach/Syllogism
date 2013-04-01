@@ -138,7 +138,7 @@ plurals = dict(
 	]
 )
 
-class Syllogism:
+class SyllogismController:
 	show_messages = True
 	premise_list = []
 
@@ -982,7 +982,7 @@ class Syllogism:
 #			r = symbol_types[idx]
 #		return r
 
-s = Syllogism()
+s = SyllogismController()
 #test_line1 = '10 all men are mortal'
 #p = Premise(test_line1)
 
