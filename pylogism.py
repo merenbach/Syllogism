@@ -147,7 +147,12 @@ class Premise(object):
         self.statement = tokens[1:]
     
     def empty(self):
-        """ `True` if this has only a line number, `false` otherwise. """
+        """ Check whether this premise actually contains a statement.
+
+        Returns
+        -------
+        boolean : `True` if a statement exists for this premise, `False` otherwise.
+        """
         return not self.statement or len(self.statement) == 0
     
     def __repr__(self):
@@ -159,18 +164,40 @@ class Rubric(object):
         self.premises = []
 
     def enter_line(self, line):
-        """ Parse a string and try to add it as a line.
-            Return `true` on success and `false` on failure.
+        """ Try to parse a string into a premise and add it to our lookup table.
+        
+        Parameters
+        ----------
+        line : string
+               A string to parse into a premise.
+
+        Returns
+        -------
+        boolean : `True` if a premise was added successfully, `False` otherwise.
+                  If this method returns `False`, odds are that an error message was printed.
         """
         try:
             premise = Premise(line)
         except ValueError:
             # Invalid input
+            print("*** Invalid entry.")
             return False
         return self.enter_premise(premise)
     
     def enter_premise(self, premise):
-        if self.has_premise(premise) or not premise.empty():
+        """ Try to add a premise to our lookup table.
+        
+        Parameters
+        ----------
+        premise : Premise
+                  A premise to add to our lookup table.
+
+        Returns
+        -------
+        boolean : `True` if the premise was added successfully, `False` otherwise.
+                  If this method returns `False`, odds are that an error message was printed.
+        """
+        if self.has_conflict(premise) or not premise.empty():
             # Remove any lines with the same line number
             newlines = [p for p in self.premises if p.line_number != premise.line_number]
             
@@ -192,8 +219,19 @@ class Rubric(object):
             return False
         return True
 
-    def has_premise(self, premise):
-        """ Remove a premise """
+    def has_conflict(self, premise):
+        """ Check if a premise with the same number exists in the lookup table.
+        
+        Parameters
+        ----------
+        premise : Premise
+                  A premise for whose existence to check.
+
+        Returns
+        -------
+        boolean : `True` if a premise with the same number exists already, `False` otherwise.
+        """
+
         for p in self.premises:
             if p.line_number == premise.line_number:
                 return True
@@ -635,10 +673,7 @@ s.enter_line("10 all men are mortal")
 s.enter_line("30 all men are mortal")
 s.enter_line("30 a no men are mortal")
 s.enter_line("4 all men are mortal")
-s.enter_line('4 ')
-s.enter_line('10 ')
-s.enter_line('30 ')
-s.enter_line('30 ')
+
 print(s)
 
 #test_line1 = '10 all men are mortal'
