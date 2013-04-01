@@ -138,6 +138,73 @@ plurals = dict(
 	]
 )
 
+
+class Premise(object):
+    def __init__(self, line):
+        self.raw = line.strip()
+        tokens = line.strip().split()
+        self.line_number = int(tokens[0])
+        self.statement = tokens[1:]
+    
+    def empty(self):
+        """ `True` if this has only a line number, `false` otherwise. """
+        return not self.statement or len(self.statement) == 0
+    
+    def __repr__(self):
+        return self.raw
+
+class Rubric(object):
+    """ Hold a list of lines (of the format tuple(line number, statement))"""
+    def __init__(self):
+        self.premises = []
+
+    def enter_line(self, line):
+        """ Parse a string and try to add it as a line.
+            Return `true` on success and `false` on failure.
+        """
+        try:
+            premise = Premise(line)
+        except ValueError:
+            # Invalid input
+            return False
+        return self.enter_premise(premise)
+    
+    def enter_premise(self, premise):
+        if self.has_premise(premise) or not premise.empty():
+            # Remove any lines with the same line number
+            newlines = [p for p in self.premises if p.line_number != premise.line_number]
+            
+            # If a statement was included, replace the existing line
+            # Otherwise, simply don't put the statement into place
+            if not premise.empty():
+                newlines.append(premise)
+                # Sort the new premises by line number
+                # We only need to do this when adding lines                
+                newlines.sort(key=lambda p: p.line_number)
+            self.premises = newlines
+        elif len(self.premises) == 0:
+            # No premises have been entered
+            print("*** No premises have been entered.")
+            return False
+        else:
+            # The premise to remove did not exist
+            print("*** No premise with that line number exists.")
+            return False
+        return True
+
+    def has_premise(self, premise):
+        """ Remove a premise """
+        for p in self.premises:
+            if p.line_number == premise.line_number:
+                return True
+        return False
+
+    def __repr__(self):
+        return u'\n'.join(repr(p) for p in self.premises)
+
+class Syllogism(object):
+    pass
+
 class SyllogismController:
 	show_messages = True
 	premise_list = []
@@ -234,9 +301,9 @@ class SyllogismController:
 			'help': self.print_commands,
 			'syntax': self.print_syntax,
 			'info': self.print_info,
-			'dump': self.show_dump,
+            # 'dump': self.show_dump,
 			'msg': self.toggle_messages,
-			'substitute': self.substitute_terms,
+            # 'substitute': self.substitute_terms,
 			#'link': link(),
 			#'link*': link(),
 			'list': self.list_lines,
@@ -419,115 +486,6 @@ class SyllogismController:
 
 		if self.show_messages:
 			print("Suggestion: try the LINK or LINK* command.")
-			
-	def show_dump(self):
-		# 8890 rem---"Dump" values of variables---
-		print("Highest symbol table loc. used: {0}  Negative premises: {1}".format(self.symbol_count, self.neg_premises))
-		if self.symbol_count > 0:
-			print("Adr. art. term {0} type       occurs    dist. count".format(self.spaces(48-14)))
-			for i in range(self.symbol_count):
-				# rem Metal's lack of tabbing gets difficult here...
-				itab = 7-len(str(i))
-				astringtab = 11-len(self.article_strings[self.term_article[i]])-7
-				tstringtab = 49-len(self.term_strings[i])-11
-				gtab = 60-len(str(self.term_type[i]))-49
-				otab = 71-len(str(self.term_occurrences[i]))-60
-				print(i + self.spaces(itab) + article_strings[term_article[i]] + self.spaces(astringtab) + term_strings[i] + self.spaces(tstringtab) + term_type[i] + self.spaces(gtab))
-				print(self.term_occurrences[i] + self.spaces(otab) + self.term_dist_count[i])
-
-	# should work, but not fully tested
-	def substitute_terms(self):
-		#9060 rem---Substitute terms---
-		address = 0
-		while address != (-1):
-			skip = False
-			print('Enter address of old term; or 0 for help, -1 to exit, -2 for dump')
-			address = raw_input(prompt)
-			try:
-				address = int(address)
-			except:
-				skip = True
-			if address != -1 and skip == False:
-				if address == -2:
-					self.show_dump()
-				else:
-					if address == 0:
-						print("   This subroutine allows a term in a syllogism to be uniformly")
-						print("replaced by another term.  This is useful e.g. for finding an")
-						print("interpretation which actually makes the premises true, to produce as")
-						print("an obvious example of invalidity an argument having exactly the same")
-						print("logical form.  The substitution does not take place in the premises")
-						print("as originally entered; it takes place in the terms as stored within")
-						print("the program.  Thus, the LINK and LIST commands will display the")
-						print("original premises; to see the changed ones, use the LIST* and LINK*")
-						print("commands.")
-						print("   To find the 'addresses' of the terms, enter -2 to run the DUMP.")
-						print("   Warning: if you replace a term with another one already occurring")
-						print("in the syllogism, the result will not make much sense.  However,")
-						print("this routine does not convert entered term to lower-case or singular.")
-					else:
-						if address >= self.symbol_count:
-							print("Address {0} too large.  Symbol table only of length ".format(address, self.symbol_count))
-						else:
-							print("Enter new term to replace {0} '".format(term_type_names[self.term_type[address]], self.term_strings[address]))
-							new_term = raw_input(prompt)
-							self.term_strings[address] = new_term
-							print('Replaced by "{0}"'.format(new_term))
-					print
-		print("Exit from substitution routine")
-	
-	# experimental; need sanity-checks
-	# should work, though!
-	def compute_conclusion(self):
-		#rem---Compute conclusion--- : rem 6200
-		c1 = self.conclusion_terms[0]
-		c2 = self.conclusion_terms[1]
-		term_article_c1 = self.term_article[c1]
-		term_article_c2 = self.term_article[c2]
-		term_strings_c1 = self.term_strings[c1]
-		term_strings_c2 = self.term_strings[c2]
-		article_strings_c1 = self.article_strings[term_article_c1]
-		article_strings_c2 = self.article_strings[term_article_c2]
-		term_dist_count_c1 = self.term_dist_count[c1]
-		term_dist_count_c2 = self.term_dist_count[c2]
-
-		z = 'A is A'
-		if self.lowest_line > 0:
-			if self.neg_premises > 0:
-				# negative conclusion
-				if term_dist_count_c2 == 0:
-					z = "Some {0} is not {1}{2}".format(term_strings_c2, article_strings_c1, term_strings_c1)
-				elif term_dist_count_c1 == 0:
-					z = "Some {0} is not {1}{2}".format(term_strings_c1, article_strings_c2, term_strings_c2)
-				elif self.term_type[c1] >= 2:
-					z = "{0} is not {1}{2}".format(term_strings_c1, article_strings_c2, term_strings_c2)
-				elif self.term_type[c2] >= 2:
-					z = "{0} is not {1}{2}".format(term_strings_c2, article_strings_c1, term_strings_c1)
-				elif term_article_c1 == 0 and term_article_c2 > 0:
-					z = "No {0} is {1}{2}".format(term_strings_c2, article_strings_c1, term_strings_c1)
-				else:
-					z = "No {0} is {1}{2}".format(term_strings_c1, article_strings_c2, term_strings_c2)
-			else:
-				# affirmative conclusion
-				if term_dist_count_c1 > 0:
-					if self.term_type[c1] != 2:
-						z = "All {0} is {1}".format(term_strings_c1, term_strings_c2)
-					else:
-						z = "{0} is {1}{2}".format(term_strings_c1, article_strings_c2, term_strings_c2)
-				elif term_dist_count_c2 > 0:
-					if self.term_type[c2] != 2:
-						z = "All {0} is {1}".format(term_strings_c2, term_strings_c1)
-					else:
-						z = "{0} is {1}{2}".format(term_strings_c2, article_strings_c1, term_strings_c1)
-				else:
-					if term_article_c1 == 0 and term_article_c2 > 0:
-						z = "Some {0} is {1}{2}".format(term_strings_c2, article_strings_c1, term_strings_c1)
-					else:
-						z = "Some {0} is {1}{2}".format(term_strings_c1, article_strings_c2, term_strings_c2)
-		# PRINT  conclusion
-		print('  / ' + z)
-		if modern_valid:
-			print('  * Aristotle-valid only, i.e. on requirement that term "{0}" denotes.'.format(self.term_strings[v1]))
 
 	def enter_line(self, line=''):
 		# rem---Enter line into list--- : rem 4530
@@ -571,34 +529,6 @@ class SyllogismController:
 					break
 				else:
 					i = self.line_numbers_arranged[i]
-
-	def decrement_table_entries(self):
-		# rem---Decrement table entries--- : rem [am] 4890
-		# local
-		j_array = [0] * 4
-
-		j_array[0] = p(j1)
-		j_array[1] = q(j1)
-		if self.r_array[j1] % 2 != 0:
-			self.neg_premises -= 1
-			j_array[3] = 1
-		else:
-			if self.term_types[q_array[j1]] == 2:
-				j_array[3] = 1
-			else:
-				j_array[3] = 0
-		if self.r_array[j1] >= 2:
-			j_array[2] = 1
-		else:
-			j_array[2] = 0
-		for k in range(2):
-			self.term_occurrences[j_array[k]] -= 1
-			if self.term_occurrences[j_array[k]] == 0:
-				self.term_strings[j_array[k]] = ""
-				self.term_article[j_array[k]] = 0
-				self.term_type[j_array[k]] = 0
-			endif
-			self.term_dist_count[j_array[k]] -= j_array[k+2]
 
 	def sub_enter_line(self, a1, j1):
 		a1 = self.a_array[self.a_array_0]
@@ -658,292 +588,8 @@ class SyllogismController:
 			#self.line_numbers_arranged = []
 			self.lowest_line = 0
 
-	def insert_terms(self):
-		# rem---Add self.recent_term_1, self.recent_term_2 to table term_strings$()--- : rem [am] 3400
-		pass
-
 	def show_error_invalid_cmd(self, i):
 		print(self.spaces(spaces) + "^   Invalid numeral or command")
-
-	def split_line(self, line=''):
-		pass
-		# rem--scan line L1$ into array S$() : rem 2020
-		# 2020 rem---L1$ into array S$()---
-		#	# rem T(): 1:line num., 2:"/", 3:quantifier, 4:no/not, 5:is/are, 6:term
-		#	# rem                     10 SOME  FRIED COCONUTS   ARE  NOT  TASTY
-		#	# rem                      1   3        6            5    4     6
-		#	self.term_strings = filter(None, line.split())
-		#	self.term_types = list()
-		recent_symbol_strings = [''] * 6
-		recent_symbol_types = [0] * 6
-		for word in self.term_strings:
-			if len(self.term_strings) == 1:
-				if word == '/':
-					self.recent_symbol_types[0] = 2
-					pass
-				else:
-					if len(word) > 4:
-						#show_error_invalid_cmd(i + n)
-						break
-					else:
-						if (has_invalid_chars):
-							#show_error_invalid_cmd(i + n)
-							pass
-						else:
-							#self.term_types[1] = 1
-							pass
-						pass
-					n = len(recent_symbol_strings)
-					#if n > 4 then
-					#	procERROR_INVALID_CMD(i + n)
-					#	goto 2885
-					#else
-					#	for n in range(len(recent_symbol_strings)):
-					#		t$ = mid$(s$,n,1)
-					#		if asc(t$) > 57 or asc(t$) < 48 then
-					#			procERROR_INVALID_CMD(i + n)
-					#			goto 2885
-					#		endif
-					#	next n
-					#	t(1) = 1
-					#endif
-					#if len(self.term_strings) == 6:
-					#	
-					#		pass
-	
-	
-		#	#for j = 1 to 6
-		#	#	s$(j) = ""
-		#	#	t(j) = 0
-		#	#next j
-		#	p1 = 0
-		#	recent_article_types(2) = 0
-		#	j = 1
-		#	i = 1
-		#	l = len(l1$)
-		#	do
-		#		do
-		#			if i > l then 2885
-		#			s$ = mid$(l1$,i,1)
-		#			if s$ != " " then exit do
-		#			i = i+1
-		#		loop
-		#		for k = 1 to (l - i)
-		#			s$ = mid$(l1$,i+k,1)
-		#			if s$ = " " then exit for
-		#		next k
-		#		s$ = mid$(l1$,i,k) : rem S$ is set to next word
-		#		if j <= 1 then
-		#			if s$ = "/" then
-		#				t(1) = 2
-		#			else
-		#				n = len(s$)
-		#				if n > 4 then
-		#					procERROR_INVALID_CMD(i + n)
-		#					goto 2885
-		#				else
-		#					for n = 1 to len(s$)
-		#						t$ = mid$(s$,n,1)
-		#						if asc(t$) > 57 or asc(t$) < 48 then
-		#							procERROR_INVALID_CMD(i + n)
-		#							goto 2885
-		#						endif
-		#					next n
-		#					t(1) = 1
-		#				endif
-		#			endif
-		#			goto 2840
-		#		endif
-		#rem Scan : rem [am] 2520
-		#		if s$ = "somebody" or s$ = "something" or s$ = "nobody" or s$ = "nothing" then
-		#			procERR_RESERVED_WORD(s$, i + k - 1)
-		#			t(1) = 0
-		#			goto 2885
-		#		elseif s$ = "someone" or s$ = "everyone" or s$ = "everybody" or s$ = "everything" then
-		#			procERR_RESERVED_WORD(s$, i + k - 1)
-		#			t(1) = 0
-		#			goto 2885
-		#		elseif s$ = "all" or s$ = "some" then
-		#			if t(j) = 6 then
-		#				procERR_RESERVED_WORD(s$, i + k - 1)
-		#				t(1) = 0
-		#				goto 2885
-		#			else
-		#				t(j) = 3
-		#				goto 2840
-		#			endif
-		#		elseif s$ = "no" or s$ = "not" then
-		#			if t(j) = 6 then
-		#				procERR_RESERVED_WORD(s$, i + k - 1)
-		#				t(1) = 0
-		#				goto 2885
-		#			else
-		#				t(j) = 4
-		#				goto 2840
-		#			endif
-		#		elseif s$ = "is" or s$ = "are" then
-		#			if t(j) = 6 then
-		#				if not (t(j-1) = 5 or t(j-2) = 5) then
-		#					j = j+1
-		#					t(j) = 5
-		#					goto 2840
-		#				endif
-		#			endif
-		#			procERR_RESERVED_WORD(s$, i + k - 1)
-		#			t(1) = 0
-		#			goto 2885
-		#		elseif t(j) <> 6 then
-		#			if t(j-1) = 5 or t(j-2) = 5 then
-		#				if s$ = "a" or s$ = "an" or s$ = "sm" then
-		#					if i <> l then
-		#						if s$ = "a" then
-		#							recent_article_types(2) = 1
-		#						elseif s$ = "an" then
-		#							recent_article_types(2) = 2
-		#						else
-		#							recent_article_types(2) = 3
-		#						endif
-		#						p1 = 1
-		#					else
-		#						gosub 2790
-		#					endif
-		#				else
-		#					if s$ = "the" then p1 = 2
-		#					gosub 2790
-		#				endif
-		#			else
-		#				gosub 2790
-		#			endif
-		#		else
-		#			s$(j) = s$(j)+" "+s$
-		#		endif
-		#		goto 2860
-		#2840	s$(j) = s$
-		#		j = j+1
-		#2860	i = k+i
-		#	loop until j > 6
-		#2885 return
-
-
-	# array indices need adjustment
-	# rem---Parse line in S$()--- : rem [am] 2890
-	def parse_line(self):
-		self.syllogism_form = -1
-		if self.term_strings[1] == "all":
-			if self.term_strings[2] != 6:
-				self.show_parse_error_missing_subject_term()
-			elif self.term_types[3] != 5:
-				self.show_parse_error_missing_copula()
-			elif self.term_types[4] != 6:
-				self.show_parse_error_missing_predicate()
-			else:
-				self.recent_term_1 = self.term_strings[2]
-				self.recent_term_2 = self.term_strings[4]
-				# rem all A is B
-				self.syllogism_form = 2
-		elif self.term_strings[1] == "some":
-			if self.term_types[2] != 6:
-				self.show_parse_error_missing_subject_term()
-			elif self.term_types[3] != 5:
-				self.show_parse_error_missing_copula()
-			elif self.term_strings[4] != "not":
-				if self.term_types[4] != 6:
-					self.show_parse_error_missing_predicate()
-				else:
-					self.recent_term_1 = self.term_strings[2]
-					self.recent_term_2 = self.term_strings[4]
-					# rem Some A is B
-					self.syllogism_form = 0
-			else:
-				if self.term_types[5] != 6:
-					self.show_parse_error_missing_predicate()
-				else:
-					self.recent_term_1 = self.term_strings[2]
-					self.recent_term_2 = self.term_strings[5]
-					# rem some A is not B
-					self.syllogism_form = 1
-		elif self.term_strings[1] == "no":
-			if self.term_types[2] != 6:
-				self.show_parse_error_missing_subject_term()
-			elif self.term_types[3] != 5:
-				self.show_parse_error_missing_copula()
-			elif self.term_types[4] != 6:
-				self.show_parse_error_missing_predicate()
-				self.show_parse_error_help()
-			else:
-				# rem no A is B
-				self.recent_term_1 = self.term_strings[2]
-				self.recent_term_2 = self.term_strings[4]
-				self.syllogism_form = 3
-		elif self.term_types[1] != 6:
-			self.show_parse_error_missing_subject_term()
-		elif self.term_types[2] == 5:
-			self.recent_term_1 = self.term_strings[1]
-			if self.term_strings[3] != "not":
-				if self.term_types[3] != 6:
-					self.show_parse_error_missing_predicate()
-				# rem a is T
-				self.syllogism_form = 4
-				self.recent_term_2 = self.term_strings[3]
-			else:
-				if self.term_types[4] != 6:
-					self.show_parse_error_missing_predicate()
-				else:
-					# rem a is not T
-					self.syllogism_form = 5
-					self.recent_term_2 = self.term_strings[4]
-		else:
-			self.show_parse_error_missing_copula()
-
-	def test_offered_conclusion(self):
-		# 6630 rem---test offered conclusion---
-		# rem--conc. poss, line in s$()
-		pass
-	
-	def see_if_conclusion_possible(self):
-		# 5880 rem---See if conclusion possible---
-		pass
-	
-	def see_if_syllogism(self):
-		# 5070 rem---See if syllogism---
-		return (-1)
-
-	# still being reworked
-	def scan_line(self, line=''):
-		# 1570 rem--scan line L1$ into array S$()
-		self.split_line(line)
-		if self.recent_term_type_1 == 1:
-			if self.recent_term_type_2 > 0:
-				# rem parse the line in S$()
-				self.parse_line()
-				if syllogism_form >= 0:
-					# enter line into list
-					self.enter_line()
-					# add terms to symbol tablosue
-					self.insert_terms()
-			else:
-				if self.lowest_line > 0:
-					# delete line
-					self.delete_line()
-				else:
-					self.show_error_no_premises()
-		else:
-			if self.recent_term_type_1 == 0:
-				self.print_hint()
-			else:
-				# draw/test conclusion
-				# is it a syl?
-				j1 = self.see_if_syllogism()
-				if j1 <= 1:
-					if j1 == 0:
-						# poss. conclusion?
-						self.see_if_conclusion_possible()
-					if j1 <= 1:
-						if self.recent_term_type_2:
-							self.test_offered_conclusion()
-						else:
-							# test/draw conclusion
-							self.compute_conclusion()
 
 
 #class Premise:
@@ -982,7 +628,19 @@ class SyllogismController:
 #			r = symbol_types[idx]
 #		return r
 
-s = SyllogismController()
+#s = SyllogismController()
+
+s = Rubric()
+s.enter_line("10 all men are mortal")
+s.enter_line("30 all men are mortal")
+s.enter_line("30 a no men are mortal")
+s.enter_line("4 all men are mortal")
+s.enter_line('4 ')
+s.enter_line('10 ')
+s.enter_line('30 ')
+s.enter_line('30 ')
+print(s)
+
 #test_line1 = '10 all men are mortal'
 #p = Premise(test_line1)
 
