@@ -3,8 +3,6 @@
 
 import os
 
-
-
 # from the latest BASIC distribution:
 #   Syllogism 1.0. November 8, 2002
 #   I edited this program in 2002, for compatibility with freeware BASIC
@@ -40,6 +38,7 @@ import os
 
 MSG_NEW_SYLLOGISM = 'Begin new syllogism'
 MSG_USAGE_HINT = 'Enter HELP for list of commands'
+MSG_STOPPED = '(Some versions support typing CONT to continue)'
 MSG_NO_PREMISES = 'No premises'
 MSG_LINK_SUGGEST = 'Suggestion: try the LINK or LINK* command.'
 
@@ -49,14 +48,55 @@ COPYRIGHT_LINES = (
     "Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org",
 )
 
-####
+INFO_BLURB = """   To use this program, enter a syllogism, one line at a time,
+and  THEN  test conclusions or ask the program to draw a conclusion.
 
-prompt = '>'
+   A syllogism as (mis)defined here is a (possibly empty) set of
+numbered premises, each of a form specified in the SYNTAX list.
+No term may occur more than twice.  Exactly two terms must occur
+exactly once: these are the two 'end' terms, which will appear in
+the conclusion.  Furthermore, each premise must have exactly one
+term in common with its successor, for some ordering of the premises.
+Example:
+   10 Socrates is a Greek
+   20 All men are mortal
+   30 All Greeks are men
+   40 No gods are mortal
 
-articles = ("a ", "an ", "sm ")
-term_type_names = ("undetermined type", "general term", "designator")
+Note: using a '/' command to draw or test a conclusion does not
+require you to stop.  You can continue, adding or deleting premises
+and drawing and testing more conclusions.
 
-sample_lines = (
+Reference:  H. Gensler, 'A Simplified Decision Procedure for Categor-
+   ical Syllogisms,' Notre Dame J. of Formal Logic 14 (1973) 457-466."""
+
+SYNTAX_BLURB = """Valid statement forms:
+  All    <general term #1>   is/are       <general term #2>
+  Some   <general term #1>   is/are       <general term #2>
+  Some   <general term #1>   is/are not   <general term #2>
+  No     <general term #1>   is/are       <general term #2>
+
+   <designator>      is/are       <general term>
+   <designator>      is/are not   <general term>
+   <designator A>    is/are       <designator B>
+   <designator A>    is/are not   <designator B>
+
+Examples:
+  All tall men are Greek gods             The teacher of Plato is wise
+  Some cheese is tasty                    Socrates is not handsome
+  Some cheese is not soft                 The teacher of Plato is Socrates
+  No libertarians are cringing wimps      Socrates is not the teacher of Thales
+
+Since e.g. 'Socrates is grunch' is ambiguous ('grunch' could be
+either a designator or a general term), the program will try to
+resolve the ambiguity from other uses of the term in the syllogism.
+The indefinite article 'sm' may be used with mass terms in predicates
+(e.g. 'This puddle is sm ink') to ensure that the mass term is taken
+as a general term rather than as a designator."""
+
+MSG_PROMPT = '>'
+
+SAMPLE_LINES = (
     "10 all mortals are fools",
     "20 all athenians are men",
     "30 all philosophers are geniuses",
@@ -68,6 +108,12 @@ sample_lines = (
     "90 all diamond brokers are people with good taste",
     "100 the most hedonistic person in florida is a decision-theorist",
 )
+
+####
+
+articles = ("a ", "an ", "sm ")
+term_type_names = ("undetermined type", "general term", "designator")
+
 
 x_array = ('some', 'some', 'all', 'no', '', '', '', '')
 y_array = ("  is", "  is not", "*  is", "*  is", "+  is", "+  is not", "+  = ", "+   = / = ")
@@ -278,9 +324,6 @@ class Rubric(object):
         return self.p()
 
 class Syllogism(object):
-    pass
-
-class SyllogismController(object):
 
     def __init__(self):
         self.show_messages = True
@@ -320,8 +363,7 @@ class SyllogismController(object):
 
     def print_hint(self):
         """ Print usage hint """
-        if self.show_messages:
-            print(MSG_USAGE_HINT)
+        self.print_message(MSG_USAGE_HINT)
 
     def request_input(self):
         """ Main loop """
@@ -341,9 +383,9 @@ class SyllogismController(object):
         }
 
         line = ''
-        while line != 'stop':
-            print
-            line = raw_input(prompt).lower()
+        while True:
+            #print
+            line = raw_input(MSG_PROMPT).lower()
             line = self.strip_string(line)
             if line == '':
                 self.print_hint()
@@ -354,17 +396,23 @@ class SyllogismController(object):
                         function()
                     else:
                         function(True)
+                elif line == 'stop':
+                    break
                 else:
                     self.enter_line(line)
-                    
+        self.print_message(MSG_STOPPED)
+
+    def print_message(self, msg):
+        """ Print a message if `show_messages` is enabled """
         if self.show_messages:
-            print("(Some versions support typing CONT to continue)")
-        print
-    
+            print(msg)
+
+    def print_indented_msg(self, msg, offset):
+        print(u'{0}^   {1}'.format(self.spaces(offset + len(MSG_PROMPT) - 1), msg))
+
     def toggle_messages(self):
         """ Toggle the state of certain messages """
         self.show_messages = not self.show_messages
-        state = ''
         if self.show_messages:
             state = 'on'
         else:
@@ -422,54 +470,12 @@ class SyllogismController(object):
     def print_syntax(self):
         # rem--"syntax"-- : rem [am] 7960
         self.cls()
-        print("Valid statement forms:")
-        print("  All    <general term #1>   is/are       <general term #2>")
-        print("  Some   <general term #1>   is/are       <general term #2>")
-        print("  Some   <general term #1>   is/are not   <general term #2>")
-        print("  No     <general term #1>   is/are       <general term #2>")
-        print
-        print("   <designator>      is/are       <general term>")
-        print("   <designator>      is/are not   <general term>")
-        print("   <designator A>    is/are       <designator B>")
-        print("   <designator A>    is/are not   <designator B>")
-        print
-        print("Examples:")
-        print("  All tall men are Greek gods             The teacher of Plato is wise")
-        print("  Some cheese is tasty                    Socrates is not handsome")
-        print("  Some cheese is not soft                 The teacher of Plato is Socrates")
-        print("  No libertarians are cringing wimps      Socrates is not the teacher of Thales")
-        print
-        print("Since e.g. 'Socrates is grunch' is ambiguous ('grunch' could be")
-        print("either a designator or a general term), the program will try to")
-        print("resolve the ambiguity from other uses of the term in the syllogism.")
-        print("The indefinite article 'sm' may be used with mass terms in predicates")
-        print("(e.g. 'This puddle is sm ink') to ensure that the mass term is taken")
-        print("as a general term rather than as a designator.")
+        print(SYNTAX_BLURB)
     
     def print_info(self):
         # rem---Info--- : rem [am] 8290
         self.cls()
-        print("   To use this program, enter a syllogism, one line at a time,")
-        print("and  THEN  test conclusions or ask the program to draw a conclusion.")
-        print
-        print("   A syllogism as (mis)defined here is a (possibly empty) set of")
-        print("numbered premises, each of a form specified in the SYNTAX list.")
-        print("No term may occur more than twice.  Exactly two terms must occur")
-        print("exactly once: these are the two 'end' terms, which will appear in")
-        print("the conclusion.  Furthermore, each premise must have exactly one")
-        print("term in common with its successor, for some ordering of the premises.")
-        print("Example:")
-        print("   10 Socrates is a Greek")
-        print("   20 All men are mortal")
-        print("   30 All Greeks are men")
-        print("   40 No gods are mortal")
-        print
-        print("Note: using a '/' command to draw or test a conclusion does not")
-        print("require you to stop.  You can continue, adding or deleting premises")
-        print("and drawing and testing more conclusions.")
-        print
-        print("Reference:  H. Gensler, 'A Simplified Decision Procedure for Categor-")
-        print("   ical Syllogisms,' Notre Dame J. of Formal Logic 14 (1973) 457-466.")
+        print(INFO_BLURB)
 
     def singularize(self, string):
         # divide by one or more whitespace characters
@@ -513,12 +519,11 @@ class SyllogismController(object):
     def sample_syllogism(self):
         """ Enter a sample syllogism. """
         # 8980 rem--sample--
-        self.new_syllogism()
-        for line in sample_lines:
+        self.new_syllogism(False)
+        for line in SAMPLE_LINES:
             print(line)
             self.enter_line(line)
-        if self.show_messages:
-            print(MSG_LINK_SUGGEST)
+        self.print_message(MSG_LINK_SUGGEST)
 
     def list_lines(self, analyze=False):
         """ Cover method to list out lines, optionally in a distribution-analysis format. """
@@ -543,17 +548,15 @@ class SyllogismController(object):
             # Invalid input
             print("*** Invalid entry [am].")
 
-    def new_syllogism(self):
+    def new_syllogism(self, show_message=True):
         """ Remove all premises from the rubric. """
-        print(MSG_NEW_SYLLOGISM)
+        if show_message:
+            print(MSG_NEW_SYLLOGISM)
         self.rubric.reset()
 
     # This works but is unused
     #def show_error_invalid_cmd(self, i):
     #    self.print_indented_msg("Invalid numeral or command", i)
-        
-    def print_indented_msg(self, msg, offset):
-        print(u'{0}^   {1}'.format(self.spaces(offset), msg))
 
 
 #class Premise:
@@ -592,17 +595,17 @@ class SyllogismController(object):
 #           r = symbol_types[idx]
 #       return r
 
-SyllogismController().run()
+Syllogism().run()
 
 s = Rubric()
-s.enter_line("10 all men are mortal")
-s.enter_line("30 all men are mortal")
-s.enter_line("30 a no men are mortal")
-s.enter_line("401 all men are mortal")
-s.enter_line("41 all men are mortal")
-s.enter_line("4 all men are mortal")
-s.enter_line("4012 all men are mortal")
-s.enter_line("50 all men are mortal")
+#s.enter_line("10 all men are mortal")
+#s.enter_line("30 all men are mortal")
+#s.enter_line("30 a no men are mortal")
+#s.enter_line("401 all men are mortal")
+#s.enter_line("41 all men are mortal")
+#s.enter_line("4 all men are mortal")
+#s.enter_line("4012 all men are mortal")
+#s.enter_line("50 all men are mortal")
 
 print(s)
 
