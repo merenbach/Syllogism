@@ -36,6 +36,12 @@ import os
 #rem t$(65) => term_strings$(65)
 #rem w$( 2 ) => recent_term_strings
 
+#### New stuff: error messages!
+
+MSG_NO_PREMISES = 'No premises'
+
+####
+
 prompt = '>'
 
 articles = ("a ", "an ", "sm ")
@@ -163,6 +169,10 @@ class Rubric(object):
     def __init__(self):
         self.premises = []
 
+    def __len__(self):
+        """ Return the number of premises """
+        return len(self.premises)
+
     def reset(self):
         """ Remove all premises. """
         self.premises = []
@@ -215,7 +225,7 @@ class Rubric(object):
         elif len(self.premises) == 0:
             # No premises have been entered
             if not silent:
-                self.show_error_no_premises()
+                print(MSG_NO_PREMISES)
             return False
         else:
             # The premise to remove did not exist
@@ -257,10 +267,6 @@ class Rubric(object):
 
     def __repr__(self):
         return self.p()
-
-    def show_error_no_premises(self):
-        """ Show an error if no premises have been entered. """
-        print("No premises")
 
 class Syllogism(object):
     pass
@@ -559,7 +565,10 @@ class SyllogismController(object):
     def list_lines(self, analyze=False):
         """ Cover method to list out lines, optionally in a distribution-analysis format. """
         # rem---list--- : rem [am] 7460
-        print(self.rubric.p(analyze))
+        if len(self.rubric) > 0:
+            print(self.rubric.p(analyze))
+        else:
+            print(MSG_NO_PREMISES)
 
     def enter_line(self, line):
         """ Try to parse a string into a premise and add it to our rubric.
@@ -578,6 +587,7 @@ class SyllogismController(object):
 
     def new_syllogism(self):
         """ Remove all premises from the rubric. """
+        print("Begin new syllogism")
         self.rubric.reset()
 
     def show_error_invalid_cmd(self, i):
