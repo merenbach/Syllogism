@@ -43,6 +43,12 @@ MSG_USAGE_HINT = 'Enter HELP for list of commands'
 MSG_NO_PREMISES = 'No premises'
 MSG_LINK_SUGGEST = 'Suggestion: try the LINK or LINK* command.'
 
+COPYRIGHT_LINES = (
+    "Syllogism Program Copyright (c) 1988 Richard Sharvy",
+    "Syllogism 1.0 (c) 2002 Richard Sharvy's estate",
+    "Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org",
+)
+
 ####
 
 prompt = '>'
@@ -275,79 +281,28 @@ class Syllogism(object):
     pass
 
 class SyllogismController(object):
-    show_messages = True
-    premise_list = []
-
-
-    line_numbers_arranged = []      # l()
-    line_strings = []       # l$()
-    term_article = []       # b()
-    term_strings = []       # t$()
-    term_types = []         # g()
-    conclusion_terms = []   # c()
-    neg_premises = 0        # n1
-    modern_valid = False    # v1
-    symbol_count = 0        # l1
-    lowest_line = 0         # l(0)
-
-    #recent_term_strings = []   # w$()
-    recent_term_1 = ''
-    recent_term_2 = ''
-    recent_term_type_1 = (-1)
-    recent_term_type_2 = (-1)
-    recent_symbol_types = []    # t()
-    recent_symbol_strings = []  # s$()
-
-    syllogism_form = (-1)       # d1
-
-    a_array_0 = 0   # a(0)
-    a_array = []    # a()
-
-    q_array = []
-    r_array = []
-
-    # length_of_symbol_table = len(term_strings)
-    #im a(63),c(63),term_dist_count(63),term_type(63),l(63),line_numbers(63),term_occurrences(63),p(63),q(63)
-    #dim r(63),term_article(63),k(63),j(4),recent_symbol_types[7],recent_article_types(2),h(2)
-    #dim article_strings[3),line_strings$(63),term_strings$(65)
-    #dim g$(2),recent_symbol_strings[6],recent_term_strings[MY_TWO],x$(7),y$(7),z(7)
 
     def __init__(self):
-        # New variables
+        self.show_messages = True
         self.rubric = Rubric()
-        
-        # Legacy
-        
-        self.a_array = range(64)
-        self.a_array_0 = 0
 
-        self.line_numbers_arranged = [0] * 64       # l()
-        self.line_strings = [''] * 64       # l$()
-        self.term_article = [0] * 64        # b()
-        self.term_strings = [''] * 64       # t$()
-        self.term_types = [0] * 64          # g()
-        self.recent_symbol_types = [0] * 64 # t()
-        self.recent_symbol_strings = [''] * 64  # s$()
-
-
-        q_array = [0] * 64
-        r_array = [0] * 64
-        
-        self.main()
-        #pass
-
-    def main(self):
-        self.intro()
-        self.print_hint()
-        self.new_syllogism()
-        self.request_input()
-
-    def intro(self):
+    def run(self):
+        # Clear the screen
         self.cls()
-        print("Syllogism Program Copyright (c) 1988 Richard Sharvy")
-        print("Syllogism 1.0 (c) 2002 Richard Sharvy's estate")
-        print("Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org")
+
+        # Print copyright messages
+        for c in COPYRIGHT_LINES:
+            print(c)
         print
+        
+        # Print a usage hint
+        self.print_hint()
+        
+        # Create a new document: Currently unnecessary
+        #self.new_syllogism()
+        
+        # Start the request loop
+        self.request_input()
 
     def cls(self):
         # clear the screen
@@ -431,9 +386,9 @@ class SyllogismController(object):
         punctuation = ('.', '?', '!')
         s = s.rstrip()
         while s.endswith(punctuation):
-            self.show_indented_error(len(s), "Punctuation mark ignored")
-            #line = line.rstrip('.?!')
+            self.print_indented_msg("Punctuation mark ignored", len(s))
             s = s[:-1].rstrip()
+            #line = line.rstrip('.?!')
         s = s.lstrip()
         return s
 
@@ -595,10 +550,10 @@ class SyllogismController(object):
 
     # This works but is unused
     #def show_error_invalid_cmd(self, i):
-    #    self.show_indented_error(i, "Invalid numeral or command")
+    #    self.print_indented_msg("Invalid numeral or command", i)
         
-    def show_indented_error(self, i, msg):
-        print(u'{0}^   {1}'.format(self.spaces(i), msg))
+    def print_indented_msg(self, msg, offset):
+        print(u'{0}^   {1}'.format(self.spaces(offset), msg))
 
 
 #class Premise:
@@ -637,7 +592,7 @@ class SyllogismController(object):
 #           r = symbol_types[idx]
 #       return r
 
-s = SyllogismController()
+SyllogismController().run()
 
 s = Rubric()
 s.enter_line("10 all men are mortal")
