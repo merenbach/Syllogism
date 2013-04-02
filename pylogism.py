@@ -62,6 +62,10 @@ MSG_INDENTED_RESERVED = '\nReserved word "{0}" may not occur within a term'
 MSG_INDENTED_IGNORED = 'Punctuation mark ignored'
 MSG_INDENTED_INVALID = 'Invalid numeral or command'
 
+MSG_MISSING_COPULA_IS_ARE = '** Missing copula is/are'
+MSG_SUBJECT_TERM_BAD_OR_MISSING = '** Predicate term bad or missing'
+MSG_PREDICATE_TERM_BAD_OR_MISSING = '** Predicate term bad or missing'
+
 COPYRIGHT_BLURB = """Syllogism Program Copyright (c) 1988 Richard Sharvy
 Syllogism 1.0 (c) 2002 Richard Sharvy's estate
 Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org"""
@@ -127,7 +131,7 @@ SAMPLE_LINES = (
     "100 the most hedonistic person in florida is a decision-theorist",
 )
 
-RESERVED_TERMS = (
+RESERVED_WORDS = (
     'somebody',
     'something',
     'nobody',
@@ -136,6 +140,23 @@ RESERVED_TERMS = (
     'everyone',
     'everybody',
     'everything',
+)
+
+# These are more experimental
+
+RESERVED_TERMS_POSITIVE = (
+    'all',
+    'some',
+)
+
+RESERVED_TERMS_NEGATIVE = (
+    'no',
+    'not',
+)
+
+RESERVED_TERMS_EQUALITY = (
+    'is',
+    'are',
 )
 
 ####
@@ -228,30 +249,209 @@ plurals = dict(
     ]
 )
 
+#class Proposition(object):
+#    # Per the square of opposition
+#    # http://en.wikipedia.org/wiki/Square_of_opposition
+#    pass
+#
+#class UniversalAffirmativeProposition(Proposition):
+#    # An "A" proposition in the square of opposition
+#    # All S are P
+#    # Every S is a P
+#    pass
+#
+#class UniversalNegativeProposition(Proposition):
+#    # An "E" proposition in the square of opposition
+#    # No S is/are P
+#    pass
+#
+#class ParticularAffirmativeProposition(Proposition):
+#    # An "I" proposition in the square of opposition
+#    # Some S is P
+#    # Particular affirmative
+#    pass
+#
+#class ParticularNegativeProposition(Proposition):
+#    # An "O" proposition in the square of opposition
+#    # Some S is not P
+#    pass
+
+class PremiseToken(object):
+    #	rem T(): 1:line num., 2:"/", 3:quantifier, 4:no/not, 5:is/are, 6:term
+    QUANTIFIER = 3
+    NO_NOT = 4
+    IS_ARE = 5
+    TERM = 6
+    
+    # 2 = '/'
+    # 3 = line number
+    def __init__(self, t):
+        self.raw = t
+
+    def __len__(self):
+        return len(self.raw)
+    
+    def __repr__(self):
+        return self.raw
+
+#class LineNumberToken(PremiseToken):
+#    # 3: line number
+#    def __repr__(self):
+#        return 'L=' + self.raw
+#
+#class SlashToken(PremiseToken):
+#    # 2: "/"
+#    def __repr__(self):
+#        return '/=' + self.raw
+    
+class QuantifierToken(PremiseToken):
+    category = PremiseToken.QUANTIFIER
+
+    def __repr__(self):
+        return 'Q=' + self.raw
+
+class NegationToken(PremiseToken):
+    category = PremiseToken.NO_NOT
+
+    def __repr__(self):
+        return 'N=' + self.raw
+
+class EqualityToken(PremiseToken):
+    category = PremiseToken.IS_ARE
+
+    def __repr__(self):
+        return 'E=' + self.raw
+
+class TermToken(PremiseToken):
+    category = PremiseToken.TERM
+
+    def __repr__(self):
+        return 'T=' + self.raw
 
 class Premise(object):
     """ This object represents a parsed line. """
 
     def __init__(self, line):
         self.raw = line.strip()
-        tokens = line.strip().split()
+        components = line.strip().split()
         try:
-            self.line_number = int(tokens[0])
+            self.line_number = int(components[0])
         except ValueError:
-            raise ValueError(format_indented_msg(MSG_INDENTED_INVALID, len(tokens[0])))
-        self.statement = u' '.join(tokens[1:])
-        self.tokens = tokens
-        self.validate()
+            raise ValueError(format_indented_msg(MSG_INDENTED_INVALID, len(components[0])))
+        self.statement = u' '.join(components[1:])
+        tokens = self.parse(components[1:])
+        self.validate(tokens)
+        # self.tokens = tokens
 
-    def validate(self):
-        len_covered = len(MSG_PROMPT) # account for prompt
-        
-        for t in self.tokens:
-            if t in RESERVED_TERMS:
-                # Throw reserved term error
-                raise ValueError(format_indented_msg(MSG_INDENTED_RESERVED.format(t), len_covered + len(t)))
-            len_covered += len(t)
+    def parse(self, components):
+        """ Return a list of tokens corresponding to each component passed in """
+        tokens = []
+        for t in components:
+            # if t.isdigit():
+            #     tokens.append(LineNumberToken(t))
+            # elif t == '/':
+            #     tokens.append(SlashToken(t))
+            if t in ('all', 'some', 'no'):
+                tokens.append(QuantifierToken(t))
+            elif t in ('is', 'are'):
+                tokens.append(EqualityToken(t))
+            elif t in ('not'):
+                tokens.append(NegationToken(t))
+            else:
+                tokens.append(TermToken(t))
+        return self.elide_terms(tokens)
     
+    def elide_terms(self, tokens):
+        # Elide consecutive terms into single terms
+        elided_tokens = []
+        prev_term = None
+        for t in tokens:
+            if t.category == PremiseToken.TERM:
+                if prev_term:
+                    prev_term.raw += ' ' + t.raw
+                else:
+                    elided_tokens.append(t)
+                    prev_term = t
+            else:
+                elided_tokens.append(t)
+                prev_term = None
+        return elided_tokens
+
+    def validate(self, tokens):
+        """ Validate the tokens """
+        #All    <general term #1>   is/are       <general term #2>
+        #Some   <general term #1>   is/are       <general term #2>
+        #Some   <general term #1>   is/are not   <general term #2>
+        #No     <general term #1>   is/are       <general term #2>
+        #
+        # <designator>      is/are       <general term>
+        # <designator>      is/are not   <general term>
+        # <designator A>    is/are       <designator B>
+        # <designator A>    is/are not   <designator B>
+        print(tokens)
+        #valid_forms = (
+        #    (PremiseToken.QUANTIFIER_ALL, PremiseToken.TERM, PremiseToken.IS_ARE, PremiseToken.TERM),
+        #    (PremiseToken.QUANTIFIER_SOME, PremiseToken.TERM, PremiseToken.IS_ARE, PremiseToken.TERM),
+        #    (PremiseToken.QUANTIFIER_SOME, PremiseToken.TERM, PremiseToken.IS_ARE, PremiseToken.NO_NOT, PremiseToken.TERM),
+        #    (PremiseToken.QUANTIFIER_NO, PremiseToken.TERM, PremiseToken.IS_ARE, PremiseToken.TERM),
+        #    (PremiseToken.TERM, PremiseToken.IS_ARE, PremiseToken.TERM),
+        #    (PremiseToken.TERM, PremiseToken.IS_ARE, PremiseToken.NO_NOT, PremiseToken.TERM),
+        #)
+        #
+        #is_valid = True
+        #for f in valid_forms:
+        #    is_valid = True
+        #    for z in zip(f, tokens):
+        #        if z[0] != z[1].category:
+        #            is_valid = False
+        #            break
+        #    if is_valid:
+        #        break
+        #print('isvalid = ' + str(is_valid))
+        
+        #proposition_types = {
+        #    'all': UNIVERSAL_AFFIRMATIVE,
+        #    'no': UNIVERSAL_NEGATIVE,
+        #    'some': PARTICULAR_AFFIRMATIVE,
+        #    'some': PARTICULAR_NEGATIVE,
+        #}
+        
+        # elif t in RESERVED_TERMS_POSITIVE:
+        #     if tj == 6:
+        #         raise ValueError(format_indented_msg(MSG_INDENTED_RESERVED.format(t), len_covered + len(t)))
+        #     else:
+        #         tj = 3
+        # elif t in RESERVED_TERMS_NEGATIVE:
+        #     pass
+        # elif t in RESERVED_TERMS_EQUALITY:
+        #     pass
+        
+        # statement_type = None
+        #len_covered = len(MSG_PROMPT) # account for prompt
+        ##	rem T(): 1:line num., 2:"/", 3:quantifier, 4:no/not, 5:is/are, 6:term
+        #is_valid = True
+        #valid_next_tokens = (PremiseToken.QUANTIFIER, PremiseToken.TERM)
+        #for t in tokens:
+        #    if t.category in valid_next_tokens:
+        #        if t.category == PremiseToken.QUANTIFIER:
+        #            valid_next_tokens = (PremiseToken.TERM,)
+        #        elif t.category == PremiseToken.IS_ARE:
+        #            valid_next_tokens = (PremiseToken.TERM, PremiseToken.NO_NOT)
+        #        elif t.category == PremiseToken.NO_NOT:
+        #            valid_next_tokens = (PremiseToken.TERM,)
+        #        elif t.category == PremiseToken.TERM:
+        #            valid_next_tokens = (PremiseToken.IS_ARE,)
+        #            if t.raw in RESERVED_WORDS:
+        #                raise ValueError(format_indented_msg(MSG_INDENTED_RESERVED.format(t), len_covered + len(t)))
+        #        len_covered += len(t)
+        #    else:
+        #        # Invalid pattern
+        #        if PremiseToken.IS_ARE in valid_next_tokens:
+        #            raise ValueError(MSG_MISSING_COPULA_IS_ARE)
+        #        is_valid = False
+        #        #raise ValueError(MSG_SUBJECT_TERM_BAD_OR_MISSING)
+        #        #raise ValueError(MSG_PREDICATE_TERM_BAD_OR_MISSING)
+        #print 'is valid = ' + str(is_valid)
     def empty(self):
         """ Check whether this premise actually contains a statement.
 
