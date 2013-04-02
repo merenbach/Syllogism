@@ -249,7 +249,6 @@ class Premise(object):
         for t in self.tokens:
             if t in RESERVED_TERMS:
                 # Throw reserved term error
-                # We should not be printing in this method--throw a printable string instead
                 raise ValueError(format_indented_msg(MSG_INDENTED_RESERVED.format(t), len_covered + len(t)))
             len_covered += len(t)
     
@@ -286,17 +285,16 @@ class Rubric(object):
         ----------
         premise : Premise
                   A premise to add to our lookup table.
-
-        Returns
-        -------
-        boolean : `True` if the premise was added successfully, `False` otherwise.
-                  If this method returns `False`, odds are that an error message was printed.
         """
         if premise.empty():
-            return self.remove_line(premise.line_number, silent=False)
+            return self.remove_line(premise.line_number)
         else:
             # Remove any lines with the same line number
-            self.remove_line(premise.line_number, silent=True)
+            try:
+                self.remove_line(premise.line_number)
+            except ValueError:
+                # Let it slide: We don't need to worry if the line doesn't exist
+                pass
             self.premises.append(premise)
             # If a statement was included, replace the existing line
             # Otherwise, simply don't put the statement into place
@@ -304,36 +302,23 @@ class Rubric(object):
             # Sort the new premises by line number
             # We only need to do this when adding lines                
             self.premises.sort(key=lambda p: p.line_number)
-            return True
 
-    def remove_line(self, line_number, silent=False):
+    def remove_line(self, line_number):
         """ Remove a premise (identified by line number) from the lookup table.
         
         Parameters
         ----------
         line_number : integer
                       A premise line number for whose existence to check.
-        silent      : boolean
-                      `True` to complain if line does not exist or if no premises are entered,
-                      `False` otherwise.
-
-        Returns
-        -------
-        boolean : `True` if the line was removed, `False` otherwise.
         """
         if self.line_exists(line_number):
             self.premises = [p for p in self.premises if p.line_number != line_number]
-            return True
         elif len(self.premises) == 0:
             # No premises have been entered
-            if not silent:
-                print(MSG_NO_PREMISES)
-            return False
+            raise ValueError(MSG_NO_PREMISES)
         else:
             # The premise to remove did not exist
-            if not silent:
-                print("Line {0} not found".format(line_number))
-            return False
+            raise ValueError("Line {0} not found".format(line_number))
 
     def line_exists(self, line_number):
         """ Check if a premise with a given line number exists in the lookup table.
