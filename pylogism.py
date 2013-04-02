@@ -38,7 +38,10 @@ import os
 
 #### New stuff: error messages!
 
+MSG_NEW_SYLLOGISM = 'Begin new syllogism'
+MSG_USAGE_HINT = 'Enter HELP for list of commands'
 MSG_NO_PREMISES = 'No premises'
+MSG_LINK_SUGGEST = 'Suggestion: try the LINK or LINK* command.'
 
 ####
 
@@ -363,7 +366,7 @@ class SyllogismController(object):
     def print_hint(self):
         """ Print usage hint """
         if self.show_messages:
-            print("Enter HELP for list of commands")
+            print(MSG_USAGE_HINT)
 
     def request_input(self):
         """ Main loop """
@@ -560,7 +563,7 @@ class SyllogismController(object):
             print(line)
             self.enter_line(line)
         if self.show_messages:
-            print("Suggestion: try the LINK or LINK* command.")
+            print(MSG_LINK_SUGGEST)
 
     def list_lines(self, analyze=False):
         """ Cover method to list out lines, optionally in a distribution-analysis format. """
@@ -587,11 +590,12 @@ class SyllogismController(object):
 
     def new_syllogism(self):
         """ Remove all premises from the rubric. """
-        print("Begin new syllogism")
+        print(MSG_NEW_SYLLOGISM)
         self.rubric.reset()
 
-    def show_error_invalid_cmd(self, i):
-        self.show_indented_error(i, "Invalid numeral or command")
+    # This works but is unused
+    #def show_error_invalid_cmd(self, i):
+    #    self.show_indented_error(i, "Invalid numeral or command")
         
     def show_indented_error(self, i, msg):
         print(u'{0}^   {1}'.format(self.spaces(i), msg))
