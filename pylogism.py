@@ -184,7 +184,7 @@ class Rubric(object):
             premise = Premise(line)
         except ValueError:
             # Invalid input
-            print("*** Invalid entry.")
+            print("*** Invalid entry [am].")
             return False
         return self.enter_premise(premise)
     
@@ -426,16 +426,26 @@ class SyllogismController(object):
             state = 'off'
         print('Messages turned {0}'.format(state))
 
-    def strip_string(self, string):
+    def strip_string(self, s):
+        """ Remove punctuation from the end of a string
+
+        Parameters
+        ----------
+        s : string
+            A string to strip.
+
+        Returns
+        -------
+        string : a processed version of the original string.
+        """
         punctuation = ('.', '?', '!')
-        string = string.rstrip()
-        while string[-1:] in punctuation:
-            print(self.spaces(len(string)) + "^   Punctuation mark ignored")
+        s = s.rstrip()
+        while s.endswith(punctuation):
+            self.show_indented_error(len(s), "Punctuation mark ignored")
             #line = line.rstrip('.?!')
-            string = string[:-1]
-            string = string.rstrip()
-        string = string.lstrip()
-        return string
+            s = s[:-1].rstrip()
+        s = s.lstrip()
+        return s
 
     def print_commands(self):
         """ List valid inputs """
@@ -517,8 +527,8 @@ class SyllogismController(object):
         print("   ical Syllogisms,' Notre Dame J. of Formal Logic 14 (1973) 457-466.")
 
     def singularize(self, string):
-        # divide by whitespace and remove blank items
-        words = filter(None, string.split())
+        # divide by one or more whitespace characters
+        words = string.split()
         #words_out = [plurals[word] for word in words if word in plurals.keys()]
         words_out = []
         for word in words:
@@ -565,12 +575,9 @@ class SyllogismController(object):
             print("Suggestion: try the LINK or LINK* command.")
 
     def list_lines(self, analyze=False):
+        """ Cover method to list out lines, optionally in a distribution-analysis format. """
         # rem---list--- : rem [am] 7460
         print(self.rubric.p(analyze))
-
-    #def list_premises(self, analyze=False):
-    #   for p in self.premise_list:
-    #       print p
 
     def scan_line(self, line):
         """ Cover method to add a line. """
@@ -581,7 +588,10 @@ class SyllogismController(object):
         self.rubric.reset()
 
     def show_error_invalid_cmd(self, i):
-        print(self.spaces(spaces) + "^   Invalid numeral or command")
+        self.show_indented_error(i, "Invalid numeral or command")
+        
+    def show_indented_error(self, i, msg):
+        print(u'{0}^   {1}'.format(self.spaces(i), msg))
 
 
 #class Premise:
