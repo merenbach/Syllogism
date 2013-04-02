@@ -34,6 +34,22 @@ import os
 #rem t$(65) => term_strings$(65)
 #rem w$( 2 ) => recent_term_strings
 
+def spaces(space_count):
+    # print a specified number of space
+    return (space_count * ' ')
+    #return ' '.ljust(space_count)
+    #str_list = []
+    #for n in range(space_count):
+    #   str_list.append(' ')
+    #s = ''.join(str_list)
+    #s = ''.join([' ' for n in range(space_count)])
+
+def format_indented_msg(msg, offset):
+    return u'{0}^   {1}'.format(spaces(offset + len(MSG_PROMPT) - 1), msg)
+
+def print_indented_msg(msg, offset):
+    print(format_indented_msg(msg, offset))
+
 #### New stuff: error messages!
 
 MSG_NEW_SYLLOGISM = 'Begin new syllogism'
@@ -42,7 +58,7 @@ MSG_STOPPED = '(Some versions support typing CONT to continue)'
 MSG_NO_PREMISES = 'No premises'
 MSG_LINK_SUGGEST = 'Suggestion: try the LINK or LINK* command.'
 
-#MSG_INDENTED_RESERVED = 'Reserved word "{0}" may not occur within a term'
+MSG_INDENTED_RESERVED = '\nReserved word "{0}" may not occur within a term'
 MSG_INDENTED_IGNORED = 'Punctuation mark ignored'
 MSG_INDENTED_INVALID = 'Invalid numeral or command'
 
@@ -219,15 +235,23 @@ class Premise(object):
     def __init__(self, line):
         self.raw = line.strip()
         tokens = line.strip().split()
-        self.line_number = int(tokens[0])
+        try:
+            self.line_number = int(tokens[0])
+        except ValueError:
+            raise ValueError(format_indented_msg(MSG_INDENTED_INVALID, len(tokens[0])))
         self.statement = u' '.join(tokens[1:])
-        #self.tokens = tokens
-    
-    #def parse(self):
-    #    for t in self.tokens:
-    #        if t in RESERVED_TERMS:
-    #            pass
-    #            # Throw reserved term error
+        self.tokens = tokens
+        self.validate()
+
+    def validate(self):
+        len_covered = len(MSG_PROMPT) # account for prompt
+        
+        for t in self.tokens:
+            if t in RESERVED_TERMS:
+                # Throw reserved term error
+                # We should not be printing in this method--throw a printable string instead
+                raise ValueError(format_indented_msg(MSG_INDENTED_RESERVED.format(t), len_covered + len(t)))
+            len_covered += len(t)
     
     def empty(self):
         """ Check whether this premise actually contains a statement.
@@ -373,16 +397,6 @@ class Syllogism(object):
         # clear the screen
         os.system("clear")
 
-    def spaces(self, space_count):
-        # print a specified number of space
-        return (space_count * ' ')
-        #return ' '.ljust(space_count)
-        #str_list = []
-        #for n in range(space_count):
-        #   str_list.append(' ')
-        #s = ''.join(str_list)
-        #s = ''.join([' ' for n in range(space_count)])
-
     def print_hint(self):
         """ Print usage hint """
         self.print_message(MSG_USAGE_HINT)
@@ -421,16 +435,16 @@ class Syllogism(object):
                 elif line == 'stop':
                     break
                 else:
-                    self.enter_line(line)
+                    try:
+                        self.enter_line(line)
+                    except ValueError as e:
+                        print(e)
         self.print_message(MSG_STOPPED)
 
     def print_message(self, msg):
         """ Print a message if `show_messages` is enabled """
         if self.show_messages:
             print(msg)
-
-    def print_indented_msg(self, msg, offset):
-        print(u'{0}^   {1}'.format(self.spaces(offset + len(MSG_PROMPT) - 1), msg))
 
     def toggle_messages(self):
         """ Toggle the state of certain messages """
@@ -456,7 +470,7 @@ class Syllogism(object):
         punctuation = ('.', '?', '!')
         s = s.rstrip()
         while s.endswith(punctuation):
-            self.print_indented_msg(MSG_INDENTED_IGNORED, len(s))
+            print_indented_msg(MSG_INDENTED_IGNORED, len(s))
             s = s[:-1].rstrip()
             #line = line.rstrip('.?!')
         s = s.lstrip()
@@ -468,26 +482,26 @@ class Syllogism(object):
         self.cls()
         print("Valid commands are:")
         print("   <n>  [ <statement> ]   Insert, delete, or replace premise number  <n> ")
-        print(self.spaces(28) + "Examples:   10  All men are mortal")
-        print(self.spaces(40) + "10")
-        print("  DUMP" + self.spaces(15) + "Prints symbol table, distribution count, etc.")
-        print("  HELP" + self.spaces(15) + "Prints this list")
-        print("  INFO" + self.spaces(15) + "Gives information about syllogisms")
-        print("  LIST" + self.spaces(15) + "Lists premises")
-        print("  LIST*" + self.spaces(14) + "Same, but displays distribution analysis:")
-        print(self.spaces(25) + "distributed positions marked with '*', ")
-        print(self.spaces(25) + "designators marked with '+'")
-        print("  LINK" + self.spaces(15) + "Lists premises in order of term-links (if possible)")
-        print("  LINK*" + self.spaces(14) + "Same, but in distribution-analysis format")
-        print("  MSG" + self.spaces(16) + "Turns on/off Printing of certain messages and warnings")
-        print("  NEW" + self.spaces(16) + "Erases current syllogism")
-        print("  SAMPLE" + self.spaces(13) + "Erases current syllogism and enters sample syllogism")
-        print("  STOP" + self.spaces(15) + "Stops entire program")
-        print("  SUBSTITUTE" + self.spaces(9) + "Allows uniform substitution of new terms in old premises")
-        print("  SYNTAX" + self.spaces(13) + "Explains statement syntax, with examples")
-        print("  /" + self.spaces(18) + "Asks program to draw conclusion")
-        print("  /  <statement>" + self.spaces(5) + "Tests  <statement>  as conclusion")
-        print(self.spaces(25) + "Note: this can be done even if there are no premises")
+        print(spaces(28) + "Examples:   10  All men are mortal")
+        print(spaces(40) + "10")
+        print("  DUMP" + spaces(15) + "Prints symbol table, distribution count, etc.")
+        print("  HELP" + spaces(15) + "Prints this list")
+        print("  INFO" + spaces(15) + "Gives information about syllogisms")
+        print("  LIST" + spaces(15) + "Lists premises")
+        print("  LIST*" + spaces(14) + "Same, but displays distribution analysis:")
+        print(spaces(25) + "distributed positions marked with '*', ")
+        print(spaces(25) + "designators marked with '+'")
+        print("  LINK" + spaces(15) + "Lists premises in order of term-links (if possible)")
+        print("  LINK*" + spaces(14) + "Same, but in distribution-analysis format")
+        print("  MSG" + spaces(16) + "Turns on/off Printing of certain messages and warnings")
+        print("  NEW" + spaces(16) + "Erases current syllogism")
+        print("  SAMPLE" + spaces(13) + "Erases current syllogism and enters sample syllogism")
+        print("  STOP" + spaces(15) + "Stops entire program")
+        print("  SUBSTITUTE" + spaces(9) + "Allows uniform substitution of new terms in old premises")
+        print("  SYNTAX" + spaces(13) + "Explains statement syntax, with examples")
+        print("  /" + spaces(18) + "Asks program to draw conclusion")
+        print("  /  <statement>" + spaces(5) + "Tests  <statement>  as conclusion")
+        print(spaces(25) + "Note: this can be done even if there are no premises")
     
     def print_syntax(self):
         # rem--"syntax"-- : rem [am] 7960
@@ -567,14 +581,8 @@ class Syllogism(object):
             # [TODO] Evaluate
             pass
         else:
-            try:
-                premise = Premise(line)
-                self.rubric.enter_premise(premise)
-            except ValueError:
-                # Invalid input
-                print("*** Invalid entry [am].")
-                # This needs to be indented properly
-                # self.print_indented_msg(MSG_INDENTED_INVALID, len(line))
+            premise = Premise(line)
+            self.rubric.enter_premise(premise)
 
     def new_syllogism(self, silent=False):
         """ Remove all premises from the rubric. """
