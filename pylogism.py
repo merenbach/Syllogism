@@ -167,27 +167,6 @@ class Rubric(object):
         """ Remove all premises. """
         self.premises = []
 
-    def enter_line(self, line):
-        """ Try to parse a string into a premise and add it to our lookup table.
-        
-        Parameters
-        ----------
-        line : string
-               A string to parse into a premise.
-
-        Returns
-        -------
-        boolean : `True` if a premise was added successfully, `False` otherwise.
-                  If this method returns `False`, odds are that an error message was printed.
-        """
-        try:
-            premise = Premise(line)
-        except ValueError:
-            # Invalid input
-            print("*** Invalid entry [am].")
-            return False
-        return self.enter_premise(premise)
-    
     def enter_premise(self, premise):
         """ Try to add a premise to our lookup table.
         
@@ -381,6 +360,7 @@ class SyllogismController(object):
             print("Enter HELP for list of commands")
 
     def request_input(self):
+        """ Main loop """
         functions = {
             'new': self.new_syllogism,
             'sample': self.sample_syllogism,
@@ -411,13 +391,14 @@ class SyllogismController(object):
                     else:
                         function(True)
                 else:
-                    self.scan_line(line)
+                    self.enter_line(line)
                     
         if self.show_messages:
             print("(Some versions support typing CONT to continue)")
         print
     
     def toggle_messages(self):
+        """ Toggle the state of certain messages """
         self.show_messages = not self.show_messages
         state = ''
         if self.show_messages:
@@ -536,6 +517,7 @@ class SyllogismController(object):
             if word in plurals.keys():
                 words_out.append(plurals[word])
             else:
+                # Try to make some educated guesses
                 if word.endswith('men'):
                     word = word[:-2] + 'an'
                 elif word.endswith('s'):
@@ -548,20 +530,21 @@ class SyllogismController(object):
                         elif word.endswith('sse') or word.endswith('she') or word.endswith('che'):
                             y = word[:-1]
                 words_out.append(word);
-        return ' '.join(words_out)
+        return u' '.join(words_out)
 
-    def show_parse_error_missing_copula(self):
-        print("** Missing copula is/are")
-        self.show_parse_error_help()
-    def show_parse_error_missing_subject_term(self):
-        print("** Subject term bad or missing")
-        self.show_parse_error_help()
-    def show_parse_error_missing_predicate(self):
-        print("** Predicate term bad or missing")
-        self.show_parse_error_help()
-    def show_parse_error_help(self):
-        if self.show_messages:
-            print("Enter SYNTAX for help with statements")
+    ## These all work but are unused.  They are therefore commented out.
+    #def show_parse_error_missing_copula(self):
+    #    print("** Missing copula is/are")
+    #    self.show_parse_error_help()
+    #def show_parse_error_missing_subject_term(self):
+    #    print("** Subject term bad or missing")
+    #    self.show_parse_error_help()
+    #def show_parse_error_missing_predicate(self):
+    #    print("** Predicate term bad or missing")
+    #    self.show_parse_error_help()
+    #def show_parse_error_help(self):
+    #    if self.show_messages:
+    #        print("Enter SYNTAX for help with statements")
 
     def sample_syllogism(self):
         """ Enter a sample syllogism. """
@@ -569,8 +552,7 @@ class SyllogismController(object):
         self.new_syllogism()
         for line in sample_lines:
             print(line)
-            self.scan_line(line)
-
+            self.enter_line(line)
         if self.show_messages:
             print("Suggestion: try the LINK or LINK* command.")
 
@@ -579,9 +561,20 @@ class SyllogismController(object):
         # rem---list--- : rem [am] 7460
         print(self.rubric.p(analyze))
 
-    def scan_line(self, line):
-        """ Cover method to add a line. """
-        self.rubric.enter_line(line)
+    def enter_line(self, line):
+        """ Try to parse a string into a premise and add it to our rubric.
+        
+        Parameters
+        ----------
+        line : string
+               A string to parse into a premise.
+        """
+        try:
+            premise = Premise(line)
+            self.rubric.enter_premise(premise)
+        except ValueError:
+            # Invalid input
+            print("*** Invalid entry [am].")
 
     def new_syllogism(self):
         """ Remove all premises from the rubric. """
