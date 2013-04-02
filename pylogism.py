@@ -42,11 +42,12 @@ MSG_STOPPED = '(Some versions support typing CONT to continue)'
 MSG_NO_PREMISES = 'No premises'
 MSG_LINK_SUGGEST = 'Suggestion: try the LINK or LINK* command.'
 
-COPYRIGHT_LINES = (
-    "Syllogism Program Copyright (c) 1988 Richard Sharvy",
-    "Syllogism 1.0 (c) 2002 Richard Sharvy's estate",
-    "Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org",
-)
+MSG_INDENTED_IGNORED = 'Punctuation mark ignored'
+MSG_INDENTED_INVALID = 'Invalid numeral or command'
+
+COPYRIGHT_BLURB = """Syllogism Program Copyright (c) 1988 Richard Sharvy
+Syllogism 1.0 (c) 2002 Richard Sharvy's estate
+Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org"""
 
 INFO_BLURB = """   To use this program, enter a syllogism, one line at a time,
 and  THEN  test conclusions or ask the program to draw a conclusion.
@@ -201,6 +202,8 @@ plurals = dict(
 
 
 class Premise(object):
+    """ This object represents a parsed line. """
+
     def __init__(self, line):
         self.raw = line.strip()
         tokens = line.strip().split()
@@ -220,7 +223,8 @@ class Premise(object):
         return self.raw
 
 class Rubric(object):
-    """ Hold a list of premises. """
+    """ This object represents a collection of parsed lines. """
+
     def __init__(self):
         self.premises = []
 
@@ -333,16 +337,15 @@ class Syllogism(object):
         # Clear the screen
         self.cls()
 
-        # Print copyright messages
-        for c in COPYRIGHT_LINES:
-            print(c)
+        # Print copyright message
+        print(COPYRIGHT_BLURB)
         print
         
         # Print a usage hint
         self.print_hint()
         
         # Create a new document: Currently unnecessary
-        #self.new_syllogism()
+        #self.new_syllogism(silent=True)
         
         # Start the request loop
         self.request_input()
@@ -399,7 +402,7 @@ class Syllogism(object):
                 elif line == 'stop':
                     break
                 else:
-                    self.enter_line(line)
+                    self.parse_line(line)
         self.print_message(MSG_STOPPED)
 
     def print_message(self, msg):
@@ -420,7 +423,7 @@ class Syllogism(object):
         print('Messages turned {0}'.format(state))
 
     def strip_string(self, s):
-        """ Remove punctuation from the end of a string
+        """ Remove punctuation from the end of a string.  Used in input processing.
 
         Parameters
         ----------
@@ -434,7 +437,7 @@ class Syllogism(object):
         punctuation = ('.', '?', '!')
         s = s.rstrip()
         while s.endswith(punctuation):
-            self.print_indented_msg("Punctuation mark ignored", len(s))
+            self.print_indented_msg(MSG_INDENTED_IGNORED, len(s))
             s = s[:-1].rstrip()
             #line = line.rstrip('.?!')
         s = s.lstrip()
@@ -519,7 +522,7 @@ class Syllogism(object):
     def sample_syllogism(self):
         """ Enter a sample syllogism. """
         # 8980 rem--sample--
-        self.new_syllogism(False)
+        self.new_syllogism(silent=True)
         for line in SAMPLE_LINES:
             print(line)
             self.enter_line(line)
@@ -533,7 +536,7 @@ class Syllogism(object):
         else:
             print(MSG_NO_PREMISES)
 
-    def enter_line(self, line):
+    def parse_line(self, line):
         """ Try to parse a string into a premise and add it to our rubric.
         
         Parameters
@@ -541,16 +544,22 @@ class Syllogism(object):
         line : string
                A string to parse into a premise.
         """
-        try:
-            premise = Premise(line)
-            self.rubric.enter_premise(premise)
-        except ValueError:
-            # Invalid input
-            print("*** Invalid entry [am].")
+        if line.startswith('/'):
+            # [TODO] Evaluate
+            pass
+        else:
+            try:
+                premise = Premise(line)
+                self.rubric.enter_premise(premise)
+            except ValueError:
+                # Invalid input
+                print("*** Invalid entry [am].")
+                # This needs to be indented properly
+                # self.print_indented_msg(MSG_INDENTED_INVALID, len(line))
 
-    def new_syllogism(self, show_message=True):
+    def new_syllogism(self, silent=False):
         """ Remove all premises from the rubric. """
-        if show_message:
+        if not silent:
             print(MSG_NEW_SYLLOGISM)
         self.rubric.reset()
 
