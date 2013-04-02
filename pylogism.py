@@ -42,6 +42,7 @@ MSG_STOPPED = '(Some versions support typing CONT to continue)'
 MSG_NO_PREMISES = 'No premises'
 MSG_LINK_SUGGEST = 'Suggestion: try the LINK or LINK* command.'
 
+#MSG_INDENTED_RESERVED = 'Reserved word "{0}" may not occur within a term'
 MSG_INDENTED_IGNORED = 'Punctuation mark ignored'
 MSG_INDENTED_INVALID = 'Invalid numeral or command'
 
@@ -108,6 +109,17 @@ SAMPLE_LINES = (
     "80 no genius is a fool",
     "90 all diamond brokers are people with good taste",
     "100 the most hedonistic person in florida is a decision-theorist",
+)
+
+RESERVED_TERMS = (
+    'somebody',
+    'something',
+    'nobody',
+    'nothing',
+    'someone',
+    'everyone',
+    'everybody',
+    'everything',
 )
 
 ####
@@ -209,6 +221,13 @@ class Premise(object):
         tokens = line.strip().split()
         self.line_number = int(tokens[0])
         self.statement = u' '.join(tokens[1:])
+        #self.tokens = tokens
+    
+    #def parse(self):
+    #    for t in self.tokens:
+    #        if t in RESERVED_TERMS:
+    #            pass
+    #            # Throw reserved term error
     
     def empty(self):
         """ Check whether this premise actually contains a statement.
@@ -402,7 +421,7 @@ class Syllogism(object):
                 elif line == 'stop':
                     break
                 else:
-                    self.parse_line(line)
+                    self.enter_line(line)
         self.print_message(MSG_STOPPED)
 
     def print_message(self, msg):
@@ -536,7 +555,7 @@ class Syllogism(object):
         else:
             print(MSG_NO_PREMISES)
 
-    def parse_line(self, line):
+    def enter_line(self, line):
         """ Try to parse a string into a premise and add it to our rubric.
         
         Parameters
