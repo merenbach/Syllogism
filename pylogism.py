@@ -1,7 +1,9 @@
-#!/usr/bin/python
+#! /usr/bin/env python3
+    # [TODO] should be #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import os
+from collections import UserList, UserString
 
 # from the latest BASIC distribution:
 #   Syllogism 1.0. November 8, 2002
@@ -45,7 +47,7 @@ def spaces(space_count):
     #s = ''.join([' ' for n in range(space_count)])
 
 def format_indented_msg(msg, offset):
-    return u'{0}^   {1}'.format(spaces(offset + len(MSG_PROMPT) - 1), msg)
+    return '{0}^   {1}'.format(spaces(offset + len(MSG_PROMPT) - 1), msg)
 
 def print_indented_msg(msg, offset):
     print(format_indented_msg(msg, offset))
@@ -276,7 +278,8 @@ plurals = dict(
 #    # Some S is not P
 #    pass
 
-class PremiseToken(object):
+
+class PremiseToken(UserString):
     #	rem T(): 1:line num., 2:"/", 3:quantifier, 4:no/not, 5:is/are, 6:term
     QUANTIFIER = 3
     NO_NOT = 4
@@ -285,14 +288,6 @@ class PremiseToken(object):
     
     # 2 = '/'
     # 3 = line number
-    def __init__(self, t):
-        self.raw = t
-
-    def __len__(self):
-        return len(self.raw)
-    
-    def __repr__(self):
-        return self.raw
 
 #class LineNumberToken(PremiseToken):
 #    # 3: line number
@@ -303,42 +298,48 @@ class PremiseToken(object):
 #    # 2: "/"
 #    def __repr__(self):
 #        return '/=' + self.raw
-    
+
+
 class QuantifierToken(PremiseToken):
     category = PremiseToken.QUANTIFIER
 
     def __repr__(self):
-        return 'Q=' + self.raw
+        return 'Q=' + super().__repr__()
+
 
 class NegationToken(PremiseToken):
     category = PremiseToken.NO_NOT
 
     def __repr__(self):
-        return 'N=' + self.raw
+        return 'N=' + super().__repr__()
+
 
 class EqualityToken(PremiseToken):
     category = PremiseToken.IS_ARE
 
     def __repr__(self):
-        return 'E=' + self.raw
+        return 'E=' + super().__repr__()
+
 
 class TermToken(PremiseToken):
     category = PremiseToken.TERM
 
     def __repr__(self):
-        return 'T=' + self.raw
+        return 'T=' + super().__repr__()
 
-class Premise(object):
+
+class Premise(UserString):
     """ This object represents a parsed line. """
 
-    def __init__(self, line):
-        self.raw = line.strip()
-        components = line.strip().split()
+    def __init__(self, seq):
+        seq = seq.strip()
+        super().__init__(seq)
+        components = seq.split()
         try:
             self.line_number = int(components[0])
         except ValueError:
             raise ValueError(format_indented_msg(MSG_INDENTED_INVALID, len(components[0])))
-        self.statement = u' '.join(components[1:])
+        self.statement = ' '.join(components[1:])
         tokens = self.parse(components[1:])
         self.validate(tokens)
         # self.tokens = tokens
@@ -368,7 +369,7 @@ class Premise(object):
         for t in tokens:
             if t.category == PremiseToken.TERM:
                 if prev_term:
-                    prev_term.raw += ' ' + t.raw
+                    prev_term += ' ' + t
                 else:
                     elided_tokens.append(t)
                     prev_term = t
@@ -452,31 +453,10 @@ class Premise(object):
         #        #raise ValueError(MSG_SUBJECT_TERM_BAD_OR_MISSING)
         #        #raise ValueError(MSG_PREDICATE_TERM_BAD_OR_MISSING)
         #print 'is valid = ' + str(is_valid)
-    def empty(self):
-        """ Check whether this premise actually contains a statement.
 
-        Returns
-        -------
-        boolean : `True` if a statement exists for this premise, `False` otherwise.
-        """
-        return not self.statement or len(self.statement) == 0
-    
-    def __repr__(self):
-        return self.raw
 
-class Rubric(object):
+class Rubric(UserList):
     """ This object represents a collection of parsed lines. """
-
-    def __init__(self):
-        self.premises = []
-
-    def __len__(self):
-        """ Return the number of premises """
-        return len(self.premises)
-
-    def reset(self):
-        """ Remove all premises. """
-        self.premises = []
 
     def enter_premise(self, premise):
         """ Try to add a premise to our lookup table.
@@ -486,8 +466,8 @@ class Rubric(object):
         premise : Premise
                   A premise to add to our lookup table.
         """
-        if premise.empty():
-            return self.remove_line(premise.line_number)
+        if not premise.statement:
+            self.remove_line(premise.line_number)
         else:
             # Remove any lines with the same line number
             try:
@@ -495,13 +475,13 @@ class Rubric(object):
             except ValueError:
                 # Let it slide: We don't need to worry if the line doesn't exist
                 pass
-            self.premises.append(premise)
+            self.append(premise)
             # If a statement was included, replace the existing line
             # Otherwise, simply don't put the statement into place
 
             # Sort the new premises by line number
             # We only need to do this when adding lines                
-            self.premises.sort(key=lambda p: p.line_number)
+            self.sort(key=lambda p: p.line_number)
 
     def remove_line(self, line_number):
         """ Remove a premise (identified by line number) from the lookup table.
@@ -510,10 +490,15 @@ class Rubric(object):
         ----------
         line_number : integer
                       A premise line number for whose existence to check.
+        
+        [TODO] could also use OrderedDict...
+
         """
         if self.line_exists(line_number):
-            self.premises = [p for p in self.premises if p.line_number != line_number]
-        elif len(self.premises) == 0:
+            for p in self:
+                if p.line_number == line_number:
+                    self.remove(p)
+        elif len(self) == 0:
             # No premises have been entered
             raise ValueError(MSG_NO_PREMISES)
         else:
@@ -532,7 +517,7 @@ class Rubric(object):
         -------
         boolean : `True` if a premise with the given line number exists already, `False` otherwise.
         """
-        for p in self.premises:
+        for p in self:
             if p.line_number == line_number:
                 return True
         return False
@@ -540,17 +525,17 @@ class Rubric(object):
     def p(self, analyze=False):
         """ Printable format """
         lines = []
-        last_premise = self.premises[-1:]
+        last_premise = self[-1:]
         if len(last_premise) > 0:
             max_padding_chars = len(str(last_premise[0].line_number))
             # Format lines with nice spacing
-            premise_groups = ((p.line_number, p.statement) for p in self.premises)
+            premise_groups = ((p.line_number, p.statement) for p in self)
             for p in premise_groups:
                 if not analyze:
-                    lines.append(u' {0} {1}'.format(str(p[0]).rjust(max_padding_chars), p[1]))
+                    lines.append(' {0} {1}'.format(str(p[0]).rjust(max_padding_chars), p[1]))
                 else:
                     lines.append(u" [TODO] Distribution analysis listing")
-        return u'\n'.join(lines)
+        return '\n'.join(lines)
 
     def __repr__(self):
         return self.p()
@@ -606,7 +591,7 @@ class Syllogism(object):
         line = ''
         while True:
             #print
-            line = raw_input(MSG_PROMPT).lower()
+            line = input(MSG_PROMPT).lower()
             line = self.strip_string(line)
             if line == '':
                 self.print_hint()
@@ -721,7 +706,7 @@ class Syllogism(object):
                         elif word.endswith('sse') or word.endswith('she') or word.endswith('che'):
                             y = word[:-1]
                 words_out.append(word);
-        return u' '.join(words_out)
+        return ' '.join(words_out)
 
     ## These all work but are unused.  They are therefore commented out.
     #def show_parse_error_missing_copula(self):
@@ -773,7 +758,7 @@ class Syllogism(object):
         """ Remove all premises from the rubric. """
         if not silent:
             print(MSG_NEW_SYLLOGISM)
-        self.rubric.reset()
+        self.rubric.clear()
 
     # This works but is unused
     #def show_error_invalid_cmd(self, i):
