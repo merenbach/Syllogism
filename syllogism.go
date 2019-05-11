@@ -272,7 +272,6 @@ var (
 	localint_j1    int
 	localint_k     int
 	localint_l     int
-	localint_m     int
 	localint_n     int
 	localint_p1    int
 	localint_s     int
@@ -540,10 +539,10 @@ Line5520: // 5520
 	localint_n = 1
 	intarray_h[1] = intarray_k[localint_i]
 
-	for localint_m = localint_i; localint_m <= localint_k-1; localint_m++ {
+	for m := localint_i; m <= localint_k-1; m++ {
 		localint_n = 3 - localint_n
-		intarray_h[localint_n] = intarray_k[localint_m+1]
-		intarray_k[localint_m+1] = intarray_h[3-localint_n]
+		intarray_h[localint_n] = intarray_k[m+1]
+		intarray_k[m+1] = intarray_h[3-localint_n]
 	}
 
 	intarray_k[localint_i] = intarray_h[localint_n]
