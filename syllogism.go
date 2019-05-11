@@ -1705,7 +1705,7 @@ Line1190: // 1190
 
 	localstring_l1 = strings.ToLower(localstring_l1)
 
-	switch strings.ToLower(localstring_l1) {
+	switch localstring_l1 {
 	case "stop":
 		if msg {
 			fmt.Println("(Some versions support typing CONT to continue)")
