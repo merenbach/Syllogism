@@ -1615,42 +1615,23 @@ func syllogize() {
 	fmt.Println(syllogismCopyright)
 	fmt.Println()
 
-	dataStringXyz := []string{
-		"some", "  is", "", "some", "  is not", "*",
-		"all", "*  is", "", "no", "*  is", "*",
-		"", "+  is", "", "", "+  is not", "*",
-		"", "+  = ", "+", "", "+   = / = ", "*",
-	}
+	stringarray_x[0] = "some"
+	stringarray_x[1] = "some"
+	stringarray_x[2] = "all"
+	stringarray_x[3] = "no"
+	stringarray_x[4] = ""
 
-	for i, e := range dataStringXyz {
-		switch i % 3 {
-		case 0:
-			stringarray_x[i/3] = e
-		case 1:
-			stringarray_y[i/3] = e
-		case 2:
-			stringarray_z[i/3] = e
-		}
-	}
+	stringarray_y[0] = "  is"
+	stringarray_y[1] = "  is not"
+	stringarray_y[2] = "*  is"
+	stringarray_y[3] = "*  is"
+	stringarray_y[4] = "+  is"
 
-	/* alternative means of setting the above */
-	// stringarray_x[0] = "some"
-	// stringarray_x[1] = "some"
-	// stringarray_x[2] = "all"
-	// stringarray_x[3] = "no"
-	// stringarray_x[4] = ""
-
-	// stringarray_y[0] = "  is"
-	// stringarray_y[1] = "  is not"
-	// stringarray_y[2] = "*  is"
-	// stringarray_y[3] = "*  is"
-	// stringarray_y[4] = "+  is"
-
-	// stringarray_z[0] = ""
-	// stringarray_z[1] = "*"
-	// stringarray_z[2] = ""
-	// stringarray_z[3] = "*"
-	// stringarray_z[4] = ""
+	stringarray_z[0] = ""
+	stringarray_z[1] = "*"
+	stringarray_z[2] = ""
+	stringarray_z[3] = "*"
+	stringarray_z[4] = ""
 
 	/*
 
