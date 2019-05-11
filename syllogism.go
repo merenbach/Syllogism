@@ -7,6 +7,7 @@ package main
 * Refactor into proper Golang project layout
 * Use Golang list type for Line collection?
 * Improve dumping further
+* Ensure that ssQuantifiers and ssCopulas match x$() and y$(), respectively, from original BASIC
 *
 * Porting notes on variables:
 *
@@ -255,8 +256,8 @@ var (
 	}
 	stringarray_s [7]string
 	stringarray_w [3]string
-	stringarray_x [8]string
-	stringarray_y [8]string
+	ssQuantifiers [8]string
+	ssCopulas     [8]string
 	stringarray_z [8]string
 
 	localint_t1    int
@@ -601,9 +602,9 @@ Line5750: // 5750
 				intarray_r[intarray_k[localint_i]] += 2
 			}
 			if intarray_r[intarray_k[localint_i]] < 4 {
-				fmt.Printf("%s  ", stringarray_x[intarray_r[intarray_k[localint_i]]])
+				fmt.Printf("%s  ", ssQuantifiers[intarray_r[intarray_k[localint_i]]])
 			}
-			fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[intarray_p[intarray_k[localint_i]]].Term, stringarray_y[intarray_r[intarray_k[localint_i]]], symbolTable.Symbols[intarray_q[intarray_k[localint_i]]].Term, stringarray_z[intarray_r[intarray_k[localint_i]]])
+			fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[intarray_p[intarray_k[localint_i]]].Term, ssCopulas[intarray_r[intarray_k[localint_i]]], symbolTable.Symbols[intarray_q[intarray_k[localint_i]]].Term, stringarray_z[intarray_r[intarray_k[localint_i]]])
 		}
 	}
 }
@@ -911,10 +912,10 @@ func basicGosub7460(analyze bool) {
 				rlocalinti := intarray_r[localint_i]
 
 				if rlocalinti < 4 {
-					fmt.Printf("%s  ", stringarray_x[rlocalinti])
+					fmt.Printf("%s  ", ssQuantifiers[rlocalinti])
 				}
 
-				fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[plocalinti].Term, stringarray_y[rlocalinti], symbolTable.Symbols[qlocalinti].Term, stringarray_z[rlocalinti])
+				fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[plocalinti].Term, ssCopulas[rlocalinti], symbolTable.Symbols[qlocalinti].Term, stringarray_z[rlocalinti])
 			}
 		}
 	}
@@ -1615,17 +1616,17 @@ func syllogize() {
 	fmt.Println(syllogismCopyright)
 	fmt.Println()
 
-	stringarray_x[0] = "some"
-	stringarray_x[1] = "some"
-	stringarray_x[2] = "all"
-	stringarray_x[3] = "no"
-	stringarray_x[4] = ""
+	ssQuantifiers[0] = "some"
+	ssQuantifiers[1] = "some"
+	ssQuantifiers[2] = "all"
+	ssQuantifiers[3] = "no"
+	ssQuantifiers[4] = ""
 
-	stringarray_y[0] = "  is"
-	stringarray_y[1] = "  is not"
-	stringarray_y[2] = "*  is"
-	stringarray_y[3] = "*  is"
-	stringarray_y[4] = "+  is"
+	ssCopulas[0] = "  is"
+	ssCopulas[1] = "  is not"
+	ssCopulas[2] = "*  is"
+	ssCopulas[3] = "*  is"
+	ssCopulas[4] = "+  is"
 
 	stringarray_z[0] = ""
 	stringarray_z[1] = "*"
