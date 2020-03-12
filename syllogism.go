@@ -526,7 +526,7 @@ func basicGosub4890() {
 	intarray_j[1] = intarray_p[localint_j1]
 	intarray_j[2] = intarray_q[localint_j1]
 	if intarray_r[localint_j1]%2 != 0 {
-		symbolTable.NegativePremiseCount -= 1
+		symbolTable.NegativePremiseCount--
 		intarray_j[4] = 1
 	} else if symbolTable.Symbols[intarray_q[localint_j1]].TermType == symbolDesignator {
 		intarray_j[4] = 1
@@ -544,7 +544,7 @@ func basicGosub4890() {
 		idx := intarray_j[k]
 
 		localsymbol := symbolTable.Symbols[idx]
-		localsymbol.Occurrences -= 1
+		localsymbol.Occurrences--
 		if localsymbol.Empty() {
 			localsymbol.Term = ""
 			localsymbol.ArticleType = articleTypeNone
@@ -571,7 +571,7 @@ func basicGosub4760() {
 			fmt.Printf("Line %d not found\n", localint_n)
 			break
 		} else if localint_n == programLines[localint_j1].Number {
-			intarray_a[0] -= 1
+			intarray_a[0]--
 			intarray_a[intarray_a[0]] = localint_j1
 			intarray_l[localint_i] = intarray_l[localint_j1]
 			basicGosub4890()
@@ -841,7 +841,7 @@ func basicGosub1840() {
 	symbolTable = NewSymbolTable(basicDimMax + 2)
 
 	for localint_j = intarray_l[0]; localint_j > 0; localint_j = intarray_l[localint_j] {
-		intarray_a[0] -= 1
+		intarray_a[0]--
 		intarray_a[intarray_a[0]] = localint_j
 	}
 	intarray_l[0] = 0
@@ -1514,7 +1514,7 @@ Line1160: // 1160
 		goto Line1080
 	}
 
-	localint_l -= 1
+	localint_l--
 	localstring_l1 = basicLeft(localstring_l1, localint_l)
 	goto Line1120
 
@@ -1525,7 +1525,7 @@ Line1181: // 1181
 	if localint_l == 1 {
 		goto Line1080
 	}
-	localint_l -= 1
+	localint_l--
 	localstring_l1 = basicRight(localstring_l1, localint_l)
 	goto Line1181
 
