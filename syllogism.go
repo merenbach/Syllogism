@@ -36,6 +36,8 @@ import (
 	"strconv"
 	"strings"
 	"text/tabwriter"
+
+	"github.com/merenbach/syllogism/internal/help"
 )
 
 const basicDimMax = 64
@@ -317,7 +319,7 @@ func basicGosub9060() {
 					fmt.Printf("Address %d too large.  Symbol table only of length %d.\n", localint_i1, symbolTable.HighestLocationUsed)
 				}
 			} else {
-				fmt.Println(syllogismHelpForSubstitute)
+				fmt.Println(help.SyllogismHelpForSubstitute)
 			}
 			fmt.Println()
 		} else {
@@ -332,7 +334,7 @@ func printInfoHelp() {
 	// 8290
 	//---Info---
 	basicCls()
-	fmt.Println(syllogismHelpForInfo)
+	fmt.Println(help.SyllogismHelpForInfo)
 }
 
 // PrintInputsHelp prints help for inputs.
@@ -340,7 +342,7 @@ func printInputsHelp() {
 	// 7660
 	//---List valid inputs---
 	basicCls()
-	fmt.Println(syllogismHelpForInputs)
+	fmt.Println(help.SyllogismHelpForInputs)
 }
 
 // PrintSyntaxHelp returns help for syntax.
@@ -348,7 +350,7 @@ func printSyntaxHelp() {
 	// 7960
 	//--"syntax"--
 	basicCls()
-	fmt.Println(syllogismHelpForSyntax)
+	fmt.Println(help.SyllogismHelpForSyntax)
 }
 
 // BasicCls clears the screen
@@ -1613,7 +1615,7 @@ func syllogize() {
 	*/
 
 	basicCls()
-	fmt.Println(syllogismCopyright)
+	fmt.Println(help.SyllogismCopyright)
 	fmt.Println()
 
 	ssQuantifiers[0] = "some"

@@ -1,11 +1,13 @@
-package main
+package help
 
 const (
-	syllogismCopyright = `Syllogism Program Copyright (c) 1988 Richard Sharvy
+	// SyllogismCopyright holds a copyright message.
+	SyllogismCopyright = `Syllogism Program Copyright (c) 1988 Richard Sharvy
 Syllogism 1.0 (c) 2002 Richard Sharvy's estate
 Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org`
 
-	syllogismHelpForInputs = `Valid commands are:
+	// SyllogismHelpForInputs holds the help message for inputs.
+	SyllogismHelpForInputs = `Valid commands are:
    <n>  [ <statement> ]   Insert, delete, or replace premise number  <n>
                             Examples:   10  All men are mortal
                                         10
@@ -28,7 +30,8 @@ Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org`
   /  <statement>     Tests  <statement>  as conclusion
                          Note: this can be done even if there are no premises`
 
-	syllogismHelpForInfo = `   To use this program, enter a syllogism, one line at a time,
+	// SyllogismHelpForInfo holds the help for the info command.
+	SyllogismHelpForInfo = `   To use this program, enter a syllogism, one line at a time,
 and  THEN  test conclusions or ask the program to draw a conclusion.
 
    A syllogism as (mis)defined here is a (possibly empty) set of
@@ -50,7 +53,8 @@ and drawing and testing more conclusions.
 Reference:  H. Gensler, 'A Simplified Decision Procedure for Categor-
    ical Syllogisms,' Notre Dame J. of Formal Logic 14 (1973) 457-466.`
 
-	syllogismHelpForSubstitute = `   This subroutine allows a term in a syllogism to be uniformly
+	// SyllogismHelpForSubstitute holds help for the substitute command.
+	SyllogismHelpForSubstitute = `   This subroutine allows a term in a syllogism to be uniformly
 replaced by another term.  This is useful e.g. for finding an
 interpretation which actually makes the premises true, to produce as
 an obvious example of invalidity an argument having exactly the same
@@ -64,7 +68,8 @@ commands.
 in the syllogism, the result will not make much sense.  However,
 this routine does not convert entered term to lower-case or singular.`
 
-	syllogismHelpForSyntax = `Valid statement forms:
+	// SyllogismHelpForSyntax holds help for the syntax command
+	SyllogismHelpForSyntax = `Valid statement forms:
   All    <general term #1>   is/are       <general term #2>
   Some   <general term #1>   is/are       <general term #2>
   Some   <general term #1>   is/are not   <general term #2>
