@@ -1197,7 +1197,7 @@ func basicGosub8980() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		localint_d1, err = basicGosub2890()
+		d1, err := basicGosub2890()
 		if err != nil {
 			fmt.Println(err)
 			if msg {
@@ -1205,7 +1205,7 @@ func basicGosub8980() {
 			}
 		}
 		basicGosub4530(localstring_l1)
-		basicGosub3400(localint_d1)
+		basicGosub3400(d1)
 	}
 
 	if msg {
