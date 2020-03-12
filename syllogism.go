@@ -548,8 +548,7 @@ func basicGosub6630() {
 	localint_g2 := 1
 
 	//--conc. poss, line in s$()
-	var err error
-	localint_d1, err = basicGosub2890()
+	d1, err := basicGosub2890()
 	if err != nil {
 		fmt.Println(err)
 		if msg {
@@ -557,14 +556,14 @@ func basicGosub6630() {
 		}
 	}
 
-	if localint_d1 < 0 {
+	if d1 < 0 {
 		return
-	} else if localint_d1 >= 4 {
+	} else if d1 >= 4 {
 		localint_g1 = 2
 		localint_g2 = localint_p1
 	}
-	if localint_g2 == 2 && localint_d1 < 6 && localint_d1 > 3 {
-		localint_d1 += 2
+	if localint_g2 == 2 && d1 < 6 && d1 > 3 {
+		d1 += 2
 	}
 
 	localstring_w = stringutil.Singularize(stringarray_w[1])
@@ -592,7 +591,7 @@ Line6840: // 6840
 	localstring_w = stringutil.Singularize(stringarray_w[2])
 	if localint_j1 != 0 {
 		if localstring_w == stringarray_w[1] {
-			if localint_d1 != 4 || localint_g2 == 0 {
+			if d1 != 4 || localint_g2 == 0 {
 				goto Line7120
 			}
 			fmt.Printf("** Subject is a %s, predicate is a %s -- but\n", stringarray_g[2], stringarray_g[1])
@@ -615,7 +614,7 @@ Line6840: // 6840
 		} else if localint_g2 != 0 {
 			fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[localint_t2].Term, stringarray_g[localint_g2])
 		}
-		if symbolTable.NegativePremiseCount != 0 && localint_d1%2 == 0 {
+		if symbolTable.NegativePremiseCount != 0 && d1%2 == 0 {
 			fmt.Println("** Negative conclusion required.")
 			return
 		}
@@ -636,13 +635,13 @@ Line7070: // 7070
 	return
 
 Line7120: // 7120
-	if symbolTable.NegativePremiseCount > 0 || localint_d1%2 == 0 {
+	if symbolTable.NegativePremiseCount > 0 || d1%2 == 0 {
 		if localint_j1 != 1 {
-			if symbolTable.Symbols[localint_t1].DistributionCount > 0 || localint_d1 <= 1 || localint_d1 >= 4 {
+			if symbolTable.Symbols[localint_t1].DistributionCount > 0 || d1 <= 1 || d1 >= 4 {
 				if symbolTable.Symbols[localint_t2].DistributionCount > 0 {
 					goto Line7250
 				}
-				if localint_d1%2 == 1 || localint_d1 == 6 {
+				if d1%2 == 1 || d1 == 6 {
 					fmt.Printf("** Term %q not distributed in premises\n", symbolTable.Symbols[localint_t2].Term)
 					fmt.Println("   may not be distributed in conclusion.")
 					return
@@ -663,8 +662,8 @@ Line7250: // 7250
 	fmt.Println("-->  VALID!")
 
 	if localint_j1 == 0 {
-		if symbolTable.Symbols[localint_t1].DistributionCount == 0 || localint_d1 >= 2 {
-			if symbolTable.Symbols[localint_t2].DistributionCount > 0 && localint_d1%2 == 0 && localint_d1 != 4 && localint_d1 != 6 {
+		if symbolTable.Symbols[localint_t1].DistributionCount == 0 || d1 >= 2 {
+			if symbolTable.Symbols[localint_t2].DistributionCount > 0 && d1%2 == 0 && d1 != 4 && d1 != 6 {
 				localint_v1 = localint_t2
 			}
 
@@ -675,7 +674,7 @@ Line7250: // 7250
 			localint_v1 = localint_t1
 		}
 	} else {
-		if localint_d1 > 0 {
+		if d1 > 0 {
 			return
 		}
 		symbolTable.Symbols[0].Term = localstring_w
