@@ -24,6 +24,8 @@ package main
             appears independent in substitution routine, but spans gosubs 3400 and 3950.
 * l1     => highest symbol table location used, so symboltable.HighestLocationUsed
 * n1     => negative premise count on symbol table, so symboltable.NegativePremiseCount
+* s$     => parsed line tokens
+* w$     => most recently entered premise, either for entry into l$ or for evaluation with /
 */
 import (
 	"bufio"
@@ -82,8 +84,8 @@ var (
 		symbol.GeneralTermString,
 		symbol.DesignatorString,
 	}
-	stringarray_s [7]string
-	stringarray_w [3]string
+	stringarray_s [7]string // appears to hold parsed line tokens
+	stringarray_w [3]string // appears to hold the most recently-input first and second terms for parsing or testing
 	ssQuantifiers [8]string
 	ssCopulas     [8]string
 	stringarray_z [8]string
