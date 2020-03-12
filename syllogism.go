@@ -251,7 +251,7 @@ func basicGosub5070() {
 
 				fmt.Printf("   %s %q occurs %d times in premises.\n", s.TermTypeString(), s.Term, s.Occurrences)
 			}
-			localint_c += 1
+			localint_c++
 			intarray_c[localint_c] = i
 		}
 		return false
@@ -280,7 +280,7 @@ func basicGosub5070() {
 	localint_l = 0
 
 	for {
-		localint_l += 1
+		localint_l++
 		intarray_k[localint_l] = localint_i
 		localint_i = intarray_l[localint_i]
 
@@ -341,7 +341,7 @@ Line5610: // 5610
 	}
 
 Line5620: // 5620
-	localint_k += 1
+	localint_k++
 	if localint_k <= localint_l {
 		goto Line5470
 	}
@@ -362,7 +362,7 @@ Line5710: // 5710
 	fmt.Println(programLines[intarray_k[localint_i]])
 
 Line5730: // 5730
-	localint_i += 1
+	localint_i++
 
 	if localint_i <= localint_l {
 		goto Line5460
@@ -729,7 +729,7 @@ func basicGosub3400() {
 	var localint_b1 int
 	var localint_g int
 	if localint_d1%2 == 1 {
-		symbolTable.NegativePremiseCount += 1
+		symbolTable.NegativePremiseCount++
 
 		if symbolTable.NegativePremiseCount > 1 && msg {
 			fmt.Printf("Warning: %d negative premises\n", symbolTable.NegativePremiseCount)
@@ -757,7 +757,7 @@ func basicGosub3400() {
 			if localint_b1 > 0 {
 				localint_i1 = localint_b1
 			} else {
-				symbolTable.HighestLocationUsed += 1
+				symbolTable.HighestLocationUsed++
 			}
 
 			symbolTable.Symbols[localint_i1].Term = localstring_w
@@ -786,7 +786,7 @@ func basicGosub3400() {
 			fmt.Printf("Warning: %s %q has also occurred as a %s\n", stringarray_g[localint_g], localstring_w, stringarray_g[3-localint_g])
 		}
 
-		localint_i1 += 1
+		localint_i1++
 		goto Line3500
 
 	Line3710: // 3710
@@ -817,7 +817,7 @@ func basicGosub3400() {
 		symbolTable.Symbols[localint_i1].ArticleType = intarray_e[localint_j]
 
 	Line3780: // 3780
-		symbolTable.Symbols[localint_i1].Occurrences += 1
+		symbolTable.Symbols[localint_i1].Occurrences++
 
 		if symbolTable.Symbols[localint_i1].Occurrences < 3 {
 			goto Line3810
@@ -834,7 +834,7 @@ func basicGosub3400() {
 			intarray_p[localint_a1] = localint_i1
 
 			if localint_d1 >= 2 {
-				symbolTable.Symbols[localint_i1].DistributionCount += 1
+				symbolTable.Symbols[localint_i1].DistributionCount++
 			}
 
 		} else {
@@ -852,7 +852,7 @@ func basicGosub3400() {
 			}
 
 			if localint_d1 == 6 || localint_d1%2 != 0 {
-				symbolTable.Symbols[localint_i1].DistributionCount += 1
+				symbolTable.Symbols[localint_i1].DistributionCount++
 			}
 		}
 
@@ -905,7 +905,7 @@ func basicGosub4530(s string) {
 	}
 	intarray_l[localint_i] = localint_a1
 	intarray_l[localint_a1] = localint_j1
-	intarray_a[0] += 1
+	intarray_a[0]++
 }
 
 func basicGosub2890() int {
@@ -1072,7 +1072,7 @@ func tokenize() ([7]string, [8]int, [3]int, error) {
 	localint_i = 0
 Iterate:
 	for _, word := range strings.Split(localstring_l1, " ") {
-		localint_i += 1
+		localint_i++
 
 		if word == "" {
 			continue
