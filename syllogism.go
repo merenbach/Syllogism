@@ -29,6 +29,7 @@ package main
 */
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -546,7 +547,14 @@ func basicGosub6630() {
 	localint_g2 := 1
 
 	//--conc. poss, line in s$()
-	localint_d1 = basicGosub2890()
+	var err error
+	localint_d1, err = basicGosub2890()
+	if err != nil {
+		fmt.Println(err)
+		if msg {
+			fmt.Println("Enter SYNTAX for help with statements")
+		}
+	}
 
 	if localint_d1 < 0 {
 		return
@@ -909,7 +917,7 @@ func basicGosub4530(s string) {
 	intarray_a[0]++
 }
 
-func basicGosub2890() int {
+func basicGosub2890() (int, error) {
 	// 2890
 	//---Parse line in S$()---
 	if stringarray_s[2] != "all" {
@@ -930,14 +938,14 @@ func basicGosub2890() int {
 					}
 
 					stringarray_w[2] = stringarray_s[5]
-					return formAIsNotT // a is not T
+					return formAIsNotT, nil // a is not T
 				} else {
 					if intarray_t[4] != tokenizeType6Term {
 						goto Line3370
 					}
 
 					stringarray_w[2] = stringarray_s[4]
-					return formAIsT // a is T
+					return formAIsT, nil // a is T
 				}
 			}
 
@@ -956,7 +964,7 @@ func basicGosub2890() int {
 			stringarray_w[1] = stringarray_s[3]
 			stringarray_w[2] = stringarray_s[5]
 
-			return formNoAIsB // no A is B
+			return formNoAIsB, nil // no A is B
 		}
 		if intarray_t[3] != tokenizeType6Term {
 			goto Line3350
@@ -970,14 +978,14 @@ func basicGosub2890() int {
 			}
 			stringarray_w[1] = stringarray_s[3]
 			stringarray_w[2] = stringarray_s[6]
-			return formSomeAIsNotB // some A is not B
+			return formSomeAIsNotB, nil // some A is not B
 		}
 		if intarray_t[5] != tokenizeType6Term {
 			goto Line3370
 		}
 		stringarray_w[1] = stringarray_s[3]
 		stringarray_w[2] = stringarray_s[5]
-		return formSomeAIsB // Some A is B
+		return formSomeAIsB, nil // Some A is B
 	}
 	if intarray_t[3] != tokenizeType6Term {
 		goto Line3350
@@ -990,25 +998,16 @@ func basicGosub2890() int {
 	}
 	stringarray_w[1] = stringarray_s[3]
 	stringarray_w[2] = stringarray_s[5]
-	return formAllAIsB // all A is B
+	return formAllAIsB, nil // all A is B
 
 Line3330: // 3330
-	fmt.Println("** Missing copula is/are")
-	goto Line3380
+	return formUndefined, errors.New("** Missing copula is/are")
 
 Line3350: // 3350
-	fmt.Println("** Subject term bad or missing")
-	goto Line3380
+	return formUndefined, errors.New("** Subject term bad or missing")
 
 Line3370: // 3370
-	fmt.Println("** Predicate term bad or missing")
-
-Line3380: // 3380
-	if msg {
-		fmt.Println("Enter SYNTAX for help with statements")
-	}
-
-	return formUndefined
+	return formUndefined, errors.New("** Predicate term bad or missing")
 }
 
 const (
@@ -1198,7 +1197,13 @@ func basicGosub8980() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		localint_d1 = basicGosub2890()
+		localint_d1, err = basicGosub2890()
+		if err != nil {
+			fmt.Println(err)
+			if msg {
+				fmt.Println("Enter SYNTAX for help with statements")
+			}
+		}
 		basicGosub4530(localstring_l1)
 		basicGosub3400()
 	}
@@ -1472,7 +1477,13 @@ Line1620: // 1620
 	goto Line1080
 
 Line1640: // 1640
-	localint_d1 = basicGosub2890() // parse the line in S$()
+	localint_d1, err = basicGosub2890() // parse the line in S$()
+	if err != nil {
+		fmt.Println(err)
+		if msg {
+			fmt.Println("Enter SYNTAX for help with statements")
+		}
+	}
 	if localint_d1 != formUndefined {
 		basicGosub4530(localstring_l1) // enter line into list
 		basicGosub3400()               // add terms to symbol table
