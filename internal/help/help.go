@@ -6,6 +6,18 @@ const (
 Syllogism 1.0 (c) 2002 Richard Sharvy's estate
 Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org`
 
+	// SampleData contains a sample program to run.
+	SampleData = `10 all mortals are fools
+20 all athenians are men
+30 all philosophers are geniuses
+40 all people with good taste are philosophers
+50 richter is a diamond broker
+60 richter is the most hedonistic person in florida
+70 all men are mortal
+80 no genius is a fool
+90 all diamond brokers are people with good taste
+100 the most hedonistic person in florida is a decision-theorist`
+
 	// SyllogismHelpForInputs holds the help message for inputs.
 	SyllogismHelpForInputs = `Valid commands are:
    <n>  [ <statement> ]   Insert, delete, or replace premise number  <n>
