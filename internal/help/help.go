@@ -8,9 +8,11 @@ import (
 
 const (
 	// SyllogismCopyright holds a copyright message.
-	SyllogismCopyright = `Syllogism Program Copyright (c) 1988 Richard Sharvy
+	syllogismCopyright = `Syllogism Program Copyright (c) 1988 Richard Sharvy
 Syllogism 1.0 (c) 2002 Richard Sharvy's estate
-Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org`
+Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org
+
+Golang port by Andrew Merenbach <andrew@merenbach.com>.`
 
 	// SampleData contains a sample program to run.
 	SampleData = `10 all mortals are fools
@@ -111,6 +113,12 @@ The indefinite article 'sm' may be used with mass terms in predicates
 (e.g. 'This puddle is sm ink') to ensure that the mass term is taken
 as a general term rather than as a designator.`
 )
+
+// ShowCopyright shows the copyright for the program.
+func ShowCopyright() {
+	tui.Clear()
+	fmt.Println(syllogismCopyright)
+}
 
 // ShowGeneralHelp shows help for the program.
 func ShowGeneralHelp() {

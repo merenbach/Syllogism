@@ -37,7 +37,6 @@ import (
 	"github.com/merenbach/syllogism/internal/stringutil"
 	"github.com/merenbach/syllogism/internal/symbol"
 	"github.com/merenbach/syllogism/internal/symboltable"
-	"github.com/merenbach/syllogism/internal/tui"
 )
 
 const basicDimMax = 64
@@ -1303,8 +1302,7 @@ func syllogize() {
 	    tb$ = "                                                  "
 	*/
 
-	tui.Clear()
-	fmt.Println(help.SyllogismCopyright)
+	help.ShowCopyright()
 	fmt.Println()
 
 	ssQuantifiers[0] = "some"
