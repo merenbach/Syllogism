@@ -873,7 +873,6 @@ func basicGosub3400() {
 	}
 
 	intarray_r[localint_a1] = localint_d1
-	return
 }
 
 // basicGosub4530 enters the provided line (string with line number + statement) into the list.
