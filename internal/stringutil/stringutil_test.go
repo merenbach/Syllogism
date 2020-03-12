@@ -1,4 +1,4 @@
-package main
+package stringutil
 
 import "testing"
 
@@ -80,7 +80,7 @@ func TestSingularize(t *testing.T) {
 	}
 
 	for k, v := range data {
-		if out := singularize(k); out != v {
+		if out := Singularize(k); out != v {
 			t.Errorf("Expected %q to singularize to %q; instead got %q", k, v, out)
 		}
 	}
