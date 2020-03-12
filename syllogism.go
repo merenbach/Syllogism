@@ -596,7 +596,7 @@ Line6840: // 6840
 			}
 			fmt.Printf("** Subject is a %s, predicate is a %s -- but\n", stringarray_g[2], stringarray_g[1])
 		} else {
-			fmt.Print("** Conclusion from no premises must have same subject and predicate.")
+			fmt.Println("** Conclusion from no premises must have same subject and predicate.")
 			return
 		}
 	}
