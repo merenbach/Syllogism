@@ -382,7 +382,7 @@ Line5750: // 5750
 		if localstring_l1 == "link" {
 			fmt.Println(programLines[intarray_k[localint_i]])
 		} else {
-			fmt.Printf("%d ", programLines[intarray_k[localint_i]].Number)
+			fmt.Printf("%d  ", programLines[intarray_k[localint_i]].Number)
 			if intarray_r[intarray_k[localint_i]] < 6 && symbolTable.Symbols[intarray_q[intarray_k[localint_i]]].TermType == symbolDesignator {
 				intarray_r[intarray_k[localint_i]] += 2
 			}
@@ -1295,18 +1295,27 @@ func syllogize() {
 	ssQuantifiers[2] = "all"
 	ssQuantifiers[3] = "no"
 	ssQuantifiers[4] = ""
+	ssQuantifiers[5] = ""
+	ssQuantifiers[6] = ""
+	ssQuantifiers[7] = ""
 
 	ssCopulas[0] = "  is"
 	ssCopulas[1] = "  is not"
 	ssCopulas[2] = "*  is"
 	ssCopulas[3] = "*  is"
 	ssCopulas[4] = "+  is"
+	ssCopulas[5] = "+  is not"
+	ssCopulas[6] = "+  = "
+	ssCopulas[7] = "+   = / = "
 
 	stringarray_z[0] = ""
 	stringarray_z[1] = "*"
 	stringarray_z[2] = ""
 	stringarray_z[3] = "*"
 	stringarray_z[4] = ""
+	stringarray_z[5] = "*"
+	stringarray_z[6] = "+"
+	stringarray_z[7] = "*"
 
 	/*
 
