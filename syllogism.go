@@ -773,7 +773,6 @@ func basicGosub3400() {
 		}
 		if symbolTable.Symbols[localint_i1].TermType == symbolUndeterminedType {
 			if msg {
-
 				fmt.Printf("Note: earlier use of %q taken as the %s used here\n", localstring_w, stringarray_g[localint_g])
 			}
 			goto Line3710
