@@ -26,6 +26,7 @@ package main
 * n1     => negative premise count on symbol table, so symboltable.NegativePremiseCount
 * s$     => parsed line tokens
 * w$     => most recently entered premise, either for entry into l$ or for evaluation with /
+* d1     => form of most recently entered premise, either for entry into l$ or for evaluation with /
 */
 import (
 	"bufio"
@@ -733,12 +734,12 @@ func basicGosub1840() {
 	intarray_l[0] = 0
 }
 
-func basicGosub3400() {
+func basicGosub3400(d1 int) {
 	// 3400
 	//---Add W$(1), W$(2) to table T$()---
 	var localint_b1 int
 	var localint_g int
-	if localint_d1%2 == 1 {
+	if d1%2 == 1 {
 		symbolTable.NegativePremiseCount++
 
 		if symbolTable.NegativePremiseCount > 1 && msg {
@@ -749,7 +750,7 @@ func basicGosub3400() {
 	intarray_e[1] = articleTypeNone
 	for localint_j = 1; localint_j <= 2; localint_j++ {
 		localstring_w = stringarray_w[localint_j]
-		if localint_d1 < 4 {
+		if d1 < 4 {
 			localint_g = 1
 		} else if localint_j == 1 {
 			localint_g = 2
@@ -842,7 +843,7 @@ func basicGosub3400() {
 
 			intarray_p[localint_a1] = localint_i1
 
-			if localint_d1 >= 2 {
+			if d1 >= 2 {
 				symbolTable.Symbols[localint_i1].DistributionCount++
 			}
 
@@ -857,10 +858,10 @@ func basicGosub3400() {
 			}
 
 			if symbolTable.Symbols[localint_i1].TermType == symbolDesignator {
-				localint_d1 += 2
+				d1 += 2
 			}
 
-			if localint_d1 == 6 || localint_d1%2 != 0 {
+			if d1 == 6 || d1%2 != 0 {
 				symbolTable.Symbols[localint_i1].DistributionCount++
 			}
 		}
@@ -872,7 +873,7 @@ func basicGosub3400() {
 		}
 	}
 
-	intarray_r[localint_a1] = localint_d1
+	intarray_r[localint_a1] = d1
 }
 
 // basicGosub4530 enters the provided line (string with line number + statement) into the list.
@@ -1204,7 +1205,7 @@ func basicGosub8980() {
 			}
 		}
 		basicGosub4530(localstring_l1)
-		basicGosub3400()
+		basicGosub3400(localint_d1)
 	}
 
 	if msg {
@@ -1485,7 +1486,7 @@ Line1640: // 1640
 	}
 	if localint_d1 != formUndefined {
 		basicGosub4530(localstring_l1) // enter line into list
-		basicGosub3400()               // add terms to symbol table
+		basicGosub3400(localint_d1)    // add terms to symbol table
 	}
 	goto Line1080
 
