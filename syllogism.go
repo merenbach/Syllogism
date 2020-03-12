@@ -43,7 +43,7 @@ import (
 const basicDimMax = 64
 
 type SymbolTable struct {
-	Symbols              []Symbol
+	Symbols              []*Symbol
 	HighestLocationUsed  int
 	NegativePremiseCount int
 }
@@ -53,7 +53,10 @@ type SymbolTable struct {
 // TODO: Use slices to avoid specifying size manually.
 func NewSymbolTable(size int) *SymbolTable {
 	t := SymbolTable{
-		Symbols: make([]Symbol, size),
+		Symbols: make([]*Symbol, size),
+	}
+	for i := range t.Symbols {
+		t.Symbols[i] = &Symbol{}
 	}
 	return &t
 }
@@ -103,11 +106,11 @@ const (
 )
 
 // Empty determines whether a symbol is empty.
-func (s Symbol) Empty() bool {
+func (s *Symbol) Empty() bool {
 	return s.Occurrences == 0
 }
 
-func (s Symbol) ArticleTypeString() string {
+func (s *Symbol) ArticleTypeString() string {
 	a := []string{
 		articleBlankString,
 		articleAString,
@@ -117,7 +120,7 @@ func (s Symbol) ArticleTypeString() string {
 	return a[s.ArticleType]
 }
 
-func (s Symbol) TermTypeString() string {
+func (s *Symbol) TermTypeString() string {
 	g := []string{
 		symbolUndeterminedTypeString,
 		symbolGeneralTermString,
@@ -127,7 +130,7 @@ func (s Symbol) TermTypeString() string {
 }
 
 // Dump values of variables in a Symbol.
-func (s Symbol) Dump() string {
+func (s *Symbol) Dump() string {
 	return fmt.Sprintf("%s\t%s\t%d\t%d\t%d",
 		s.ArticleTypeString(),
 		s.Term,
@@ -540,7 +543,7 @@ func basicGosub4890() {
 	reduceDistributionCount := func(k int) {
 		idx := intarray_j[k]
 
-		localsymbol := &symbolTable.Symbols[idx]
+		localsymbol := symbolTable.Symbols[idx]
 		localsymbol.Occurrences -= 1
 		if localsymbol.Empty() {
 			localsymbol.Term = ""
@@ -849,7 +852,7 @@ func basicGosub1840() {
 // This function should return `true` when stopping condition is reached.
 func (t *SymbolTable) Iterate(start int, f func(int, *Symbol) bool) {
 	for i := start; i <= t.HighestLocationUsed; i++ {
-		if f(i, &t.Symbols[i]) {
+		if f(i, t.Symbols[i]) {
 			break
 		}
 	}
