@@ -31,13 +31,12 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"os/exec"
-	"runtime"
 	"strconv"
 	"strings"
 	"text/tabwriter"
 
 	"github.com/merenbach/syllogism/internal/help"
+	"github.com/merenbach/syllogism/internal/tui"
 )
 
 const basicDimMax = 64
@@ -333,7 +332,7 @@ func basicGosub9060() {
 func printInfoHelp() {
 	// 8290
 	//---Info---
-	basicCls()
+	tui.Clear()
 	fmt.Println(help.SyllogismHelpForInfo)
 }
 
@@ -341,7 +340,7 @@ func printInfoHelp() {
 func printInputsHelp() {
 	// 7660
 	//---List valid inputs---
-	basicCls()
+	tui.Clear()
 	fmt.Println(help.SyllogismHelpForInputs)
 }
 
@@ -349,28 +348,8 @@ func printInputsHelp() {
 func printSyntaxHelp() {
 	// 7960
 	//--"syntax"--
-	basicCls()
+	tui.Clear()
 	fmt.Println(help.SyllogismHelpForSyntax)
-}
-
-// BasicCls clears the screen
-func basicCls() {
-	switch runtime.GOOS {
-	case "darwin":
-		fallthrough
-	case "freebsd":
-		fallthrough
-	case "linux":
-		cmd := exec.Command("/usr/bin/clear")
-		cmd.Stdout = os.Stdout
-		cmd.Run()
-	case "windows":
-		cmd := exec.Command("cmd", "/c", "cls")
-		cmd.Stdout = os.Stdout
-		cmd.Run()
-	default:
-		panic("Unsupported OS: " + runtime.GOOS)
-	}
 }
 
 func basicGosub5880() {
@@ -1614,7 +1593,7 @@ func syllogize() {
 	    tb$ = "                                                  "
 	*/
 
-	basicCls()
+	tui.Clear()
 	fmt.Println(help.SyllogismCopyright)
 	fmt.Println()
 
