@@ -27,117 +27,31 @@ package main
 */
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"log"
 	"os"
 	"strconv"
 	"strings"
-	"text/tabwriter"
 
 	"github.com/merenbach/syllogism/internal/help"
 	"github.com/merenbach/syllogism/internal/stringutil"
+	"github.com/merenbach/syllogism/internal/symbol"
+	"github.com/merenbach/syllogism/internal/symboltable"
 	"github.com/merenbach/syllogism/internal/tui"
 )
 
 const basicDimMax = 64
 
-type SymbolTable struct {
-	Symbols              []*Symbol
-	HighestLocationUsed  int
-	NegativePremiseCount int
-}
-
-// NewSymbolTable creates and initializes a new symbol table.
-// TODO: Create new table each time new() is invoked.
-// TODO: Use slices to avoid specifying size manually.
-func NewSymbolTable(size int) *SymbolTable {
-	t := SymbolTable{
-		Symbols: make([]*Symbol, size),
-	}
-	for i := range t.Symbols {
-		t.Symbols[i] = &Symbol{}
-	}
-	return &t
-}
-
-// Dump values of variables in a SymbolTable.
-func (t *SymbolTable) Dump() string {
-	dump := new(bytes.Buffer)
-	fmt.Fprintf(dump, "Highest symbol table loc. used: %d  Negative premises: %d\n", t.HighestLocationUsed, t.NegativePremiseCount)
-	if t.HighestLocationUsed != 0 {
-		w := tabwriter.NewWriter(dump, 0, 0, 2, ' ', 0)
-		fmt.Fprint(w, "Adr.\tart.\tterm\ttype\toccurs\tdist. count")
-		for address := 1; address <= t.HighestLocationUsed; address++ {
-			symbolDump := symbolTable.Symbols[address].Dump()
-			fmt.Fprintf(w, "\n%d\t%s", address, symbolDump)
-		}
-		w.Flush()
-	}
-	return dump.String()
-}
-
-type Symbol struct {
-	Term              string
-	ArticleType       int
-	TermType          int
-	Occurrences       int
-	DistributionCount int
-}
-
 const (
-	articleBlankString    = ""
-	articleAString        = "a "
-	articleAStringnString = "an "
-	articleSmString       = "sm "
-
 	articleTypeNone = 0
 	articleTypeA    = 1
 	articleTypeAn   = 2
 	articleTypeSm   = 3
 
-	symbolUndeterminedTypeString = "undetermined type"
-	symbolGeneralTermString      = "general term"
-	symbolDesignatorString       = "designator"
-
 	symbolUndeterminedType = 0
 	symbolGeneralTerm      = 1
 	symbolDesignator       = 2
 )
-
-// Empty determines whether a symbol is empty.
-func (s *Symbol) Empty() bool {
-	return s.Occurrences == 0
-}
-
-func (s *Symbol) ArticleTypeString() string {
-	a := []string{
-		articleBlankString,
-		articleAString,
-		articleAStringnString,
-		articleSmString,
-	}
-	return a[s.ArticleType]
-}
-
-func (s *Symbol) TermTypeString() string {
-	g := []string{
-		symbolUndeterminedTypeString,
-		symbolGeneralTermString,
-		symbolDesignatorString,
-	}
-	return g[s.TermType]
-}
-
-// Dump values of variables in a Symbol.
-func (s *Symbol) Dump() string {
-	return fmt.Sprintf("%s\t%s\t%d\t%d\t%d",
-		s.ArticleTypeString(),
-		s.Term,
-		s.TermType,
-		s.Occurrences,
-		s.DistributionCount)
-}
 
 // ProgramLine stores a line number and program statement.
 type ProgramLine struct {
@@ -176,12 +90,12 @@ var (
 	intarray_t [8]int
 	intarray_e [3]int
 
-	symbolTable = NewSymbolTable(basicDimMax + 2)
+	symbolTable = symboltable.NewSymbolTable(basicDimMax + 2)
 
 	stringarray_g = []string{
-		symbolUndeterminedTypeString,
-		symbolGeneralTermString,
-		symbolDesignatorString,
+		symbol.UndeterminedTypeString,
+		symbol.GeneralTermString,
+		symbol.DesignatorString,
 	}
 	stringarray_s [7]string
 	stringarray_w [3]string
@@ -290,7 +204,7 @@ func basicGosub5880() {
 	symbol1 := symbolTable.Symbols[localint_c1]
 	symbol2 := symbolTable.Symbols[localint_c2]
 
-	symbolTable.Iterate(1, func(i int, s *Symbol) bool {
+	symbolTable.Iterate(1, func(i int, s *symbol.Symbol) bool {
 		if s.Occurrences < 2 {
 			return false
 		}
@@ -365,7 +279,7 @@ func basicGosub5070() {
 
 	localint_c = 0
 
-	symbolTable.Iterate(1, func(i int, s *Symbol) bool {
+	symbolTable.Iterate(1, func(i int, s *symbol.Symbol) bool {
 		if s.Occurrences != 0 && s.Occurrences != 2 {
 			if s.Occurrences != 1 {
 				if localint_j1 != 2 {
@@ -838,49 +752,13 @@ func basicGosub1840() {
 		return
 	}
 
-	symbolTable = NewSymbolTable(basicDimMax + 2)
+	symbolTable = symboltable.NewSymbolTable(basicDimMax + 2)
 
 	for localint_j = intarray_l[0]; localint_j > 0; localint_j = intarray_l[localint_j] {
 		intarray_a[0]--
 		intarray_a[intarray_a[0]] = localint_j
 	}
 	intarray_l[0] = 0
-}
-
-// Iterate over a symbol table with a given function.
-// This function should return `false` to continue.
-// This function should return `true` when stopping condition is reached.
-func (t *SymbolTable) Iterate(start int, f func(int, *Symbol) bool) {
-	for i := start; i <= t.HighestLocationUsed; i++ {
-		if f(i, t.Symbols[i]) {
-			break
-		}
-	}
-}
-
-// Search a symbol table for a term matching a given string.
-// Porting notes: All variable use is encapsulated, so if porting needs to be re-done in future, re-porting this function can be avoided by invoking the equivalent of `i1, b1 = search(start, w$)`.
-func (t *SymbolTable) Search(start int, w string) (int, int) {
-	// 3950
-	//---Search T$() for W$ from I1 to L1---
-
-	// If found, I1 = L1; else I1 = L1+1. B1 set to 1st empty loc.
-	firstEmptyLocation := 0
-
-	t.Iterate(start, func(i int, s *Symbol) bool {
-		if s.Term == w {
-			return true
-		}
-
-		if s.Empty() && firstEmptyLocation == 0 {
-			firstEmptyLocation = i
-		}
-
-		start = i + 1
-		return false
-	})
-
-	return start, firstEmptyLocation
 }
 
 func basicGosub3400() {
