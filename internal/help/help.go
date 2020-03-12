@@ -1,5 +1,11 @@
 package help
 
+import (
+	"fmt"
+
+	"github.com/merenbach/syllogism/internal/tui"
+)
+
 const (
 	// SyllogismCopyright holds a copyright message.
 	SyllogismCopyright = `Syllogism Program Copyright (c) 1988 Richard Sharvy
@@ -19,7 +25,7 @@ Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org`
 100 the most hedonistic person in florida is a decision-theorist`
 
 	// SyllogismHelpForInputs holds the help message for inputs.
-	SyllogismHelpForInputs = `Valid commands are:
+	syllogismHelpForInputs = `Valid commands are:
    <n>  [ <statement> ]   Insert, delete, or replace premise number  <n>
                             Examples:   10  All men are mortal
                                         10
@@ -43,7 +49,7 @@ Ben Sharvy: luvnpeas99@yahoo.com or bsharvy@efn.org`
                          Note: this can be done even if there are no premises`
 
 	// SyllogismHelpForInfo holds the help for the info command.
-	SyllogismHelpForInfo = `   To use this program, enter a syllogism, one line at a time,
+	syllogismHelpForInfo = `   To use this program, enter a syllogism, one line at a time,
 and  THEN  test conclusions or ask the program to draw a conclusion.
 
    A syllogism as (mis)defined here is a (possibly empty) set of
@@ -81,7 +87,7 @@ in the syllogism, the result will not make much sense.  However,
 this routine does not convert entered term to lower-case or singular.`
 
 	// SyllogismHelpForSyntax holds help for the syntax command
-	SyllogismHelpForSyntax = `Valid statement forms:
+	syllogismHelpForSyntax = `Valid statement forms:
   All    <general term #1>   is/are       <general term #2>
   Some   <general term #1>   is/are       <general term #2>
   Some   <general term #1>   is/are not   <general term #2>
@@ -105,3 +111,27 @@ The indefinite article 'sm' may be used with mass terms in predicates
 (e.g. 'This puddle is sm ink') to ensure that the mass term is taken
 as a general term rather than as a designator.`
 )
+
+// ShowGeneralHelp shows help for the program.
+func ShowGeneralHelp() {
+	// 8290
+	//---Info---
+	tui.Clear()
+	fmt.Println(syllogismHelpForInfo)
+}
+
+// ShowInputsHelp prints help for inputs.
+func ShowInputsHelp() {
+	// 7660
+	//---List valid inputs---
+	tui.Clear()
+	fmt.Println(syllogismHelpForInputs)
+}
+
+// ShowSyntaxHelp prints help for syntax.
+func ShowSyntaxHelp() {
+	// 7960
+	//--"syntax"--
+	tui.Clear()
+	fmt.Println(syllogismHelpForSyntax)
+}

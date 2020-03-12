@@ -171,29 +171,6 @@ func basicGosub9060() {
 	fmt.Println("Exit from substitution routine")
 }
 
-func printInfoHelp() {
-	// 8290
-	//---Info---
-	tui.Clear()
-	fmt.Println(help.SyllogismHelpForInfo)
-}
-
-// PrintInputsHelp prints help for inputs.
-func printInputsHelp() {
-	// 7660
-	//---List valid inputs---
-	tui.Clear()
-	fmt.Println(help.SyllogismHelpForInputs)
-}
-
-// PrintSyntaxHelp returns help for syntax.
-func printSyntaxHelp() {
-	// 7960
-	//--"syntax"--
-	tui.Clear()
-	fmt.Println(help.SyllogismHelpForSyntax)
-}
-
 func basicGosub5880() {
 	// 5880
 	//---See if conclusion possible---
@@ -1435,13 +1412,13 @@ Line1190: // 1190
 		basicGosub8980()
 		goto Line1080
 	case "help":
-		printInputsHelp()
+		help.ShowInputsHelp()
 		goto Line1080
 	case "syntax":
-		printSyntaxHelp()
+		help.ShowSyntaxHelp()
 		goto Line1080
 	case "info":
-		printInfoHelp()
+		help.ShowGeneralHelp()
 		goto Line1080
 	case "dump":
 		fmt.Println(symbolTable.Dump())

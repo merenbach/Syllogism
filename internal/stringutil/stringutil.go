@@ -2,6 +2,7 @@ package stringutil
 
 import "strings"
 
+// Plurals for singularization.
 var plurals = map[string]string{
 	"socrates":    "socrates",
 	"parmenides":  "parmenides",
