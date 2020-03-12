@@ -22,3 +22,9 @@ The original license---taken from the Syllogism website---is as follows:
 
 For those requiring a more formal license, Ben Sharvy has graciously offered the source code under the GNU GPL v3.  Any derivatives of the original code base that I place here, regardless of coding language, are released under the same.
 
+## How does this program differ from the original program?
+
+1. The program is written in Golang, not BASIC.
+2. My name is appended to the end of the copyright notice to designate that I ported the program to Golang.
+3. Program execution flow (e.g., `STOP`/`CONT`) is supplanted by modern terminal program flow (e.g., when you exit, the program exits completely). Press `ctrl-z` to suspend the program without closing in a particular terminal session.
+4. Some slight changes to help printouts, primarily spacing.
