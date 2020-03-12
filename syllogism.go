@@ -98,7 +98,6 @@ var (
 	localint_c     int
 	localint_c1    int
 	localint_c2    int
-	localint_d1    int
 	localint_i     int
 	localint_i1    int
 	localint_j     int
@@ -1476,17 +1475,19 @@ Line1620: // 1620
 	goto Line1080
 
 Line1640: // 1640
-	localint_d1, err = basicGosub2890() // parse the line in S$()
-	if err != nil {
-		fmt.Println(err)
-		if msg {
-			fmt.Println("Enter SYNTAX for help with statements")
+	func() {
+		d1, err := basicGosub2890() // parse the line in S$()
+		if err != nil {
+			fmt.Println(err)
+			if msg {
+				fmt.Println("Enter SYNTAX for help with statements")
+			}
 		}
-	}
-	if localint_d1 != formUndefined {
-		basicGosub4530(localstring_l1) // enter line into list
-		basicGosub3400(localint_d1)    // add terms to symbol table
-	}
+		if d1 != formUndefined {
+			basicGosub4530(localstring_l1) // enter line into list
+			basicGosub3400(d1)             // add terms to symbol table
+		}
+	}()
 	goto Line1080
 
 Line1745: // 1745
