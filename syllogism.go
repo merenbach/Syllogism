@@ -37,6 +37,7 @@ import (
 	"github.com/merenbach/syllogism/internal/stringutil"
 	"github.com/merenbach/syllogism/internal/symbol"
 	"github.com/merenbach/syllogism/internal/symboltable"
+	"github.com/merenbach/syllogism/internal/tui"
 )
 
 const basicDimMax = 64
@@ -51,21 +52,6 @@ const (
 	symbolGeneralTerm      = 1
 	symbolDesignator       = 2
 )
-
-// ProgramLine stores a line number and program statement.
-type ProgramLine struct {
-	Number    int
-	Statement string
-}
-
-func (line ProgramLine) String() string {
-	return fmt.Sprintf("%d %s", line.Number, line.Statement)
-}
-
-// Empty determines whether a line is empty.
-func (line ProgramLine) Empty() bool {
-	return line.Statement == ""
-}
 
 const (
 	formUndefined   = (-1)
@@ -128,7 +114,7 @@ var (
 	localstring_w  string
 	localstring_z  string
 
-	programLines = make([]ProgramLine, basicDimMax)
+	programLines = make([]*tui.ProgramLine, basicDimMax)
 
 	msg bool
 )
@@ -693,11 +679,11 @@ func basicGosub7460(analyze bool) {
 	// 7460
 	//---list---
 	if !analyze {
-		for localint_i = intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
+		for localint_i := intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
 			fmt.Println(programLines[localint_i])
 		}
 	} else {
-		for localint_i = intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
+		for localint_i := intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
 			line := programLines[localint_i]
 			if !line.Empty() {
 				fmt.Printf("%d ", line.Number)
@@ -899,7 +885,7 @@ func basicGosub4530(s string) {
 
 		if localint_n == programLines[localint_j1].Number {
 			basicGosub4890()
-			programLines[localint_j1] = ProgramLine{
+			programLines[localint_j1] = &tui.ProgramLine{
 				Number:    localint_n,
 				Statement: localstring_l,
 			}
@@ -913,7 +899,7 @@ func basicGosub4530(s string) {
 	}
 
 	localint_a1 = intarray_a[intarray_a[0]]
-	programLines[localint_a1] = ProgramLine{
+	programLines[localint_a1] = &tui.ProgramLine{
 		Number:    localint_n,
 		Statement: localstring_l,
 	}
