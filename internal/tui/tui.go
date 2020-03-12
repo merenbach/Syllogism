@@ -14,10 +14,6 @@ type ProgramLine struct {
 }
 
 func (pl *ProgramLine) String() string {
-	return pl.plain()
-}
-
-func (pl *ProgramLine) plain() string {
 	return fmt.Sprintf("%d %s", pl.Number, pl.Statement)
 }
 

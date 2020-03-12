@@ -679,11 +679,11 @@ func basicGosub7460(analyze bool) {
 	// 7460
 	//---list---
 	if !analyze {
-		for localint_i := intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
+		for localint_i = intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
 			fmt.Println(programLines[localint_i])
 		}
 	} else {
-		for localint_i := intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
+		for localint_i = intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
 			line := programLines[localint_i]
 			if !line.Empty() {
 				fmt.Printf("%d ", line.Number)
