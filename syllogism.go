@@ -929,12 +929,12 @@ func basicGosub2890() (int, error) {
 					goto Line3330
 				}
 
-				stringarray_w[1] = stringarray_s[2]
 				if stringarray_s[4] == "not" {
 					if intarray_t[5] != tokenizeType6Term {
 						goto Line3370
 					}
 
+					stringarray_w[1] = stringarray_s[2]
 					stringarray_w[2] = stringarray_s[5]
 					return formAIsNotT, nil // a is not T
 				} else {
@@ -942,6 +942,7 @@ func basicGosub2890() (int, error) {
 						goto Line3370
 					}
 
+					stringarray_w[1] = stringarray_s[2]
 					stringarray_w[2] = stringarray_s[4]
 					return formAIsT, nil // a is T
 				}
