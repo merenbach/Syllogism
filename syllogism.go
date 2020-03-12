@@ -912,7 +912,6 @@ func basicGosub4530(s string) {
 func basicGosub2890() int {
 	// 2890
 	//---Parse line in S$()---
-	localint_d1 = formUndefined
 	if stringarray_s[2] != "all" {
 		if stringarray_s[2] != "some" {
 			if stringarray_s[2] != "no" {
@@ -929,18 +928,17 @@ func basicGosub2890() int {
 					if intarray_t[5] != tokenizeType6Term {
 						goto Line3370
 					}
-					localint_d1 = formAIsNotT // a is not T
 
 					stringarray_w[2] = stringarray_s[5]
+					return formAIsNotT // a is not T
 				} else {
 					if intarray_t[4] != tokenizeType6Term {
 						goto Line3370
 					}
 
-					localint_d1 = formAIsT // a is T
 					stringarray_w[2] = stringarray_s[4]
+					return formAIsT // a is T
 				}
-				return localint_d1
 			}
 
 			if intarray_t[3] != tokenizeType6Term {
@@ -958,9 +956,7 @@ func basicGosub2890() int {
 			stringarray_w[1] = stringarray_s[3]
 			stringarray_w[2] = stringarray_s[5]
 
-			localint_d1 = formNoAIsB // no A is B
-
-			return localint_d1
+			return formNoAIsB // no A is B
 		}
 		if intarray_t[3] != tokenizeType6Term {
 			goto Line3350
@@ -974,16 +970,14 @@ func basicGosub2890() int {
 			}
 			stringarray_w[1] = stringarray_s[3]
 			stringarray_w[2] = stringarray_s[6]
-			localint_d1 = formSomeAIsNotB // some A is not B
-			return localint_d1
+			return formSomeAIsNotB // some A is not B
 		}
 		if intarray_t[5] != tokenizeType6Term {
 			goto Line3370
 		}
 		stringarray_w[1] = stringarray_s[3]
 		stringarray_w[2] = stringarray_s[5]
-		localint_d1 = formSomeAIsB // Some A is B
-		return localint_d1
+		return formSomeAIsB // Some A is B
 	}
 	if intarray_t[3] != tokenizeType6Term {
 		goto Line3350
@@ -996,8 +990,7 @@ func basicGosub2890() int {
 	}
 	stringarray_w[1] = stringarray_s[3]
 	stringarray_w[2] = stringarray_s[5]
-	localint_d1 = formAllAIsB // all A is B
-	return localint_d1
+	return formAllAIsB // all A is B
 
 Line3330: // 3330
 	fmt.Println("** Missing copula is/are")
@@ -1015,7 +1008,7 @@ Line3380: // 3380
 		fmt.Println("Enter SYNTAX for help with statements")
 	}
 
-	return localint_d1
+	return formUndefined
 }
 
 const (
