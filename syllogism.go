@@ -36,86 +36,11 @@ import (
 	"text/tabwriter"
 
 	"github.com/merenbach/syllogism/internal/help"
+	"github.com/merenbach/syllogism/internal/stringutil"
 	"github.com/merenbach/syllogism/internal/tui"
 )
 
 const basicDimMax = 64
-
-var plurals = map[string]string{
-	"socrates":    "socrates",
-	"parmenides":  "parmenides",
-	"epimenides":  "epimenides",
-	"mice":        "mouse",
-	"lice":        "louse",
-	"geese":       "goose",
-	"children":    "child",
-	"oxen":        "ox",
-	"people":      "person",
-	"teeth":       "tooth",
-	"wolves":      "wolf",
-	"wives":       "wife",
-	"selves":      "self",
-	"lives":       "life",
-	"leaves":      "leaf",
-	"shelves":     "shelf",
-	"elves":       "elf",
-	"dwarves":     "dwarf",
-	"knives":      "knife",
-	"thieves":     "thief",
-	"neckties":    "necktie",
-	"hippies":     "hippie",
-	"yippies":     "yippie",
-	"yuppies":     "yuppie",
-	"moonies":     "moonie",
-	"druggies":    "druggie",
-	"cookies":     "cookie",
-	"commies":     "commie",
-	"groupies":    "groupie",
-	"tomatoes":    "tomato",
-	"alcibiades":  "alcibiades",
-	"thales":      "thales",
-	"aries":       "aries",
-	"athens":      "athens",
-	"species":     "species",
-	"feces":       "feces",
-	"geniuses":    "genius",
-	"sorites":     "sorites",
-	"crises":      "crisis",
-	"emphases":    "emphasis",
-	"memoranda":   "memorandum",
-	"theses":      "thesis",
-	"automata":    "automaton",
-	"formulae":    "formula",
-	"stigmata":    "stigma",
-	"lemmata":     "lemma",
-	"vertices":    "vertex",
-	"vortices":    "vortex",
-	"indices":     "index",
-	"codices":     "codex",
-	"matrices":    "matrix",
-	"gasses":      "gas",
-	"gases":       "gas",
-	"buses":       "bus",
-	"aches":       "ache",
-	"headaches":   "headache",
-	"grits":       "grits",
-	"molasses":    "molasses",
-	"gas":         "gas",
-	"christmas":   "christmas",
-	"mathematics": "mathematics",
-	"semantics":   "semantics",
-	"physics":     "physics",
-	"metaphysics": "metaphysics",
-	"ethics":      "ethics",
-	"linguistics": "linguistics",
-	"kiwis":       "kiwi",
-	"israelis":    "israeli",
-	"goyim":       "goy",
-	"seraphim":    "seraph",
-	"cherubim":    "cherub",
-	"semen":       "semen",
-	"amen":        "amen",
-}
 
 type SymbolTable struct {
 	Symbols              []Symbol
@@ -752,7 +677,7 @@ func basicGosub6630() {
 		localint_d1 += 2
 	}
 
-	localstring_w = singularize(stringarray_w[1])
+	localstring_w = stringutil.Singularize(stringarray_w[1])
 	if localint_j1 != 0 {
 		stringarray_w[1] = localstring_w
 	} else {
@@ -774,7 +699,7 @@ func basicGosub6630() {
 	}
 
 Line6840: // 6840
-	localstring_w = singularize(stringarray_w[2])
+	localstring_w = stringutil.Singularize(stringarray_w[2])
 	if localint_j1 != 0 {
 		if localstring_w == stringarray_w[1] {
 			if localint_d1 != 4 || localint_g2 == 0 {
@@ -919,68 +844,6 @@ func basicGosub1840() {
 	intarray_l[0] = 0
 }
 
-// HasAnyPrefix saves less-maintainable repeated calls to strings.HasPrefix()
-func hasAnyPrefix(s string, prefixes ...string) bool {
-	for _, prefix := range prefixes {
-		if strings.HasPrefix(s, prefix) {
-			return true
-		}
-	}
-	return false
-}
-
-// HasAnySuffix saves less-maintainable repeated calls to strings.HasSuffix()
-func hasAnySuffix(s string, suffixes ...string) bool {
-	for _, suffix := range suffixes {
-		if strings.HasSuffix(s, suffix) {
-			return true
-		}
-	}
-	return false
-}
-
-// Singularize tries to convert a plural term to singular.
-// Porting notes: All variable use is encapsulated, even in the original, so if porting needs to be re-done in future, re-porting this function can be avoided by invoking the equivalent of `w$ = singularize(w$)`.
-func singularize(term string) string {
-	// 4040
-	//---Convert W$ to singular---
-	if strings.HasPrefix(term, "the ") {
-		return term
-	}
-
-	words := make([]string, 0)
-	for _, word := range strings.Fields(term) {
-		if singular, found := plurals[word]; found {
-			word = singular
-
-		} else if strings.HasSuffix(word, "men") {
-			word = strings.TrimSuffix(word, "en") + "an"
-
-		} else if strings.HasSuffix(word, "s") && len(word) > 1 && !hasAnySuffix(word, "ss", "us", "is", "'s") {
-			if hasAnySuffix(word, "xes", "sses", "shes", "ches") {
-				// foxes => fox
-				// passes => pass
-				// dishes => dish
-				// arches => arch
-				word = strings.TrimSuffix(word, "es")
-
-			} else if strings.HasSuffix(word, "ies") && len(word) > 4 {
-				// pastries => pastry
-				word = strings.TrimSuffix(word, "ies") + "y"
-
-			} else {
-				// cats => cat
-				word = strings.TrimSuffix(word, "s")
-
-			}
-		}
-
-		words = append(words, word)
-	}
-
-	return strings.Join(words, " ")
-}
-
 // Iterate over a symbol table with a given function.
 // This function should return `false` to continue.
 // This function should return `true` when stopping condition is reached.
@@ -1041,7 +904,7 @@ func basicGosub3400() {
 			localint_g = localint_p1
 		}
 
-		localstring_w = singularize(localstring_w)
+		localstring_w = stringutil.Singularize(localstring_w)
 		localint_i1 = 1
 
 	Line3500: // 3500
@@ -1099,7 +962,7 @@ func basicGosub3400() {
 				goto Line3780
 			}
 
-			if hasAnyPrefix(localstring_w, "a", "e", "i", "o", "u") {
+			if stringutil.HasPrefixVowel(localstring_w) {
 				// AN
 				intarray_e[localint_j] = articleTypeAn
 			} else {
