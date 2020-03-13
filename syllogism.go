@@ -732,7 +732,7 @@ func basicGosub1840() {
 	intarray_l[0] = 0
 }
 
-func basicGosub3400(d1 int) {
+func basicGosub3400(d1 int, a1 int) {
 	// 3400
 	//---Add W$(1), W$(2) to table T$()---
 	var localint_b1 int
@@ -839,7 +839,7 @@ func basicGosub3400(d1 int) {
 	Line3810: // 3810
 		if localint_j != 2 {
 
-			intarray_p[localint_a1] = localint_i1
+			intarray_p[a1] = localint_i1
 
 			if d1 >= 2 {
 				symbolTable.Symbols[localint_i1].DistributionCount++
@@ -847,9 +847,9 @@ func basicGosub3400(d1 int) {
 
 		} else {
 
-			intarray_q[localint_a1] = localint_i1
+			intarray_q[a1] = localint_i1
 
-			if intarray_p[localint_a1] == intarray_q[localint_a1] {
+			if intarray_p[a1] == intarray_q[a1] {
 				if msg {
 					fmt.Printf("Warning: same term occurs twice in line %s\n", stringarray_s[1])
 				}
@@ -871,7 +871,7 @@ func basicGosub3400(d1 int) {
 		}
 	}
 
-	intarray_r[localint_a1] = d1
+	intarray_r[a1] = d1
 }
 
 // basicGosub4530 enters the provided line (string with line number + statement) into the list.
@@ -914,6 +914,12 @@ func basicGosub4530(s string) {
 	intarray_l[localint_a1] = localint_j1
 	intarray_a[0]++
 }
+
+// type formInfo struct {
+// 	formType   int
+// 	firstWord  string
+// 	secondWord string
+// }
 
 func basicGosub2890() (int, error) {
 	// 2890
@@ -1204,7 +1210,7 @@ func basicGosub8980() {
 			}
 		}
 		basicGosub4530(localstring_l1)
-		basicGosub3400(d1)
+		basicGosub3400(d1, localint_a1)
 	}
 
 	if msg {
@@ -1485,8 +1491,8 @@ Line1640: // 1640
 			}
 		}
 		if d1 != formUndefined {
-			basicGosub4530(localstring_l1) // enter line into list
-			basicGosub3400(d1)             // add terms to symbol table
+			basicGosub4530(localstring_l1)  // enter line into list
+			basicGosub3400(d1, localint_a1) // add terms to symbol table
 		}
 	}()
 	goto Line1080
