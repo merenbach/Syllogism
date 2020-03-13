@@ -27,6 +27,7 @@ package main
 * s$     => parsed line tokens
 * w$     => most recently entered premise, either for entry into l$ or for evaluation with /
 * d1     => form of most recently entered premise, either for entry into l$ or for evaluation with /
+* a1     => address of recently-entered line in the list of lines (???)
 */
 import (
 	"bufio"
@@ -94,7 +95,6 @@ var (
 
 	localint_t1    int
 	localint_t2    int
-	localint_a1    int
 	localint_c     int
 	localint_c1    int
 	localint_c2    int
@@ -875,7 +875,7 @@ func basicGosub3400(d1 int, a1 int) {
 }
 
 // basicGosub4530 enters the provided line (string with line number + statement) into the list.
-func basicGosub4530(s string) {
+func basicGosub4530(s string) int {
 	// 4530
 	//---Enter line into list---
 	localint_n, _ = strconv.Atoi(stringarray_s[1])
@@ -896,8 +896,7 @@ func basicGosub4530(s string) {
 				Number:    localint_n,
 				Statement: localstring_l,
 			}
-			localint_a1 = localint_j1
-			return
+			return localint_j1
 		}
 
 		if localint_n < programLines[localint_j1].Number {
@@ -905,14 +904,16 @@ func basicGosub4530(s string) {
 		}
 	}
 
-	localint_a1 = intarray_a[intarray_a[0]]
-	programLines[localint_a1] = &tui.ProgramLine{
+	a1 := intarray_a[intarray_a[0]]
+	programLines[a1] = &tui.ProgramLine{
 		Number:    localint_n,
 		Statement: localstring_l,
 	}
-	intarray_l[localint_i] = localint_a1
-	intarray_l[localint_a1] = localint_j1
+	intarray_l[localint_i] = a1
+	intarray_l[a1] = localint_j1
 	intarray_a[0]++
+
+	return a1
 }
 
 // type formInfo struct {
@@ -1209,8 +1210,8 @@ func basicGosub8980() {
 				fmt.Println("Enter SYNTAX for help with statements")
 			}
 		}
-		basicGosub4530(localstring_l1)
-		basicGosub3400(d1, localint_a1)
+		a1 := basicGosub4530(localstring_l1)
+		basicGosub3400(d1, a1)
 	}
 
 	if msg {
@@ -1491,8 +1492,8 @@ Line1640: // 1640
 			}
 		}
 		if d1 != formUndefined {
-			basicGosub4530(localstring_l1)  // enter line into list
-			basicGosub3400(d1, localint_a1) // add terms to symbol table
+			a1 := basicGosub4530(localstring_l1) // enter line into list
+			basicGosub3400(d1, a1)               // add terms to symbol table
 		}
 	}()
 	goto Line1080
