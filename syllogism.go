@@ -19,6 +19,8 @@ package main
 * o(63)  => term occurrence count, so anywhere we see o(N) => symbols(N).Occurrences
 * d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
 * g$(2)  => term type names
+* e(2)   => article type (index in a$ of article type)
+* a$(3)  => article type names
 * b1     => first unused location in symbol table after a particular starting point
             (first slot with symbols(N).Occurrences == 0)
 * i1     => local iterator index that is passed through different functions
@@ -43,6 +45,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/merenbach/syllogism/internal/article"
 	"github.com/merenbach/syllogism/internal/help"
 	"github.com/merenbach/syllogism/internal/stringutil"
 	"github.com/merenbach/syllogism/internal/symbol"
@@ -80,7 +83,7 @@ var (
 	intarray_r [basicDimMax]int
 	intarray_k [basicDimMax]int
 	intarray_t [8]int
-	intarray_e [3]int
+	intarray_e [3]article.Type
 
 	symbolTable = symboltable.NewSymbolTable(basicDimMax + 2)
 
@@ -1024,7 +1027,7 @@ const (
 	tokenizeType6Term       = 6
 )
 
-func tokenize() ([7]string, [8]int, [3]int, error) {
+func tokenize() ([7]string, [8]int, [3]article.Type, error) {
 	// 2020
 	//---L1$ into array S$()---
 
@@ -1037,7 +1040,7 @@ func tokenize() ([7]string, [8]int, [3]int, error) {
 
 	var shadowstringarray_s [7]string
 	var shadowintarray_t [8]int
-	var shadowintarray_e [3]int
+	var shadowintarray_e [3]article.Type
 
 	localint_p1 = term.TypeUndetermined
 	shadowintarray_e[2] = articleTypeNone

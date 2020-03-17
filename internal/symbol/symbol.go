@@ -3,6 +3,7 @@ package symbol
 import (
 	"fmt"
 
+	"github.com/merenbach/syllogism/internal/article"
 	"github.com/merenbach/syllogism/internal/term"
 )
 
@@ -16,7 +17,7 @@ const (
 // A Symbol is a logical symbol.
 type Symbol struct {
 	Term              string
-	ArticleType       int
+	ArticleType       article.Type
 	TermType          term.Type
 	Occurrences       int
 	DistributionCount int
