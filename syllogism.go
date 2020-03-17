@@ -540,8 +540,8 @@ Line6580: // 6580
 func basicGosub6630() {
 	// 6630
 	//---test offered conclusion---
-	var localint_g1 term.Type = 1
-	var localint_g2 term.Type = 1
+	var termType1 term.Type = 1 // formerly g1
+	var termType2 term.Type = 1 // formerly g2
 
 	//--conc. poss, line in s$()
 	d1, err := basicGosub2890()
@@ -555,10 +555,10 @@ func basicGosub6630() {
 	if d1 < 0 {
 		return
 	} else if d1 >= 4 {
-		localint_g1 = 2
-		localint_g2 = localint_p1
+		termType1 = 2
+		termType2 = localint_p1
 	}
-	if localint_g2 == 2 && d1 < 6 && d1 > 3 {
+	if termType2 == 2 && d1 < 6 && d1 > 3 {
 		d1 += 2
 	}
 
@@ -569,17 +569,17 @@ func basicGosub6630() {
 		for localint_j = 1; localint_j <= 2; localint_j++ {
 			if localstring_w == symbolTable.Symbols[intarray_c[localint_j]].Term {
 				if symbolTable.Symbols[intarray_c[localint_j]].TermType > 0 {
-					if localint_g1 == symbolTable.Symbols[intarray_c[localint_j]].TermType {
+					if termType1 == symbolTable.Symbols[intarray_c[localint_j]].TermType {
 						goto Line6840
 					}
 				} else {
-					fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[intarray_c[localint_j]].Term, stringarray_g[localint_g1])
+					fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[intarray_c[localint_j]].Term, stringarray_g[termType1])
 					goto Line6840
 				}
 			}
 		}
 
-		fmt.Printf("** Conclusion may not contain %s %q.\n", stringarray_g[localint_g1], localstring_w)
+		fmt.Printf("** Conclusion may not contain %s %q.\n", stringarray_g[termType1], localstring_w)
 		localint_j = 0
 	}
 
@@ -587,7 +587,7 @@ Line6840: // 6840
 	localstring_w = stringutil.Singularize(stringarray_w[2])
 	if localint_j1 != 0 {
 		if localstring_w == stringarray_w[1] {
-			if d1 != 4 || localint_g2 == 0 {
+			if d1 != 4 || termType2 == 0 {
 				goto Line7120
 			}
 			fmt.Printf("** Subject is a %s, predicate is a %s -- but\n", stringarray_g[2], stringarray_g[1])
@@ -604,11 +604,11 @@ Line6840: // 6840
 			goto Line7060
 		}
 		if symbolTable.Symbols[localint_t2].TermType > 0 {
-			if localint_g2 != 0 && localint_g2 != symbolTable.Symbols[localint_t2].TermType {
+			if termType2 != 0 && termType2 != symbolTable.Symbols[localint_t2].TermType {
 				goto Line7060
 			}
-		} else if localint_g2 != 0 {
-			fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[localint_t2].Term, stringarray_g[localint_g2])
+		} else if termType2 != 0 {
+			fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[localint_t2].Term, stringarray_g[termType2])
 		}
 		if symbolTable.NegativePremiseCount != 0 && d1%2 == 0 {
 			fmt.Println("** Negative conclusion required.")
@@ -624,7 +624,7 @@ Line6840: // 6840
 	goto Line7070
 
 Line7060: // 7060
-	fmt.Printf("** Conclusion may not contain %s %q;\n", stringarray_g[localint_g2], localstring_w)
+	fmt.Printf("** Conclusion may not contain %s %q;\n", stringarray_g[termType2], localstring_w)
 
 Line7070: // 7070
 	fmt.Printf("** Conclusion must contain %s %q.\n", symbolTable.Symbols[localint_t2].TermType, symbolTable.Symbols[localint_t2].Term)
@@ -733,7 +733,7 @@ func basicGosub3400(d1 int, a1 int) {
 	// 3400
 	//---Add W$(1), W$(2) to table T$()---
 	var localint_b1 int
-	var localint_g term.Type
+	var termType term.Type // formerly g
 	if d1%2 == 1 {
 		symbolTable.NegativePremiseCount++
 
@@ -746,11 +746,11 @@ func basicGosub3400(d1 int, a1 int) {
 	for localint_j = 1; localint_j <= 2; localint_j++ {
 		localstring_w = stringarray_w[localint_j]
 		if d1 < 4 {
-			localint_g = 1
+			termType = 1
 		} else if localint_j == 1 {
-			localint_g = 2
+			termType = 2
 		} else {
-			localint_g = localint_p1
+			termType = localint_p1
 		}
 
 		localstring_w = stringutil.Singularize(localstring_w)
@@ -770,7 +770,7 @@ func basicGosub3400(d1 int, a1 int) {
 			goto Line3720
 		}
 
-		if localint_g == 0 {
+		if termType == 0 {
 			if symbolTable.Symbols[localint_i1].TermType != term.UndeterminedType || msg {
 				fmt.Printf("Note: predicate term %q", localstring_w)
 				fmt.Printf(" taken as the %s used earlier\n", symbolTable.Symbols[localint_i1].TermType)
@@ -779,28 +779,28 @@ func basicGosub3400(d1 int, a1 int) {
 		}
 		if symbolTable.Symbols[localint_i1].TermType == term.UndeterminedType {
 			if msg {
-				fmt.Printf("Note: earlier use of %q taken as the %s used here\n", localstring_w, stringarray_g[localint_g])
+				fmt.Printf("Note: earlier use of %q taken as the %s used here\n", localstring_w, stringarray_g[termType])
 			}
 			goto Line3710
 		}
-		if localint_g == symbolTable.Symbols[localint_i1].TermType {
+		if termType == symbolTable.Symbols[localint_i1].TermType {
 			goto Line3730
 		}
 
 		if msg {
-			fmt.Printf("Warning: %s %q has also occurred as a %s\n", stringarray_g[localint_g], localstring_w, stringarray_g[3-localint_g])
+			fmt.Printf("Warning: %s %q has also occurred as a %s\n", stringarray_g[termType], localstring_w, stringarray_g[3-termType])
 		}
 
 		localint_i1++
 		goto Line3500
 
 	Line3710: // 3710
-		if localint_g == 2 {
+		if termType == 2 {
 			symbolTable.Symbols[localint_i1].DistributionCount = symbolTable.Symbols[localint_i1].Occurrences
 		}
 
 	Line3720: // 3720
-		symbolTable.Symbols[localint_i1].TermType = localint_g
+		symbolTable.Symbols[localint_i1].TermType = termType
 
 	Line3730: // 3730
 		if intarray_e[localint_j] == articleTypeNone {
