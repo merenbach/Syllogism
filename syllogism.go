@@ -18,6 +18,7 @@ package main
 * g(63)  => term type (index in g$ of term type), so anywhere we see g(N) => symbols(N).TermType
 * o(63)  => term occurrence count, so anywhere we see o(N) => symbols(N).Occurrences
 * d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
+* g$(2)  => term type names
 * b1     => first unused location in symbol table after a particular starting point
             (first slot with symbols(N).Occurrences == 0)
 * i1     => local iterator index that is passed through different functions
@@ -28,6 +29,10 @@ package main
 * w$     => most recently entered premise, either for entry into l$ or for evaluation with /
 * d1     => form of most recently entered premise, either for entry into l$ or for evaluation with /
 * a1     => address of recently-entered line in the list of lines (???)
+* g      => term type as integer
+* g1     => term type as integer
+* g2     => term type as integer
+* p1     => term type as integer
 */
 import (
 	"bufio"
