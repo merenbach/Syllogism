@@ -471,17 +471,17 @@ func basicGosub6200() {
 				} else {
 					return fmt.Sprintf("All %s is %s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].Term)
 				}
-			} else if symbolTable.Symbols[localint_c2].DistributionCount == 0 {
-				if symbolTable.Symbols[localint_c1].ArticleType != article.TypeNone || symbolTable.Symbols[localint_c2].ArticleType == article.TypeNone {
-					return fmt.Sprintf("Some %s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
-				} else {
-					return fmt.Sprintf("Some %s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
-				}
-			} else {
+			} else if symbolTable.Symbols[localint_c2].DistributionCount != 0 {
 				if symbolTable.Symbols[localint_c2].TermType == term.TypeDesignator {
 					return fmt.Sprintf("%s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
 				} else {
 					return fmt.Sprintf("All %s is %s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].Term)
+				}
+			} else {
+				if symbolTable.Symbols[localint_c1].ArticleType != article.TypeNone || symbolTable.Symbols[localint_c2].ArticleType == article.TypeNone {
+					return fmt.Sprintf("Some %s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
+				} else {
+					return fmt.Sprintf("Some %s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
 				}
 			}
 
