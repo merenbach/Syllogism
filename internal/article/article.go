@@ -1,6 +1,6 @@
 package article
 
-// A Type holds an article type.
+// A Type of article.
 type Type int
 
 // TODO: should be able to swap ordering of any of these and retain same functionality once refactor is complete

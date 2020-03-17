@@ -1,6 +1,6 @@
 package term
 
-// A Type holds a term type.
+// A Type of term.
 type Type int
 
 // TODO: should be able to swap ordering of any of these and retain same functionality once refactor is complete
