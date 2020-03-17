@@ -496,8 +496,8 @@ func basicGosub6200() {
 		// negative conclusion
 		if symbolTable.Symbols[localint_c2].DistributionCount > 0 {
 			if symbolTable.Symbols[localint_c1].DistributionCount > 0 {
-				if symbolTable.Symbols[localint_c1].TermType < 2 {
-					if symbolTable.Symbols[localint_c2].TermType < 2 {
+				if symbolTable.Symbols[localint_c1].TermType != term.TypeDesignator {
+					if symbolTable.Symbols[localint_c2].TermType != term.TypeDesignator {
 						if symbolTable.Symbols[localint_c1].ArticleType != article.TypeNone || symbolTable.Symbols[localint_c2].ArticleType == article.TypeNone {
 							localstring_z = fmt.Sprintf("No %s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
 						} else {
