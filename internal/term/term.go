@@ -1,26 +1,26 @@
 package term
 
-// A Type is either a general term or a designator.
+// A Type holds a term type.
 type Type int
 
 // TODO: should be able to swap ordering of any of these and retain same functionality once refactor is complete
 //       since we won't be relying on integer values anymore
 const (
-	// UndeterminedType represents an undetermined type.
-	UndeterminedType Type = iota
+	// TypeUndetermined represents an undetermined type.
+	TypeUndetermined Type = iota
 
-	// GeneralTermType represents a general term.
-	GeneralTermType
+	// TypeGeneralTerm represents a general term.
+	TypeGeneralTerm
 
-	// DesignatorType represents a designator.
-	DesignatorType
+	// TypeDesignator represents a designator.
+	TypeDesignator
 )
 
 func (t Type) String() string {
 	switch t {
-	case GeneralTermType:
+	case TypeGeneralTerm:
 		return "general term"
-	case DesignatorType:
+	case TypeDesignator:
 		return "designator"
 	default:
 		return "undetermined type"

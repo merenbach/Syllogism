@@ -2,17 +2,17 @@ package term
 
 import "fmt"
 
-func ExampleUndeterminedType() {
-	fmt.Println(UndeterminedType)
+func ExampleTypeUndetermined() {
+	fmt.Println(TypeUndetermined)
 	// Output: undetermined type
 }
 
-func ExampleGeneralTermType() {
-	fmt.Println(GeneralTermType)
+func ExampleTypeGeneralTerm() {
+	fmt.Println(TypeGeneralTerm)
 	// Output: general term
 }
 
-func ExampleDesignatorType() {
-	fmt.Println(DesignatorType)
+func ExampleTypeDesignator() {
+	fmt.Println(TypeDesignator)
 	// Output: designator
 }

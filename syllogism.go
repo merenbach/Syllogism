@@ -181,7 +181,7 @@ func basicGosub5880() {
 		fmt.Printf("%s%s\n", basicTabString(5), s.Term)
 
 	Line5980: // 5980
-		if s.DistributionCount != 1 && s.TermType != term.DesignatorType {
+		if s.DistributionCount != 1 && s.TermType != term.TypeDesignator {
 			localint_v1 = localint_i
 		}
 		return false
@@ -378,7 +378,7 @@ Line5750: // 5750
 			fmt.Println(programLines[intarray_k[localint_i]])
 		} else {
 			fmt.Printf("%d  ", programLines[intarray_k[localint_i]].Number)
-			if intarray_r[intarray_k[localint_i]] < 6 && symbolTable.Symbols[intarray_q[intarray_k[localint_i]]].TermType == term.DesignatorType {
+			if intarray_r[intarray_k[localint_i]] < 6 && symbolTable.Symbols[intarray_q[intarray_k[localint_i]]].TermType == term.TypeDesignator {
 				intarray_r[intarray_k[localint_i]] += 2
 			}
 			if intarray_r[intarray_k[localint_i]] < 4 {
@@ -399,7 +399,7 @@ func basicGosub4890() {
 	if intarray_r[localint_j1]%2 != 0 {
 		symbolTable.NegativePremiseCount--
 		intarray_j[4] = 1
-	} else if symbolTable.Symbols[intarray_q[localint_j1]].TermType == term.DesignatorType {
+	} else if symbolTable.Symbols[intarray_q[localint_j1]].TermType == term.TypeDesignator {
 		intarray_j[4] = 1
 	} else {
 		intarray_j[4] = 0
@@ -419,7 +419,7 @@ func basicGosub4890() {
 		if localsymbol.Empty() {
 			localsymbol.Term = ""
 			localsymbol.ArticleType = articleTypeNone
-			localsymbol.TermType = term.UndeterminedType
+			localsymbol.TermType = term.TypeUndetermined
 		}
 
 		localsymbol.DistributionCount -= intarray_j[k+2]
@@ -474,7 +474,7 @@ func basicGosub6200() {
 				goto Line6570
 			}
 
-			if symbolTable.Symbols[localint_c2].TermType == term.DesignatorType {
+			if symbolTable.Symbols[localint_c2].TermType == term.TypeDesignator {
 				localstring_z = fmt.Sprintf("%s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleTypeString(), symbolTable.Symbols[localint_c1].Term)
 				goto Line6570
 			}
@@ -483,7 +483,7 @@ func basicGosub6200() {
 			goto Line6570
 
 		}
-		if symbolTable.Symbols[localint_c1].TermType == term.DesignatorType {
+		if symbolTable.Symbols[localint_c1].TermType == term.TypeDesignator {
 			localstring_z = fmt.Sprintf("%s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleTypeString(), symbolTable.Symbols[localint_c2].Term)
 			goto Line6570
 		}
@@ -535,8 +535,8 @@ Line6580: // 6580
 func basicGosub6630() {
 	// 6630
 	//---test offered conclusion---
-	var termType1 term.Type = term.GeneralTermType // formerly g1
-	var termType2 term.Type = term.GeneralTermType // formerly g2
+	var termType1 term.Type = term.TypeGeneralTerm // formerly g1
+	var termType2 term.Type = term.TypeGeneralTerm // formerly g2
 
 	//--conc. poss, line in s$()
 	d1, err := basicGosub2890()
@@ -550,10 +550,10 @@ func basicGosub6630() {
 	if d1 < 0 {
 		return
 	} else if d1 >= 4 {
-		termType1 = term.DesignatorType
+		termType1 = term.TypeDesignator
 		termType2 = localint_p1
 	}
-	if termType2 == term.DesignatorType && d1 < 6 && d1 > 3 {
+	if termType2 == term.TypeDesignator && d1 < 6 && d1 > 3 {
 		d1 += 2
 	}
 
@@ -563,7 +563,7 @@ func basicGosub6630() {
 	} else {
 		for localint_j = 1; localint_j <= 2; localint_j++ {
 			if localstring_w == symbolTable.Symbols[intarray_c[localint_j]].Term {
-				if symbolTable.Symbols[intarray_c[localint_j]].TermType != term.UndeterminedType {
+				if symbolTable.Symbols[intarray_c[localint_j]].TermType != term.TypeUndetermined {
 					if termType1 == symbolTable.Symbols[intarray_c[localint_j]].TermType {
 						goto Line6840
 					}
@@ -582,10 +582,10 @@ Line6840: // 6840
 	localstring_w = stringutil.Singularize(stringarray_w[2])
 	if localint_j1 != 0 {
 		if localstring_w == stringarray_w[1] {
-			if d1 != 4 || termType2 == term.UndeterminedType {
+			if d1 != 4 || termType2 == term.TypeUndetermined {
 				goto Line7120
 			}
-			fmt.Printf("** Subject is a %s, predicate is a %s -- but\n", term.DesignatorType, term.GeneralTermType)
+			fmt.Printf("** Subject is a %s, predicate is a %s -- but\n", term.TypeDesignator, term.TypeGeneralTerm)
 		} else {
 			fmt.Println("** Conclusion from no premises must have same subject and predicate.")
 			return
@@ -598,11 +598,11 @@ Line6840: // 6840
 		if localstring_w != symbolTable.Symbols[localint_t2].Term {
 			goto Line7060
 		}
-		if symbolTable.Symbols[localint_t2].TermType != term.UndeterminedType {
-			if termType2 != term.UndeterminedType && termType2 != symbolTable.Symbols[localint_t2].TermType {
+		if symbolTable.Symbols[localint_t2].TermType != term.TypeUndetermined {
+			if termType2 != term.TypeUndetermined && termType2 != symbolTable.Symbols[localint_t2].TermType {
 				goto Line7060
 			}
-		} else if termType2 != term.UndeterminedType {
+		} else if termType2 != term.TypeUndetermined {
 			fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[localint_t2].Term, termType2)
 		}
 		if symbolTable.NegativePremiseCount != 0 && d1%2 == 0 {
@@ -689,7 +689,7 @@ func basicGosub7460(analyze bool) {
 			if !line.Empty() {
 				fmt.Printf("%d ", line.Number)
 
-				if intarray_r[localint_i] < 6 && symbolTable.Symbols[intarray_q[localint_i]].TermType == term.DesignatorType {
+				if intarray_r[localint_i] < 6 && symbolTable.Symbols[intarray_q[localint_i]].TermType == term.TypeDesignator {
 					intarray_r[localint_i] += 2
 				}
 
@@ -741,9 +741,9 @@ func basicGosub3400(d1 int, a1 int) {
 	for localint_j = 1; localint_j <= 2; localint_j++ {
 		localstring_w = stringarray_w[localint_j]
 		if d1 < 4 {
-			termType = term.GeneralTermType
+			termType = term.TypeGeneralTerm
 		} else if localint_j == 1 {
-			termType = term.DesignatorType
+			termType = term.TypeDesignator
 		} else {
 			termType = localint_p1
 		}
@@ -765,14 +765,14 @@ func basicGosub3400(d1 int, a1 int) {
 			goto Line3720
 		}
 
-		if termType == term.UndeterminedType {
-			if symbolTable.Symbols[localint_i1].TermType != term.UndeterminedType || msg {
+		if termType == term.TypeUndetermined {
+			if symbolTable.Symbols[localint_i1].TermType != term.TypeUndetermined || msg {
 				fmt.Printf("Note: predicate term %q", localstring_w)
 				fmt.Printf(" taken as the %s used earlier\n", symbolTable.Symbols[localint_i1].TermType)
 			}
 			goto Line3730
 		}
-		if symbolTable.Symbols[localint_i1].TermType == term.UndeterminedType {
+		if symbolTable.Symbols[localint_i1].TermType == term.TypeUndetermined {
 			if msg {
 				fmt.Printf("Note: earlier use of %q taken as the %s used here\n", localstring_w, termType)
 			}
@@ -791,7 +791,7 @@ func basicGosub3400(d1 int, a1 int) {
 		goto Line3500
 
 	Line3710: // 3710
-		if termType == term.DesignatorType {
+		if termType == term.TypeDesignator {
 			symbolTable.Symbols[localint_i1].DistributionCount = symbolTable.Symbols[localint_i1].Occurrences
 		}
 
@@ -848,7 +848,7 @@ func basicGosub3400(d1 int, a1 int) {
 				}
 			}
 
-			if symbolTable.Symbols[localint_i1].TermType == term.DesignatorType {
+			if symbolTable.Symbols[localint_i1].TermType == term.TypeDesignator {
 				d1 += 2
 			}
 
@@ -1034,7 +1034,7 @@ func tokenize() ([7]string, [8]int, [3]int, error) {
 	var shadowintarray_t [8]int
 	var shadowintarray_e [3]int
 
-	localint_p1 = term.UndeterminedType
+	localint_p1 = term.TypeUndetermined
 	shadowintarray_e[2] = articleTypeNone
 	localint_j = 1
 
@@ -1152,7 +1152,7 @@ Iterate:
 			} else if localstring_s != "a" && localstring_s != "an" && localstring_s != "sm" {
 				if localstring_s == "the" {
 					// DESIGNATOR (definite article)
-					localint_p1 = term.DesignatorType
+					localint_p1 = term.TypeDesignator
 				}
 				addTermToken(localstring_s)
 
@@ -1169,7 +1169,7 @@ Iterate:
 					shadowintarray_e[2] = articleTypeSm
 				}
 				// GENERAL TERM (indefinite article)
-				localint_p1 = term.GeneralTermType
+				localint_p1 = term.TypeGeneralTerm
 			}
 		}
 		goto Line2860
