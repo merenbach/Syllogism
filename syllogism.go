@@ -688,7 +688,7 @@ func basicGosub7460(analyze bool) {
 		for localint_i = intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
 			line := programLines[localint_i]
 			if !line.Empty() {
-				fmt.Printf("%d ", line.Number)
+				fmt.Printf("%d  ", line.Number)
 
 				if intarray_r[localint_i] < 6 && symbolTable.Symbols[intarray_q[localint_i]].TermType == term.TypeDesignator {
 					intarray_r[localint_i] += 2

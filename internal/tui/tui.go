@@ -14,7 +14,7 @@ type ProgramLine struct {
 }
 
 func (pl *ProgramLine) String() string {
-	return fmt.Sprintf("%d %s", pl.Number, pl.Statement)
+	return fmt.Sprintf("%d  %s", pl.Number, pl.Statement)
 }
 
 // Empty determines whether a line is empty.
