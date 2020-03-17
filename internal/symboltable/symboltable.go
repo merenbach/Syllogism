@@ -15,10 +15,8 @@ type SymbolTable struct {
 	NegativePremiseCount int
 }
 
-// NewSymbolTable creates and initializes a new symbol table.
-// TODO: Create new table each time new() is invoked.
-// TODO: Use slices to avoid specifying size manually.
-func NewSymbolTable(size int) *SymbolTable {
+// New symbol table.
+func New(size int) *SymbolTable {
 	t := SymbolTable{
 		Symbols: make([]*symbol.Symbol, size),
 	}

@@ -76,9 +76,9 @@ var (
 	intarray_r [basicDimMax]int
 	intarray_k [basicDimMax]int
 	intarray_t [8]int
-	intarray_e [3]article.Type
+	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
 
-	symbolTable = symboltable.NewSymbolTable(basicDimMax + 2)
+	symbolTable = symboltable.New(basicDimMax + 2)
 
 	stringarray_s [7]string // appears to hold parsed line tokens
 	stringarray_w [3]string // appears to hold the most recently-input first and second terms for parsing or testing
@@ -716,7 +716,7 @@ func basicGosub1840() {
 		return
 	}
 
-	symbolTable = symboltable.NewSymbolTable(basicDimMax + 2)
+	symbolTable = symboltable.New(basicDimMax + 2)
 
 	for localint_j = intarray_l[0]; localint_j > 0; localint_j = intarray_l[localint_j] {
 		intarray_a[0]--
