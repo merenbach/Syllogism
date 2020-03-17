@@ -494,26 +494,18 @@ func basicGosub6200() {
 
 	} else {
 		// negative conclusion
-		if symbolTable.Symbols[localint_c2].DistributionCount > 0 {
-			if symbolTable.Symbols[localint_c1].DistributionCount > 0 {
-				if symbolTable.Symbols[localint_c1].TermType != term.TypeDesignator {
-					if symbolTable.Symbols[localint_c2].TermType != term.TypeDesignator {
-						if symbolTable.Symbols[localint_c1].ArticleType != article.TypeNone || symbolTable.Symbols[localint_c2].ArticleType == article.TypeNone {
-							localstring_z = fmt.Sprintf("No %s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
-						} else {
-							localstring_z = fmt.Sprintf("No %s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
-						}
-					} else {
-						localstring_z = fmt.Sprintf("%s is not %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
-					}
-				} else {
-					localstring_z = fmt.Sprintf("%s is not %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
-				}
-			} else {
-				localstring_z = fmt.Sprintf("Some %s is not %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
-			}
-		} else {
+		if symbolTable.Symbols[localint_c2].DistributionCount == 0 {
 			localstring_z = fmt.Sprintf("Some %s is not %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
+		} else if symbolTable.Symbols[localint_c1].DistributionCount == 0 {
+			localstring_z = fmt.Sprintf("Some %s is not %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
+		} else if symbolTable.Symbols[localint_c1].TermType == term.TypeDesignator {
+			localstring_z = fmt.Sprintf("%s is not %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
+		} else if symbolTable.Symbols[localint_c2].TermType == term.TypeDesignator {
+			localstring_z = fmt.Sprintf("%s is not %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
+		} else if symbolTable.Symbols[localint_c1].ArticleType == article.TypeNone && symbolTable.Symbols[localint_c2].ArticleType != article.TypeNone {
+			localstring_z = fmt.Sprintf("No %s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
+		} else {
+			localstring_z = fmt.Sprintf("No %s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
 		}
 	}
 
