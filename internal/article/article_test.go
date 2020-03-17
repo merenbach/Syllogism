@@ -1,6 +1,25 @@
 package article
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
+
+func TestTypeFromString(t *testing.T) {
+	tables := map[string]Type{
+		"a":      TypeA,
+		"an":     TypeAn,
+		"sm":     TypeSm,
+		"":       TypeNone,
+		"foobar": TypeNone,
+	}
+	for k, v := range tables {
+		out := TypeFromString(k)
+		if v != out {
+			t.Errorf("Expected %s => type %q, but got type %q instead\n", k, v, out)
+		}
+	}
+}
 
 func ExampleTypeNone() {
 	fmt.Println(TypeNone)
