@@ -419,7 +419,7 @@ func basicGosub4890() {
 		if localsymbol.Empty() {
 			localsymbol.Term = ""
 			localsymbol.ArticleType = articleTypeNone
-			localsymbol.TermType = 0
+			localsymbol.TermType = term.UndeterminedType
 		}
 
 		localsymbol.DistributionCount -= intarray_j[k+2]
@@ -535,8 +535,8 @@ Line6580: // 6580
 func basicGosub6630() {
 	// 6630
 	//---test offered conclusion---
-	var termType1 term.Type = 1 // formerly g1
-	var termType2 term.Type = 1 // formerly g2
+	var termType1 term.Type = term.GeneralTermType // formerly g1
+	var termType2 term.Type = term.GeneralTermType // formerly g2
 
 	//--conc. poss, line in s$()
 	d1, err := basicGosub2890()
@@ -550,10 +550,10 @@ func basicGosub6630() {
 	if d1 < 0 {
 		return
 	} else if d1 >= 4 {
-		termType1 = 2
+		termType1 = term.DesignatorType
 		termType2 = localint_p1
 	}
-	if termType2 == 2 && d1 < 6 && d1 > 3 {
+	if termType2 == term.DesignatorType && d1 < 6 && d1 > 3 {
 		d1 += 2
 	}
 
@@ -563,7 +563,7 @@ func basicGosub6630() {
 	} else {
 		for localint_j = 1; localint_j <= 2; localint_j++ {
 			if localstring_w == symbolTable.Symbols[intarray_c[localint_j]].Term {
-				if symbolTable.Symbols[intarray_c[localint_j]].TermType > 0 {
+				if symbolTable.Symbols[intarray_c[localint_j]].TermType > term.UndeterminedType {
 					if termType1 == symbolTable.Symbols[intarray_c[localint_j]].TermType {
 						goto Line6840
 					}
@@ -582,7 +582,7 @@ Line6840: // 6840
 	localstring_w = stringutil.Singularize(stringarray_w[2])
 	if localint_j1 != 0 {
 		if localstring_w == stringarray_w[1] {
-			if d1 != 4 || termType2 == 0 {
+			if d1 != 4 || termType2 == term.UndeterminedType {
 				goto Line7120
 			}
 			fmt.Printf("** Subject is a %s, predicate is a %s -- but\n", term.DesignatorType, term.GeneralTermType)
@@ -598,11 +598,11 @@ Line6840: // 6840
 		if localstring_w != symbolTable.Symbols[localint_t2].Term {
 			goto Line7060
 		}
-		if symbolTable.Symbols[localint_t2].TermType > 0 {
-			if termType2 != 0 && termType2 != symbolTable.Symbols[localint_t2].TermType {
+		if symbolTable.Symbols[localint_t2].TermType > term.UndeterminedType {
+			if termType2 != term.UndeterminedType && termType2 != symbolTable.Symbols[localint_t2].TermType {
 				goto Line7060
 			}
-		} else if termType2 != 0 {
+		} else if termType2 != term.UndeterminedType {
 			fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[localint_t2].Term, termType2)
 		}
 		if symbolTable.NegativePremiseCount != 0 && d1%2 == 0 {
@@ -741,9 +741,9 @@ func basicGosub3400(d1 int, a1 int) {
 	for localint_j = 1; localint_j <= 2; localint_j++ {
 		localstring_w = stringarray_w[localint_j]
 		if d1 < 4 {
-			termType = 1
+			termType = term.GeneralTermType
 		} else if localint_j == 1 {
-			termType = 2
+			termType = term.DesignatorType
 		} else {
 			termType = localint_p1
 		}
@@ -765,7 +765,7 @@ func basicGosub3400(d1 int, a1 int) {
 			goto Line3720
 		}
 
-		if termType == 0 {
+		if termType == term.UndeterminedType {
 			if symbolTable.Symbols[localint_i1].TermType != term.UndeterminedType || msg {
 				fmt.Printf("Note: predicate term %q", localstring_w)
 				fmt.Printf(" taken as the %s used earlier\n", symbolTable.Symbols[localint_i1].TermType)
@@ -791,7 +791,7 @@ func basicGosub3400(d1 int, a1 int) {
 		goto Line3500
 
 	Line3710: // 3710
-		if termType == 2 {
+		if termType == term.DesignatorType {
 			symbolTable.Symbols[localint_i1].DistributionCount = symbolTable.Symbols[localint_i1].Occurrences
 		}
 
@@ -1034,7 +1034,7 @@ func tokenize() ([7]string, [8]int, [3]int, error) {
 	var shadowintarray_t [8]int
 	var shadowintarray_e [3]int
 
-	localint_p1 = 0
+	localint_p1 = term.UndeterminedType
 	shadowintarray_e[2] = articleTypeNone
 	localint_j = 1
 
@@ -1152,7 +1152,7 @@ Iterate:
 			} else if localstring_s != "a" && localstring_s != "an" && localstring_s != "sm" {
 				if localstring_s == "the" {
 					// DESIGNATOR (definite article)
-					localint_p1 = 2
+					localint_p1 = term.DesignatorType
 				}
 				addTermToken(localstring_s)
 
@@ -1169,7 +1169,7 @@ Iterate:
 					shadowintarray_e[2] = articleTypeSm
 				}
 				// GENERAL TERM (indefinite article)
-				localint_p1 = 1
+				localint_p1 = term.GeneralTermType
 			}
 		}
 		goto Line2860
