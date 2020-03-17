@@ -609,30 +609,23 @@ Line7070: // 7070
 	return
 
 Line7120: // 7120
-	if symbolTable.NegativePremiseCount > 0 || d1%2 == 0 {
-		if localint_j1 != 1 {
-			if symbolTable.Symbols[localint_t1].DistributionCount > 0 || d1 <= 1 || d1 >= 4 {
-				if symbolTable.Symbols[localint_t2].DistributionCount > 0 {
-					goto Line7250
-				}
-				if d1%2 == 1 || d1 == 6 {
-					fmt.Printf("** Term %q not distributed in premises\n", symbolTable.Symbols[localint_t2].Term)
-					fmt.Println("   may not be distributed in conclusion.")
-					return
-				}
-			} else {
-				fmt.Printf("** Term %q not distributed in premises\n", symbolTable.Symbols[localint_t1].Term)
-				fmt.Println("   may not be distributed in conclusion.")
-				return
-			}
-		}
-		goto Line7250
+	if symbolTable.NegativePremiseCount == 0 && d1%2 != 0 {
+		fmt.Println("** Affirmative conclusion required.")
+		return
 	}
 
-	fmt.Println("** Affirmative conclusion required.")
-	return
+	if localint_j1 != 1 {
+		if symbolTable.Symbols[localint_t1].DistributionCount == 0 && d1 > 1 && d1 < 4 {
+			fmt.Printf("** Term %q not distributed in premises\n", symbolTable.Symbols[localint_t1].Term)
+			fmt.Println("   may not be distributed in conclusion.")
+			return
+		} else if symbolTable.Symbols[localint_t2].DistributionCount == 0 && (d1%2 == 1 || d1 == 6) {
+			fmt.Printf("** Term %q not distributed in premises\n", symbolTable.Symbols[localint_t2].Term)
+			fmt.Println("   may not be distributed in conclusion.")
+			return
+		}
+	}
 
-Line7250: // 7250
 	fmt.Println("-->  VALID!")
 
 	if localint_j1 == 0 {
