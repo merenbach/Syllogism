@@ -904,16 +904,16 @@ func basicGosub2890() (int, error) {
 	if stringarray_s[2] != "all" {
 		if stringarray_s[2] != "some" {
 			if stringarray_s[2] != "no" {
-				if intarray_t[2] != tokenizeType6Term {
+				if intarray_t[2] != token.TypeTerm {
 					goto Line3350
 				}
 
-				if intarray_t[3] != tokenizeType5IsAre {
+				if intarray_t[3] != token.TypeCopula {
 					goto Line3330
 				}
 
 				if stringarray_s[4] == "not" {
-					if intarray_t[5] != tokenizeType6Term {
+					if intarray_t[5] != token.TypeTerm {
 						goto Line3370
 					}
 
@@ -921,7 +921,7 @@ func basicGosub2890() (int, error) {
 					stringarray_w[2] = stringarray_s[5]
 					return formAIsNotT, nil // a is not T
 				} else {
-					if intarray_t[4] != tokenizeType6Term {
+					if intarray_t[4] != token.TypeTerm {
 						goto Line3370
 					}
 
@@ -931,15 +931,15 @@ func basicGosub2890() (int, error) {
 				}
 			}
 
-			if intarray_t[3] != tokenizeType6Term {
+			if intarray_t[3] != token.TypeTerm {
 				goto Line3350
 			}
 
-			if intarray_t[4] != tokenizeType5IsAre {
+			if intarray_t[4] != token.TypeCopula {
 				goto Line3330
 			}
 
-			if intarray_t[5] != tokenizeType6Term {
+			if intarray_t[5] != token.TypeTerm {
 				goto Line3370
 			}
 
@@ -948,34 +948,34 @@ func basicGosub2890() (int, error) {
 
 			return formNoAIsB, nil // no A is B
 		}
-		if intarray_t[3] != tokenizeType6Term {
+		if intarray_t[3] != token.TypeTerm {
 			goto Line3350
 		}
-		if intarray_t[4] != tokenizeType5IsAre {
+		if intarray_t[4] != token.TypeCopula {
 			goto Line3330
 		}
 		if stringarray_s[5] == "not" {
-			if intarray_t[6] != tokenizeType6Term {
+			if intarray_t[6] != token.TypeTerm {
 				goto Line3370
 			}
 			stringarray_w[1] = stringarray_s[3]
 			stringarray_w[2] = stringarray_s[6]
 			return formSomeAIsNotB, nil // some A is not B
 		}
-		if intarray_t[5] != tokenizeType6Term {
+		if intarray_t[5] != token.TypeTerm {
 			goto Line3370
 		}
 		stringarray_w[1] = stringarray_s[3]
 		stringarray_w[2] = stringarray_s[5]
 		return formSomeAIsB, nil // Some A is B
 	}
-	if intarray_t[3] != tokenizeType6Term {
+	if intarray_t[3] != token.TypeTerm {
 		goto Line3350
 	}
-	if intarray_t[4] != tokenizeType5IsAre {
+	if intarray_t[4] != token.TypeCopula {
 		goto Line3330
 	}
-	if intarray_t[5] != tokenizeType6Term {
+	if intarray_t[5] != token.TypeTerm {
 		goto Line3370
 	}
 	stringarray_w[1] = stringarray_s[3]
@@ -991,16 +991,6 @@ Line3350: // 3350
 Line3370: // 3370
 	return formUndefined, errors.New("** Predicate term bad or missing")
 }
-
-const (
-	tokenizeType0Reserved   = 0
-	tokenizeType1LineNum    = 1
-	tokenizeType2Slash      = 2
-	tokenizeType3Quantifier = 3
-	tokenizeType4NoNot      = 4
-	tokenizeType5IsAre      = 5
-	tokenizeType6Term       = 6
-)
 
 func tokenize() ([7]string, [8]token.Type, [3]article.Type, error) {
 	// 2020
@@ -1031,7 +1021,7 @@ func tokenize() ([7]string, [8]token.Type, [3]article.Type, error) {
 		shadowintarray_t[localint_j] = t
 	}
 	addTermToken := func(s string) {
-		setToken(s, tokenizeType6Term)
+		setToken(s, token.TypeTerm)
 	}
 	closeToken := func(s string, t token.Type) {
 		setToken(s, t)
@@ -1040,7 +1030,7 @@ func tokenize() ([7]string, [8]token.Type, [3]article.Type, error) {
 
 	line2670 := func(tabCount int) { // 2670
 		returnErr = fmt.Errorf("%s^\nReserved word %q may not occur within a term", basicTabString(tabCount), localstring_s)
-		shadowintarray_t[1] = tokenizeType0Reserved
+		shadowintarray_t[1] = token.TypeReserved
 	}
 
 	// TODO: use strings.Fields here; but need to properly increase letter count
@@ -1062,13 +1052,13 @@ Iterate:
 		}
 
 		if localstring_s == "/" {
-			closeToken(localstring_s, tokenizeType2Slash)
+			closeToken(localstring_s, token.TypeSlash)
 		} else {
 			if _, err := strconv.Atoi(localstring_s); err != nil {
 				returnErr = fmt.Errorf("%s^   Invalid numeral or command", basicTabString(localint_i+len(localstring_s)))
 				break
 			}
-			closeToken(localstring_s, tokenizeType1LineNum)
+			closeToken(localstring_s, token.TypeLineNumber)
 		}
 		goto Line2860
 
@@ -1098,24 +1088,24 @@ Iterate:
 			break Iterate
 
 		case "all", "some":
-			if shadowintarray_t[localint_j] == tokenizeType6Term {
+			if shadowintarray_t[localint_j] == token.TypeTerm {
 				line2670(localint_i + localint_k - 1)
 				break Iterate
 			}
-			closeToken(localstring_s, tokenizeType3Quantifier)
+			closeToken(localstring_s, token.TypeQuantifier)
 
 		case "no", "not":
-			if shadowintarray_t[localint_j] == tokenizeType6Term {
+			if shadowintarray_t[localint_j] == token.TypeTerm {
 				line2670(localint_i + localint_k - 1)
 				break Iterate
 			}
-			closeToken(localstring_s, tokenizeType4NoNot)
+			closeToken(localstring_s, token.TypeNegation)
 
 		case "is", "are":
-			if shadowintarray_t[localint_j] != tokenizeType6Term {
+			if shadowintarray_t[localint_j] != token.TypeTerm {
 				line2670(localint_i + localint_k - 1)
 				break Iterate
-			} else if shadowintarray_t[localint_j-1] == tokenizeType5IsAre || shadowintarray_t[localint_j-2] == tokenizeType5IsAre {
+			} else if shadowintarray_t[localint_j-1] == token.TypeCopula || shadowintarray_t[localint_j-2] == token.TypeCopula {
 				line2670(localint_i + localint_k - 1)
 				break Iterate
 			}
@@ -1123,13 +1113,13 @@ Iterate:
 			// All/some and no/not will occur either at the beginning of the line or right after a to-be verb.
 			// To-be verbs are the only words to (legitimately) show up right after the end of a term token (type 6).
 			nextToken()
-			closeToken(localstring_s, tokenizeType5IsAre)
+			closeToken(localstring_s, token.TypeCopula)
 
 		default:
-			if shadowintarray_t[localint_j] == tokenizeType6Term {
+			if shadowintarray_t[localint_j] == token.TypeTerm {
 				shadowstringarray_s[localint_j] += " " + localstring_s
 
-			} else if shadowintarray_t[localint_j-1] != tokenizeType5IsAre && shadowintarray_t[localint_j-2] != tokenizeType5IsAre {
+			} else if shadowintarray_t[localint_j-1] != token.TypeCopula && shadowintarray_t[localint_j-2] != token.TypeCopula {
 				addTermToken(localstring_s)
 
 			} else if localstring_s != "a" && localstring_s != "an" && localstring_s != "sm" {
@@ -1439,10 +1429,10 @@ Line1190: // 1190
 	if err != nil {
 		fmt.Println(err)
 	}
-	if intarray_t[1] != tokenizeType1LineNum {
+	if intarray_t[1] != token.TypeLineNumber {
 		goto Line1745
 	}
-	if intarray_t[2] != tokenizeType0Reserved {
+	if intarray_t[2] != token.TypeReserved {
 		goto Line1640
 	}
 
@@ -1475,7 +1465,7 @@ Line1640: // 1640
 	goto Line1080
 
 Line1745: // 1745
-	if intarray_t[1] == tokenizeType0Reserved {
+	if intarray_t[1] == token.TypeReserved {
 		goto Line1070
 	}
 
@@ -1493,7 +1483,7 @@ Line1745: // 1745
 		goto Line1080
 	}
 
-	if intarray_t[2] != tokenizeType0Reserved {
+	if intarray_t[2] != token.TypeReserved {
 		basicGosub6630()
 	} else {
 		basicGosub6200() // test/draw conclusion
