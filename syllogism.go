@@ -467,13 +467,13 @@ func basicGosub6200() {
 
 		if symbolTable.NegativePremiseCount == 0 {
 			// affirmative conclusion
-			if symbolTable.Symbols[localint_c1].DistributionCount != 0 {
+			if symbolTable.Symbols[localint_c1].DistributionCount > 0 {
 				if symbolTable.Symbols[localint_c1].TermType == term.TypeDesignator {
 					return fmt.Sprintf("%s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
 				} else {
 					return fmt.Sprintf("All %s is %s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].Term)
 				}
-			} else if symbolTable.Symbols[localint_c2].DistributionCount != 0 {
+			} else if symbolTable.Symbols[localint_c2].DistributionCount > 0 {
 				if symbolTable.Symbols[localint_c2].TermType == term.TypeDesignator {
 					return fmt.Sprintf("%s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
 				} else {
@@ -588,7 +588,7 @@ Line6840: // 6840
 		} else if termType2 != term.TypeUndetermined {
 			fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[localint_t2].Term, termType2)
 		}
-		if symbolTable.NegativePremiseCount != 0 && d1%2 == 0 {
+		if symbolTable.NegativePremiseCount > 0 && d1%2 == 0 {
 			fmt.Println("** Negative conclusion required.")
 			return
 		}
