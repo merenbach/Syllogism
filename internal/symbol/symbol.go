@@ -11,15 +11,6 @@ const (
 	articleAString     = "a "
 	articleAnString    = "an "
 	articleSmString    = "sm "
-
-	// UndeterminedTypeString is a placeholder for an undetermined type.
-	UndeterminedTypeString = "undetermined type"
-
-	// GeneralTermString is a placeholder for a general term.
-	GeneralTermString = "general term"
-
-	// DesignatorString is a placeholder for a designator.
-	DesignatorString = "designator"
 )
 
 // A Symbol is a logical symbol.
