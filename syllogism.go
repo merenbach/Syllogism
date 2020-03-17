@@ -481,7 +481,6 @@ func basicGosub6200() {
 		} else {
 			localstring_z = fmt.Sprintf("All %s is %s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].Term)
 		}
-		goto Line6570
 
 	} else {
 		// negative conclusion
@@ -500,9 +499,6 @@ func basicGosub6200() {
 		}
 	}
 
-	goto Line6570
-
-Line6570: // 6570
 	// PRINT  conclusion
 
 Line6580: // 6580
