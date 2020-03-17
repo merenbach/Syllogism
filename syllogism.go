@@ -13,6 +13,7 @@ package main
 *
 * l$(63) => line statements
 * n(63)  => line numbers
+* t(7)   => token type in parsing
 * t$(65) => term array: words like man, socrates, etc., so anywhere we see t$(N) => symbols(N).Term
 * b(63)  => term article type (index in a$ of proper article), so anywhere we see b(N) => symbols(N).ArticleType
 * g(63)  => term type (index in g$ of term type), so anywhere we see g(N) => symbols(N).TermType
@@ -52,6 +53,7 @@ import (
 	"github.com/merenbach/syllogism/internal/symbol"
 	"github.com/merenbach/syllogism/internal/symboltable"
 	"github.com/merenbach/syllogism/internal/term"
+	"github.com/merenbach/syllogism/internal/token"
 	"github.com/merenbach/syllogism/internal/tui"
 )
 
@@ -76,7 +78,7 @@ var (
 
 	intarray_r [basicDimMax]int
 	intarray_k [basicDimMax]int
-	intarray_t [8]int
+	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
 
 	symbolTable = symboltable.New(basicDimMax + 2)
@@ -1000,7 +1002,7 @@ const (
 	tokenizeType6Term       = 6
 )
 
-func tokenize() ([7]string, [8]int, [3]article.Type, error) {
+func tokenize() ([7]string, [8]token.Type, [3]article.Type, error) {
 	// 2020
 	//---L1$ into array S$()---
 
@@ -1012,7 +1014,7 @@ func tokenize() ([7]string, [8]int, [3]article.Type, error) {
 	var returnErr error
 
 	var shadowstringarray_s [7]string
-	var shadowintarray_t [8]int
+	var shadowintarray_t [8]token.Type
 	var shadowintarray_e [3]article.Type
 
 	localint_p1 = term.TypeUndetermined
@@ -1024,14 +1026,14 @@ func tokenize() ([7]string, [8]int, [3]article.Type, error) {
 	nextToken := func() {
 		localint_j++
 	}
-	setToken := func(s string, t int) {
+	setToken := func(s string, t token.Type) {
 		shadowstringarray_s[localint_j] = s
 		shadowintarray_t[localint_j] = t
 	}
 	addTermToken := func(s string) {
 		setToken(s, tokenizeType6Term)
 	}
-	closeToken := func(s string, t int) {
+	closeToken := func(s string, t token.Type) {
 		setToken(s, t)
 		nextToken()
 	}

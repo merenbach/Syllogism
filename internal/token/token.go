@@ -7,8 +7,8 @@ const (
 	// TypeReserved denotes a reserved term.
 	TypeReserved Type = iota
 
-	// TypeLineNum denotes a line number.
-	TypeLineNum
+	// TypeLineNumber denotes a line number.
+	TypeLineNumber
 
 	// TypeSlash denotes a slash.
 	TypeSlash
