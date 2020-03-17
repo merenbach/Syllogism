@@ -1133,14 +1133,7 @@ Iterate:
 				addTermToken(localstring_s)
 
 			} else {
-				switch localstring_s {
-				case "a":
-					shadowintarray_e[2] = article.TypeA
-				case "an":
-					shadowintarray_e[2] = article.TypeAn
-				case "sm":
-					shadowintarray_e[2] = article.TypeSm
-				}
+				shadowintarray_e[2] = article.TypeFromString(localstring_s)
 				// GENERAL TERM (indefinite article)
 				localint_p1 = term.TypeGeneralTerm
 			}

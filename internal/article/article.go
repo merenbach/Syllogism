@@ -20,6 +20,20 @@ const (
 	TypeSm
 )
 
+// TypeFromString returns an article type based on the provided string.
+func TypeFromString(s string) Type {
+	switch s {
+	case "a":
+		return TypeA
+	case "an":
+		return TypeAn
+	case "sm":
+		return TypeSm
+	default:
+		return TypeNone
+	}
+}
+
 func (t Type) String() string {
 	switch t {
 	case TypeA:
