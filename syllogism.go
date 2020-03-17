@@ -57,13 +57,6 @@ import (
 const basicDimMax = 64
 
 const (
-	articleTypeNone = 0
-	articleTypeA    = 1
-	articleTypeAn   = 2
-	articleTypeSm   = 3
-)
-
-const (
 	formUndefined   = (-1)
 	formSomeAIsB    = 0
 	formSomeAIsNotB = 1
@@ -426,7 +419,7 @@ func basicGosub4890() {
 		localsymbol.Occurrences--
 		if localsymbol.Empty() {
 			localsymbol.Term = ""
-			localsymbol.ArticleType = articleTypeNone
+			localsymbol.ArticleType = article.TypeNone
 			localsymbol.TermType = term.TypeUndetermined
 		}
 
@@ -473,17 +466,17 @@ func basicGosub6200() {
 		// affirmative conclusion
 		if symbolTable.Symbols[localint_c1].DistributionCount == 0 {
 			if symbolTable.Symbols[localint_c2].DistributionCount == 0 {
-				if symbolTable.Symbols[localint_c1].ArticleType != articleTypeNone || symbolTable.Symbols[localint_c2].ArticleType == articleTypeNone {
-					localstring_z = fmt.Sprintf("Some %s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleTypeString(), symbolTable.Symbols[localint_c2].Term)
+				if symbolTable.Symbols[localint_c1].ArticleType != article.TypeNone || symbolTable.Symbols[localint_c2].ArticleType == article.TypeNone {
+					localstring_z = fmt.Sprintf("Some %s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
 					goto Line6570
 				}
 
-				localstring_z = fmt.Sprintf("Some %s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleTypeString(), symbolTable.Symbols[localint_c1].Term)
+				localstring_z = fmt.Sprintf("Some %s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
 				goto Line6570
 			}
 
 			if symbolTable.Symbols[localint_c2].TermType == term.TypeDesignator {
-				localstring_z = fmt.Sprintf("%s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleTypeString(), symbolTable.Symbols[localint_c1].Term)
+				localstring_z = fmt.Sprintf("%s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
 				goto Line6570
 			}
 
@@ -492,7 +485,7 @@ func basicGosub6200() {
 
 		}
 		if symbolTable.Symbols[localint_c1].TermType == term.TypeDesignator {
-			localstring_z = fmt.Sprintf("%s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleTypeString(), symbolTable.Symbols[localint_c2].Term)
+			localstring_z = fmt.Sprintf("%s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
 			goto Line6570
 		}
 
@@ -505,25 +498,25 @@ func basicGosub6200() {
 			if symbolTable.Symbols[localint_c1].DistributionCount > 0 {
 				if symbolTable.Symbols[localint_c1].TermType < 2 {
 					if symbolTable.Symbols[localint_c2].TermType < 2 {
-						if symbolTable.Symbols[localint_c1].ArticleType != articleTypeNone || symbolTable.Symbols[localint_c2].ArticleType == articleTypeNone {
-							localstring_z = fmt.Sprintf("No %s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleTypeString(), symbolTable.Symbols[localint_c2].Term)
+						if symbolTable.Symbols[localint_c1].ArticleType != article.TypeNone || symbolTable.Symbols[localint_c2].ArticleType == article.TypeNone {
+							localstring_z = fmt.Sprintf("No %s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
 						} else {
 
-							localstring_z = fmt.Sprintf("No %s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleTypeString(), symbolTable.Symbols[localint_c1].Term)
+							localstring_z = fmt.Sprintf("No %s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
 						}
 					} else {
 
-						localstring_z = fmt.Sprintf("%s is not %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleTypeString(), symbolTable.Symbols[localint_c1].Term)
+						localstring_z = fmt.Sprintf("%s is not %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
 					}
 				} else {
 
-					localstring_z = fmt.Sprintf("%s is not %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleTypeString(), symbolTable.Symbols[localint_c2].Term)
+					localstring_z = fmt.Sprintf("%s is not %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
 				}
 			} else {
-				localstring_z = fmt.Sprintf("Some %s is not %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleTypeString(), symbolTable.Symbols[localint_c2].Term)
+				localstring_z = fmt.Sprintf("Some %s is not %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
 			}
 		} else {
-			localstring_z = fmt.Sprintf("Some %s is not %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleTypeString(), symbolTable.Symbols[localint_c1].Term)
+			localstring_z = fmt.Sprintf("Some %s is not %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
 		}
 	}
 
@@ -745,7 +738,7 @@ func basicGosub3400(d1 int, a1 int) {
 		}
 	}
 
-	intarray_e[1] = articleTypeNone
+	intarray_e[1] = article.TypeNone
 	for localint_j = 1; localint_j <= 2; localint_j++ {
 		localstring_w = stringarray_w[localint_j]
 		if d1 < 4 {
@@ -807,19 +800,19 @@ func basicGosub3400(d1 int, a1 int) {
 		symbolTable.Symbols[localint_i1].TermType = termType
 
 	Line3730: // 3730
-		if intarray_e[localint_j] == articleTypeNone {
+		if intarray_e[localint_j] == article.TypeNone {
 
 			// 3740
-			if symbolTable.Symbols[localint_i1].ArticleType != articleTypeNone || localstring_w == stringarray_w[localint_j] {
+			if symbolTable.Symbols[localint_i1].ArticleType != article.TypeNone || localstring_w == stringarray_w[localint_j] {
 				goto Line3780
 			}
 
 			if stringutil.HasPrefixVowel(localstring_w) {
 				// AN
-				intarray_e[localint_j] = articleTypeAn
+				intarray_e[localint_j] = article.TypeAn
 			} else {
 				// A
-				intarray_e[localint_j] = articleTypeA
+				intarray_e[localint_j] = article.TypeA
 			}
 		}
 
@@ -1043,7 +1036,7 @@ func tokenize() ([7]string, [8]int, [3]article.Type, error) {
 	var shadowintarray_e [3]article.Type
 
 	localint_p1 = term.TypeUndetermined
-	shadowintarray_e[2] = articleTypeNone
+	shadowintarray_e[2] = article.TypeNone
 	localint_j = 1
 
 	localint_l = len(localstring_l1)
@@ -1170,11 +1163,11 @@ Iterate:
 			} else {
 				switch localstring_s {
 				case "a":
-					shadowintarray_e[2] = articleTypeA
+					shadowintarray_e[2] = article.TypeA
 				case "an":
-					shadowintarray_e[2] = articleTypeAn
+					shadowintarray_e[2] = article.TypeAn
 				case "sm":
-					shadowintarray_e[2] = articleTypeSm
+					shadowintarray_e[2] = article.TypeSm
 				}
 				// GENERAL TERM (indefinite article)
 				localint_p1 = term.TypeGeneralTerm
