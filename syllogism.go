@@ -79,11 +79,6 @@ var (
 
 	symbolTable = symboltable.NewSymbolTable(basicDimMax + 2)
 
-	stringarray_g = []string{
-		symbol.UndeterminedTypeString,
-		symbol.GeneralTermString,
-		symbol.DesignatorString,
-	}
 	stringarray_s [7]string // appears to hold parsed line tokens
 	stringarray_w [3]string // appears to hold the most recently-input first and second terms for parsing or testing
 	ssQuantifiers [8]string
@@ -573,13 +568,13 @@ func basicGosub6630() {
 						goto Line6840
 					}
 				} else {
-					fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[intarray_c[localint_j]].Term, stringarray_g[termType1])
+					fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[intarray_c[localint_j]].Term, termType1)
 					goto Line6840
 				}
 			}
 		}
 
-		fmt.Printf("** Conclusion may not contain %s %q.\n", stringarray_g[termType1], localstring_w)
+		fmt.Printf("** Conclusion may not contain %s %q.\n", termType1, localstring_w)
 		localint_j = 0
 	}
 
@@ -590,7 +585,7 @@ Line6840: // 6840
 			if d1 != 4 || termType2 == 0 {
 				goto Line7120
 			}
-			fmt.Printf("** Subject is a %s, predicate is a %s -- but\n", stringarray_g[2], stringarray_g[1])
+			fmt.Printf("** Subject is a %s, predicate is a %s -- but\n", term.DesignatorType, term.GeneralTermType)
 		} else {
 			fmt.Println("** Conclusion from no premises must have same subject and predicate.")
 			return
@@ -608,7 +603,7 @@ Line6840: // 6840
 				goto Line7060
 			}
 		} else if termType2 != 0 {
-			fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[localint_t2].Term, stringarray_g[termType2])
+			fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[localint_t2].Term, termType2)
 		}
 		if symbolTable.NegativePremiseCount != 0 && d1%2 == 0 {
 			fmt.Println("** Negative conclusion required.")
@@ -624,7 +619,7 @@ Line6840: // 6840
 	goto Line7070
 
 Line7060: // 7060
-	fmt.Printf("** Conclusion may not contain %s %q;\n", stringarray_g[termType2], localstring_w)
+	fmt.Printf("** Conclusion may not contain %s %q;\n", termType2, localstring_w)
 
 Line7070: // 7070
 	fmt.Printf("** Conclusion must contain %s %q.\n", symbolTable.Symbols[localint_t2].TermType, symbolTable.Symbols[localint_t2].Term)
@@ -779,7 +774,7 @@ func basicGosub3400(d1 int, a1 int) {
 		}
 		if symbolTable.Symbols[localint_i1].TermType == term.UndeterminedType {
 			if msg {
-				fmt.Printf("Note: earlier use of %q taken as the %s used here\n", localstring_w, stringarray_g[termType])
+				fmt.Printf("Note: earlier use of %q taken as the %s used here\n", localstring_w, termType)
 			}
 			goto Line3710
 		}
@@ -788,7 +783,8 @@ func basicGosub3400(d1 int, a1 int) {
 		}
 
 		if msg {
-			fmt.Printf("Warning: %s %q has also occurred as a %s\n", stringarray_g[termType], localstring_w, stringarray_g[3-termType])
+			// TODO: remove subtraction here--we really just want to use the other term type
+			fmt.Printf("Warning: %s %q has also occurred as a %s\n", termType, localstring_w, 3-termType)
 		}
 
 		localint_i1++
