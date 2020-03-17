@@ -563,7 +563,7 @@ func basicGosub6630() {
 	} else {
 		for localint_j = 1; localint_j <= 2; localint_j++ {
 			if localstring_w == symbolTable.Symbols[intarray_c[localint_j]].Term {
-				if symbolTable.Symbols[intarray_c[localint_j]].TermType > term.UndeterminedType {
+				if symbolTable.Symbols[intarray_c[localint_j]].TermType != term.UndeterminedType {
 					if termType1 == symbolTable.Symbols[intarray_c[localint_j]].TermType {
 						goto Line6840
 					}
@@ -598,7 +598,7 @@ Line6840: // 6840
 		if localstring_w != symbolTable.Symbols[localint_t2].Term {
 			goto Line7060
 		}
-		if symbolTable.Symbols[localint_t2].TermType > term.UndeterminedType {
+		if symbolTable.Symbols[localint_t2].TermType != term.UndeterminedType {
 			if termType2 != term.UndeterminedType && termType2 != symbolTable.Symbols[localint_t2].TermType {
 				goto Line7060
 			}
