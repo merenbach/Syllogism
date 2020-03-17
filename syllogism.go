@@ -53,10 +53,6 @@ const (
 	articleTypeA    = 1
 	articleTypeAn   = 2
 	articleTypeSm   = 3
-
-	symbolUndeterminedType = 0
-	symbolGeneralTerm      = 1
-	symbolDesignator       = 2
 )
 
 const (
@@ -190,7 +186,7 @@ func basicGosub5880() {
 		fmt.Printf("%s%s\n", basicTabString(5), s.Term)
 
 	Line5980: // 5980
-		if s.DistributionCount != 1 && s.TermType != symbolDesignator {
+		if s.DistributionCount != 1 && s.TermType != term.DesignatorType {
 			localint_v1 = localint_i
 		}
 		return false
@@ -387,7 +383,7 @@ Line5750: // 5750
 			fmt.Println(programLines[intarray_k[localint_i]])
 		} else {
 			fmt.Printf("%d  ", programLines[intarray_k[localint_i]].Number)
-			if intarray_r[intarray_k[localint_i]] < 6 && symbolTable.Symbols[intarray_q[intarray_k[localint_i]]].TermType == symbolDesignator {
+			if intarray_r[intarray_k[localint_i]] < 6 && symbolTable.Symbols[intarray_q[intarray_k[localint_i]]].TermType == term.DesignatorType {
 				intarray_r[intarray_k[localint_i]] += 2
 			}
 			if intarray_r[intarray_k[localint_i]] < 4 {
@@ -408,7 +404,7 @@ func basicGosub4890() {
 	if intarray_r[localint_j1]%2 != 0 {
 		symbolTable.NegativePremiseCount--
 		intarray_j[4] = 1
-	} else if symbolTable.Symbols[intarray_q[localint_j1]].TermType == symbolDesignator {
+	} else if symbolTable.Symbols[intarray_q[localint_j1]].TermType == term.DesignatorType {
 		intarray_j[4] = 1
 	} else {
 		intarray_j[4] = 0
@@ -483,7 +479,7 @@ func basicGosub6200() {
 				goto Line6570
 			}
 
-			if symbolTable.Symbols[localint_c2].TermType == symbolDesignator {
+			if symbolTable.Symbols[localint_c2].TermType == term.DesignatorType {
 				localstring_z = fmt.Sprintf("%s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleTypeString(), symbolTable.Symbols[localint_c1].Term)
 				goto Line6570
 			}
@@ -492,7 +488,7 @@ func basicGosub6200() {
 			goto Line6570
 
 		}
-		if symbolTable.Symbols[localint_c1].TermType == symbolDesignator {
+		if symbolTable.Symbols[localint_c1].TermType == term.DesignatorType {
 			localstring_z = fmt.Sprintf("%s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleTypeString(), symbolTable.Symbols[localint_c2].Term)
 			goto Line6570
 		}
@@ -698,7 +694,7 @@ func basicGosub7460(analyze bool) {
 			if !line.Empty() {
 				fmt.Printf("%d ", line.Number)
 
-				if intarray_r[localint_i] < 6 && symbolTable.Symbols[intarray_q[localint_i]].TermType == symbolDesignator {
+				if intarray_r[localint_i] < 6 && symbolTable.Symbols[intarray_q[localint_i]].TermType == term.DesignatorType {
 					intarray_r[localint_i] += 2
 				}
 
@@ -775,13 +771,13 @@ func basicGosub3400(d1 int, a1 int) {
 		}
 
 		if localint_g == 0 {
-			if symbolTable.Symbols[localint_i1].TermType != symbolUndeterminedType || msg {
+			if symbolTable.Symbols[localint_i1].TermType != term.UndeterminedType || msg {
 				fmt.Printf("Note: predicate term %q", localstring_w)
 				fmt.Printf(" taken as the %s used earlier\n", symbolTable.Symbols[localint_i1].TermType)
 			}
 			goto Line3730
 		}
-		if symbolTable.Symbols[localint_i1].TermType == symbolUndeterminedType {
+		if symbolTable.Symbols[localint_i1].TermType == term.UndeterminedType {
 			if msg {
 				fmt.Printf("Note: earlier use of %q taken as the %s used here\n", localstring_w, stringarray_g[localint_g])
 			}
@@ -856,7 +852,7 @@ func basicGosub3400(d1 int, a1 int) {
 				}
 			}
 
-			if symbolTable.Symbols[localint_i1].TermType == symbolDesignator {
+			if symbolTable.Symbols[localint_i1].TermType == term.DesignatorType {
 				d1 += 2
 			}
 
