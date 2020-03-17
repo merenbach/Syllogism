@@ -42,6 +42,7 @@ import (
 	"github.com/merenbach/syllogism/internal/stringutil"
 	"github.com/merenbach/syllogism/internal/symbol"
 	"github.com/merenbach/syllogism/internal/symboltable"
+	"github.com/merenbach/syllogism/internal/term"
 	"github.com/merenbach/syllogism/internal/tui"
 )
 
@@ -105,7 +106,7 @@ var (
 	localint_k     int
 	localint_l     int
 	localint_n     int
-	localint_p1    int
+	localint_p1    term.Type
 	localint_s     int
 	localint_t     int
 	localint_v1    int
@@ -139,7 +140,7 @@ func basicGosub9060() {
 		if localint_i1 != -2 {
 			if localint_i1 > 0 {
 				if localint_i1 <= symbolTable.HighestLocationUsed {
-					fmt.Printf("Enter new term to replace %s %q\n", symbolTable.Symbols[localint_i1].TermTypeString(), symbolTable.Symbols[localint_i1].Term)
+					fmt.Printf("Enter new term to replace %s %q\n", symbolTable.Symbols[localint_i1].TermType, symbolTable.Symbols[localint_i1].Term)
 
 					localstring_w = lineInput("? ")
 					symbolTable.Symbols[localint_i1].Term = localstring_w
@@ -252,7 +253,7 @@ func basicGosub5070() {
 					localint_j1 = 2
 				}
 
-				fmt.Printf("   %s %q occurs %d times in premises.\n", s.TermTypeString(), s.Term, s.Occurrences)
+				fmt.Printf("   %s %q occurs %d times in premises.\n", s.TermType, s.Term, s.Occurrences)
 			}
 			localint_c++
 			intarray_c[localint_c] = i
@@ -268,7 +269,7 @@ func basicGosub5070() {
 			fmt.Printf("   %d terms occur exactly once in premises.\n", localint_c)
 
 			for i := 1; i <= localint_c; i++ {
-				fmt.Printf("%s%s -- %s\n", basicTabString(6), symbolTable.Symbols[intarray_c[i]].Term, symbolTable.Symbols[intarray_c[i]].TermTypeString())
+				fmt.Printf("%s%s -- %s\n", basicTabString(6), symbolTable.Symbols[intarray_c[i]].Term, symbolTable.Symbols[intarray_c[i]].TermType)
 			}
 		} else {
 			fmt.Println("   no terms occur exactly once in premises.")
@@ -543,8 +544,8 @@ Line6580: // 6580
 func basicGosub6630() {
 	// 6630
 	//---test offered conclusion---
-	localint_g1 := 1
-	localint_g2 := 1
+	var localint_g1 term.Type = 1
+	var localint_g2 term.Type = 1
 
 	//--conc. poss, line in s$()
 	d1, err := basicGosub2890()
@@ -630,7 +631,7 @@ Line7060: // 7060
 	fmt.Printf("** Conclusion may not contain %s %q;\n", stringarray_g[localint_g2], localstring_w)
 
 Line7070: // 7070
-	fmt.Printf("** Conclusion must contain %s %q.\n", symbolTable.Symbols[localint_t2].TermTypeString(), symbolTable.Symbols[localint_t2].Term)
+	fmt.Printf("** Conclusion must contain %s %q.\n", symbolTable.Symbols[localint_t2].TermType, symbolTable.Symbols[localint_t2].Term)
 	return
 
 Line7120: // 7120
@@ -736,7 +737,7 @@ func basicGosub3400(d1 int, a1 int) {
 	// 3400
 	//---Add W$(1), W$(2) to table T$()---
 	var localint_b1 int
-	var localint_g int
+	var localint_g term.Type
 	if d1%2 == 1 {
 		symbolTable.NegativePremiseCount++
 
@@ -776,7 +777,7 @@ func basicGosub3400(d1 int, a1 int) {
 		if localint_g == 0 {
 			if symbolTable.Symbols[localint_i1].TermType != symbolUndeterminedType || msg {
 				fmt.Printf("Note: predicate term %q", localstring_w)
-				fmt.Printf(" taken as the %s used earlier\n", symbolTable.Symbols[localint_i1].TermTypeString())
+				fmt.Printf(" taken as the %s used earlier\n", symbolTable.Symbols[localint_i1].TermType)
 			}
 			goto Line3730
 		}
@@ -834,7 +835,7 @@ func basicGosub3400(d1 int, a1 int) {
 		if !msg {
 			goto Line3810
 		}
-		fmt.Printf("Warning: %s %q has occurred %d times\n", symbolTable.Symbols[localint_i1].TermTypeString(), localstring_w, symbolTable.Symbols[localint_i1].Occurrences)
+		fmt.Printf("Warning: %s %q has occurred %d times\n", symbolTable.Symbols[localint_i1].TermType, localstring_w, symbolTable.Symbols[localint_i1].Occurrences)
 
 	Line3810: // 3810
 		if localint_j != 2 {

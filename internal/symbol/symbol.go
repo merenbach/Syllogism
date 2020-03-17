@@ -1,6 +1,10 @@
 package symbol
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/merenbach/syllogism/internal/term"
+)
 
 const (
 	articleBlankString = ""
@@ -22,7 +26,7 @@ const (
 type Symbol struct {
 	Term              string
 	ArticleType       int
-	TermType          int
+	TermType          term.Type
 	Occurrences       int
 	DistributionCount int
 }
@@ -41,16 +45,6 @@ func (s *Symbol) ArticleTypeString() string {
 		articleSmString,
 	}
 	return a[s.ArticleType]
-}
-
-// TermTypeString returns the term type (undetermined type, general term, designator) for the symbol.
-func (s *Symbol) TermTypeString() string {
-	g := []string{
-		UndeterminedTypeString,
-		GeneralTermString,
-		DesignatorString,
-	}
-	return g[s.TermType]
 }
 
 // Dump values of variables in a Symbol.
