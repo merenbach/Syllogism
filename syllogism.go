@@ -628,23 +628,21 @@ Line7120: // 7120
 
 	fmt.Println("-->  VALID!")
 
-	if localint_j1 == 0 {
-		if symbolTable.Symbols[localint_t1].DistributionCount == 0 || d1 >= 2 {
-			if symbolTable.Symbols[localint_t2].DistributionCount > 0 && d1%2 == 0 && d1 != 4 && d1 != 6 {
-				localint_v1 = localint_t2
-			}
-
-			if localint_v1 == 0 {
-				return
-			}
-		} else {
-			localint_v1 = localint_t1
-		}
-	} else {
+	if localint_j1 != 0 {
 		if d1 > 0 {
 			return
 		}
 		symbolTable.Symbols[0].Term = localstring_w
+	} else if symbolTable.Symbols[localint_t1].DistributionCount > 0 && d1 < 2 {
+		localint_v1 = localint_t1
+	} else {
+		if symbolTable.Symbols[localint_t2].DistributionCount > 0 && d1%2 == 0 && d1 != 4 && d1 != 6 {
+			localint_v1 = localint_t2
+		}
+
+		if localint_v1 == 0 {
+			return
+		}
 	}
 
 	fmt.Println("    but on Aristotelian interpretation only, i.e. on requirement")
