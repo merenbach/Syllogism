@@ -442,45 +442,46 @@ func basicGosub6200() {
 	compute := func() string {
 		if intarray_l[0] == 0 {
 			return "A is A"
-
 		}
 
+		symbol1 := symbolTable.Symbols[localint_c1]
+		symbol2 := symbolTable.Symbols[localint_c2]
 		if symbolTable.NegativePremiseCount == 0 {
 			// affirmative conclusion
-			if symbolTable.Symbols[localint_c1].DistributionCount > 0 {
-				if symbolTable.Symbols[localint_c1].TermType == term.TypeDesignator {
-					return fmt.Sprintf("%s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
+			if symbol1.DistributionCount > 0 {
+				if symbol1.TermType == term.TypeDesignator {
+					return fmt.Sprintf("%s is %s%s", symbol1.Term, symbol2.ArticleType, symbol2.Term)
 				} else {
-					return fmt.Sprintf("All %s is %s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].Term)
+					return fmt.Sprintf("All %s is %s", symbol1.Term, symbol2.Term)
 				}
-			} else if symbolTable.Symbols[localint_c2].DistributionCount > 0 {
-				if symbolTable.Symbols[localint_c2].TermType == term.TypeDesignator {
-					return fmt.Sprintf("%s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
+			} else if symbol2.DistributionCount > 0 {
+				if symbol2.TermType == term.TypeDesignator {
+					return fmt.Sprintf("%s is %s%s", symbol2.Term, symbol1.ArticleType, symbol1.Term)
 				} else {
-					return fmt.Sprintf("All %s is %s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].Term)
+					return fmt.Sprintf("All %s is %s", symbol2.Term, symbol1.Term)
 				}
 			} else {
-				if symbolTable.Symbols[localint_c1].ArticleType == article.TypeNone && symbolTable.Symbols[localint_c2].ArticleType != article.TypeNone {
-					return fmt.Sprintf("Some %s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
+				if symbol1.ArticleType == article.TypeNone && symbol2.ArticleType != article.TypeNone {
+					return fmt.Sprintf("Some %s is %s%s", symbol2.Term, symbol1.ArticleType, symbol1.Term)
 				} else {
-					return fmt.Sprintf("Some %s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
+					return fmt.Sprintf("Some %s is %s%s", symbol1.Term, symbol2.ArticleType, symbol2.Term)
 				}
 			}
 
 		} else {
 			// negative conclusion
-			if symbolTable.Symbols[localint_c2].DistributionCount == 0 {
-				return fmt.Sprintf("Some %s is not %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
-			} else if symbolTable.Symbols[localint_c1].DistributionCount == 0 {
-				return fmt.Sprintf("Some %s is not %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
-			} else if symbolTable.Symbols[localint_c1].TermType == term.TypeDesignator {
-				return fmt.Sprintf("%s is not %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
-			} else if symbolTable.Symbols[localint_c2].TermType == term.TypeDesignator {
-				return fmt.Sprintf("%s is not %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
-			} else if symbolTable.Symbols[localint_c1].ArticleType == article.TypeNone && symbolTable.Symbols[localint_c2].ArticleType != article.TypeNone {
-				return fmt.Sprintf("No %s is %s%s", symbolTable.Symbols[localint_c2].Term, symbolTable.Symbols[localint_c1].ArticleType, symbolTable.Symbols[localint_c1].Term)
+			if symbol2.DistributionCount == 0 {
+				return fmt.Sprintf("Some %s is not %s%s", symbol2.Term, symbol1.ArticleType, symbol1.Term)
+			} else if symbol1.DistributionCount == 0 {
+				return fmt.Sprintf("Some %s is not %s%s", symbol1.Term, symbol2.ArticleType, symbol2.Term)
+			} else if symbol1.TermType == term.TypeDesignator {
+				return fmt.Sprintf("%s is not %s%s", symbol1.Term, symbol2.ArticleType, symbol2.Term)
+			} else if symbol2.TermType == term.TypeDesignator {
+				return fmt.Sprintf("%s is not %s%s", symbol2.Term, symbol1.ArticleType, symbol1.Term)
+			} else if symbol1.ArticleType == article.TypeNone && symbol2.ArticleType != article.TypeNone {
+				return fmt.Sprintf("No %s is %s%s", symbol2.Term, symbol1.ArticleType, symbol1.Term)
 			} else {
-				return fmt.Sprintf("No %s is %s%s", symbolTable.Symbols[localint_c1].Term, symbolTable.Symbols[localint_c2].ArticleType, symbolTable.Symbols[localint_c2].Term)
+				return fmt.Sprintf("No %s is %s%s", symbol1.Term, symbol2.ArticleType, symbol2.Term)
 			}
 		}
 	}
