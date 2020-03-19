@@ -169,21 +169,15 @@ func basicGosub5880() {
 			return false
 		}
 
-		if s.DistributionCount > 0 {
-			goto Line5980
+		if s.DistributionCount == 0 {
+			if localint_j1 == 0 {
+				fmt.Println("Undistributed middle terms:")
+				localint_j1 = 5
+			}
+
+			fmt.Printf("%s%s\n", basicTabString(5), s.Term)
 		}
 
-		if localint_j1 > 0 {
-			goto Line5970
-		}
-
-		fmt.Println("Undistributed middle terms:")
-		localint_j1 = 5
-
-	Line5970: // 5970
-		fmt.Printf("%s%s\n", basicTabString(5), s.Term)
-
-	Line5980: // 5980
 		if s.DistributionCount != 1 && s.TermType != term.TypeDesignator {
 			localint_v1 = localint_i
 		}
