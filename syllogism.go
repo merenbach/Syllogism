@@ -294,12 +294,23 @@ Line5460: // 5460
 Line5470: // 5470
 	if intarray_p[intarray_k[localint_k]] == localint_t {
 		localint_t = intarray_q[intarray_k[localint_k]]
+	} else if intarray_q[intarray_k[localint_k]] == localint_t {
+		localint_t = intarray_p[intarray_k[localint_k]]
 	} else {
-		if intarray_q[intarray_k[localint_k]] != localint_t {
-			goto Line5620
+		localint_k++
+		if localint_k <= localint_l {
+			goto Line5470
 		}
 
-		localint_t = intarray_p[intarray_k[localint_k]]
+		localint_t = intarray_q[intarray_k[localint_i]]
+
+		if localint_j1 > 0 {
+			goto Line5700
+		}
+		localint_j1 = 4
+		fmt.Println("Not a syllogism: no way to order premises so that each premise")
+		fmt.Println("shares exactly one term with its successor; there is a")
+		goto Line5700
 	}
 
 	if localint_k != localint_i {
@@ -320,21 +331,6 @@ Line5470: // 5470
 	} else {
 		goto Line5730
 	}
-
-Line5620: // 5620
-	localint_k++
-	if localint_k <= localint_l {
-		goto Line5470
-	}
-
-	localint_t = intarray_q[intarray_k[localint_i]]
-
-	if localint_j1 > 0 {
-		goto Line5700
-	}
-	localint_j1 = 4
-	fmt.Println("Not a syllogism: no way to order premises so that each premise")
-	fmt.Println("shares exactly one term with its successor; there is a")
 
 Line5700: // 5700
 	fmt.Println("closed loop in the term chain within the premise set--")
