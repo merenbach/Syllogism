@@ -31,3 +31,19 @@ func (s *Symbol) Dump() string {
 		s.Occurrences,
 		s.DistributionCount)
 }
+
+// ConclusionForAllIs returns a conclusion for "all X is Y"
+// TODO: update these comments
+func (s *Symbol) ConclusionForAllIs(o *Symbol) string {
+	if s.TermType == term.TypeDesignator {
+		return fmt.Sprintf("%s is %s%s", s.Term, o.ArticleType, o.Term)
+	}
+
+	return fmt.Sprintf("All %s is %s", s.Term, o.Term)
+}
+
+// ConclusionForSomeIs returns a conclusion for "some X is Y"
+// TODO: update these comments
+func (s *Symbol) ConclusionForSomeIs(o *Symbol) string {
+	return fmt.Sprintf("Some %s is %s%s", s.Term, o.ArticleType, o.Term)
+}

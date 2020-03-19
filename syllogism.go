@@ -448,24 +448,15 @@ func basicGosub6200() {
 		symbol2 := symbolTable.Symbols[localint_c2]
 		if symbolTable.NegativePremiseCount == 0 {
 			// affirmative conclusion
+			// TODO: can we push more of these conditionals inside the symbol type?
 			if symbol1.DistributionCount > 0 {
-				if symbol1.TermType == term.TypeDesignator {
-					return fmt.Sprintf("%s is %s%s", symbol1.Term, symbol2.ArticleType, symbol2.Term)
-				} else {
-					return fmt.Sprintf("All %s is %s", symbol1.Term, symbol2.Term)
-				}
+				return symbol1.ConclusionForAllIs(symbol2)
 			} else if symbol2.DistributionCount > 0 {
-				if symbol2.TermType == term.TypeDesignator {
-					return fmt.Sprintf("%s is %s%s", symbol2.Term, symbol1.ArticleType, symbol1.Term)
-				} else {
-					return fmt.Sprintf("All %s is %s", symbol2.Term, symbol1.Term)
-				}
+				return symbol2.ConclusionForAllIs(symbol1)
+			} else if symbol1.ArticleType != article.TypeNone || symbol2.ArticleType == article.TypeNone {
+				return symbol1.ConclusionForSomeIs(symbol2)
 			} else {
-				if symbol1.ArticleType == article.TypeNone && symbol2.ArticleType != article.TypeNone {
-					return fmt.Sprintf("Some %s is %s%s", symbol2.Term, symbol1.ArticleType, symbol1.Term)
-				} else {
-					return fmt.Sprintf("Some %s is %s%s", symbol1.Term, symbol2.ArticleType, symbol2.Term)
-				}
+				return symbol2.ConclusionForSomeIs(symbol1)
 			}
 
 		} else {
