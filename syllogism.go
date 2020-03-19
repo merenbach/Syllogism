@@ -204,8 +204,8 @@ func basicGosub5880() {
 	}
 
 	if symbol1.DistributionCount > 0 || symbol2.DistributionCount > 0 {
-		if symbol1.DistributionCount > 0 || symbol2.TermType < 2 {
-			if symbol2.DistributionCount > 0 || symbol1.TermType < 2 {
+		if symbol1.DistributionCount > 0 || symbol2.TermType < term.TypeDesignator {
+			if symbol2.DistributionCount > 0 || symbol1.TermType < term.TypeDesignator {
 				return
 			}
 
