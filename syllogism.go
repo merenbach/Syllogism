@@ -294,16 +294,14 @@ Line5460: // 5460
 Line5470: // 5470
 	if intarray_p[intarray_k[localint_k]] == localint_t {
 		localint_t = intarray_q[intarray_k[localint_k]]
-		goto Line5520
+	} else {
+		if intarray_q[intarray_k[localint_k]] != localint_t {
+			goto Line5620
+		}
+
+		localint_t = intarray_p[intarray_k[localint_k]]
 	}
 
-	if intarray_q[intarray_k[localint_k]] != localint_t {
-		goto Line5620
-	}
-
-	localint_t = intarray_p[intarray_k[localint_k]]
-
-Line5520: // 5520
 	if localint_k == localint_i {
 		goto Line5610
 	}
