@@ -253,6 +253,7 @@ func basicGosub5070() {
 			fmt.Printf("   %d terms occur exactly once in premises.\n", localint_c)
 
 			for i := 1; i <= localint_c; i++ {
+				// TODO: use tabwriter here?
 				fmt.Printf("%s%s -- %s\n", basicTabString(6), symbolTable.Symbols[intarray_c[i]].Term, symbolTable.Symbols[intarray_c[i]].TermType)
 			}
 		} else {
