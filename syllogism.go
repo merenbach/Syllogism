@@ -302,22 +302,19 @@ Line5470: // 5470
 		localint_t = intarray_p[intarray_k[localint_k]]
 	}
 
-	if localint_k == localint_i {
-		goto Line5610
+	if localint_k != localint_i {
+		localint_n = 1
+		intarray_h[1] = intarray_k[localint_i]
+
+		for m := localint_i; m <= localint_k-1; m++ {
+			localint_n = 3 - localint_n
+			intarray_h[localint_n] = intarray_k[m+1]
+			intarray_k[m+1] = intarray_h[3-localint_n]
+		}
+
+		intarray_k[localint_i] = intarray_h[localint_n]
 	}
 
-	localint_n = 1
-	intarray_h[1] = intarray_k[localint_i]
-
-	for m := localint_i; m <= localint_k-1; m++ {
-		localint_n = 3 - localint_n
-		intarray_h[localint_n] = intarray_k[m+1]
-		intarray_k[m+1] = intarray_h[3-localint_n]
-	}
-
-	intarray_k[localint_i] = intarray_h[localint_n]
-
-Line5610: // 5610
 	if localint_j1 != 0 {
 		goto Line5710
 	} else {
