@@ -203,18 +203,14 @@ func basicGosub5880() {
 		return
 	}
 
-	if symbol1.DistributionCount > 0 || symbol2.DistributionCount > 0 {
-		if symbol1.DistributionCount > 0 || symbol2.TermType < term.TypeDesignator {
-			if symbol2.DistributionCount > 0 || symbol1.TermType < term.TypeDesignator {
-				return
-			}
-
-			fmt.Printf("Term %q\n", symbol2.Term)
-		} else {
-			fmt.Printf("Term %q\n", symbol1.Term)
-		}
-	} else {
+	if symbol1.DistributionCount == 0 && symbol2.DistributionCount == 0 {
 		fmt.Printf("Terms %q and %q, one of which is\n", symbol1.Term, symbol2.Term)
+	} else if symbol1.DistributionCount == 0 && symbol2.TermType == term.TypeDesignator {
+		fmt.Printf("Term %q\n", symbol1.Term)
+	} else if symbol2.DistributionCount == 0 && symbol1.TermType == term.TypeDesignator {
+		fmt.Printf("Term %q\n", symbol2.Term)
+	} else {
+		return
 	}
 
 	fmt.Println("required in predicate of negative conclusion")
