@@ -19,6 +19,7 @@ package main
 * g(63)  => term type (index in g$ of term type), so anywhere we see g(N) => symbols(N).TermType
 * o(63)  => term occurrence count, so anywhere we see o(N) => symbols(N).Occurrences
 * d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
+* r(63)  => forms for each premise
 * g$(2)  => term type names
 * e(2)   => article type (index in a$ of article type)
 * a$(3)  => article type names
@@ -48,6 +49,7 @@ import (
 	"strings"
 
 	"github.com/merenbach/syllogism/internal/article"
+	"github.com/merenbach/syllogism/internal/form"
 	"github.com/merenbach/syllogism/internal/help"
 	"github.com/merenbach/syllogism/internal/stringutil"
 	"github.com/merenbach/syllogism/internal/symbol"
@@ -59,16 +61,6 @@ import (
 
 const basicDimMax = 64
 
-const (
-	formUndefined   = (-1)
-	formSomeAIsB    = 0
-	formSomeAIsNotB = 1
-	formAllAIsB     = 2
-	formNoAIsB      = 3
-	formAIsT        = 4
-	formAIsNotT     = 5
-)
-
 var (
 	intarray_a [basicDimMax]int
 	intarray_c [basicDimMax]int
@@ -76,7 +68,7 @@ var (
 	intarray_p [basicDimMax]int
 	intarray_q [basicDimMax]int
 
-	intarray_r [basicDimMax]int
+	intarray_r [basicDimMax]form.Form
 	intarray_k [basicDimMax]int
 	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
@@ -670,7 +662,7 @@ func basicGosub1840() {
 	intarray_l[0] = 0
 }
 
-func basicGosub3400(d1 int, a1 int) {
+func basicGosub3400(d1 form.Form, a1 int) {
 	// 3400
 	//---Add W$(1), W$(2) to table T$()---
 	var localint_b1 int
@@ -861,7 +853,7 @@ func basicGosub4530(s string) int {
 // 	secondWord string
 // }
 
-func basicGosub2890() (int, error) {
+func basicGosub2890() (form.Form, error) {
 	// 2890
 	//---Parse line in S$()---
 	if stringarray_s[2] != "all" {
@@ -882,7 +874,7 @@ func basicGosub2890() (int, error) {
 
 					stringarray_w[1] = stringarray_s[2]
 					stringarray_w[2] = stringarray_s[5]
-					return formAIsNotT, nil // a is not T
+					return form.AIsNotT, nil // a is not T
 				} else {
 					if intarray_t[4] != token.TypeTerm {
 						goto Line3370
@@ -890,7 +882,7 @@ func basicGosub2890() (int, error) {
 
 					stringarray_w[1] = stringarray_s[2]
 					stringarray_w[2] = stringarray_s[4]
-					return formAIsT, nil // a is T
+					return form.AIsT, nil // a is T
 				}
 			}
 
@@ -909,7 +901,7 @@ func basicGosub2890() (int, error) {
 			stringarray_w[1] = stringarray_s[3]
 			stringarray_w[2] = stringarray_s[5]
 
-			return formNoAIsB, nil // no A is B
+			return form.NoAIsB, nil // no A is B
 		}
 		if intarray_t[3] != token.TypeTerm {
 			goto Line3350
@@ -923,14 +915,14 @@ func basicGosub2890() (int, error) {
 			}
 			stringarray_w[1] = stringarray_s[3]
 			stringarray_w[2] = stringarray_s[6]
-			return formSomeAIsNotB, nil // some A is not B
+			return form.SomeAIsNotB, nil // some A is not B
 		}
 		if intarray_t[5] != token.TypeTerm {
 			goto Line3370
 		}
 		stringarray_w[1] = stringarray_s[3]
 		stringarray_w[2] = stringarray_s[5]
-		return formSomeAIsB, nil // Some A is B
+		return form.SomeAIsB, nil // Some A is B
 	}
 	if intarray_t[3] != token.TypeTerm {
 		goto Line3350
@@ -943,16 +935,16 @@ func basicGosub2890() (int, error) {
 	}
 	stringarray_w[1] = stringarray_s[3]
 	stringarray_w[2] = stringarray_s[5]
-	return formAllAIsB, nil // all A is B
+	return form.AllAIsB, nil // all A is B
 
 Line3330: // 3330
-	return formUndefined, errors.New("** Missing copula is/are")
+	return form.Undefined, errors.New("** Missing copula is/are")
 
 Line3350: // 3350
-	return formUndefined, errors.New("** Subject term bad or missing")
+	return form.Undefined, errors.New("** Subject term bad or missing")
 
 Line3370: // 3370
-	return formUndefined, errors.New("** Predicate term bad or missing")
+	return form.Undefined, errors.New("** Predicate term bad or missing")
 }
 
 func tokenize() ([7]string, [8]token.Type, [3]article.Type, error) {
@@ -1413,7 +1405,7 @@ Line1640: // 1640
 				fmt.Println("Enter SYNTAX for help with statements")
 			}
 		}
-		if d1 != formUndefined {
+		if d1 != form.Undefined {
 			a1 := basicGosub4530(localstring_l1) // enter line into list
 			basicGosub3400(d1, a1)               // add terms to symbol table
 		}
