@@ -513,13 +513,13 @@ func basicGosub6630() {
 		for localint_j = 1; localint_j <= 2; localint_j++ {
 			symbol := symbolTable.Symbols[intarray_c[localint_j]]
 			if localstring_w == symbol.Term {
-				if symbol.TermType != term.TypeUndetermined {
+				if symbol.TermType == term.TypeUndetermined {
+					fmt.Printf("Note: %q used in premises taken to be %s\n", symbol.Term, termType1)
+					goto Line6840
+				} else {
 					if termType1 == symbol.TermType {
 						goto Line6840
 					}
-				} else {
-					fmt.Printf("Note: %q used in premises taken to be %s\n", symbol.Term, termType1)
-					goto Line6840
 				}
 			}
 		}
