@@ -371,7 +371,7 @@ func basicGosub4890() {
 
 	intarray_j[1] = intarray_p[localint_j1]
 	intarray_j[2] = intarray_q[localint_j1]
-	if intarray_r[localint_j1]%2 != 0 {
+	if intarray_r[localint_j1].IsNegative() {
 		symbolTable.NegativePremiseCount--
 		intarray_j[4] = 1
 	} else if symbolTable.Symbols[intarray_q[localint_j1]].TermType == term.TypeDesignator {
@@ -552,7 +552,7 @@ Line6840: // 6840
 		} else if termType2 != term.TypeUndetermined {
 			fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[localint_t2].Term, termType2)
 		}
-		if symbolTable.NegativePremiseCount > 0 && d1%2 == 0 {
+		if symbolTable.NegativePremiseCount > 0 && !d1.IsNegative() {
 			fmt.Println("** Negative conclusion required.")
 			return
 		}
@@ -573,7 +573,7 @@ Line7070: // 7070
 	return
 
 Line7120: // 7120
-	if symbolTable.NegativePremiseCount == 0 && d1%2 != 0 {
+	if symbolTable.NegativePremiseCount == 0 && d1.IsNegative() {
 		fmt.Println("** Affirmative conclusion required.")
 		return
 	}
@@ -583,7 +583,7 @@ Line7120: // 7120
 			fmt.Printf("** Term %q not distributed in premises\n", symbolTable.Symbols[localint_t1].Term)
 			fmt.Println("   may not be distributed in conclusion.")
 			return
-		} else if symbolTable.Symbols[localint_t2].DistributionCount == 0 && (d1%2 == 1 || d1 == 6) {
+		} else if symbolTable.Symbols[localint_t2].DistributionCount == 0 && (d1.IsNegative() || d1 == 6) {
 			fmt.Printf("** Term %q not distributed in premises\n", symbolTable.Symbols[localint_t2].Term)
 			fmt.Println("   may not be distributed in conclusion.")
 			return
@@ -600,7 +600,7 @@ Line7120: // 7120
 	} else if symbolTable.Symbols[localint_t1].DistributionCount > 0 && d1 < 2 {
 		localint_v1 = localint_t1
 	} else {
-		if symbolTable.Symbols[localint_t2].DistributionCount > 0 && d1%2 == 0 && d1 != 4 && d1 != 6 {
+		if symbolTable.Symbols[localint_t2].DistributionCount > 0 && !d1.IsNegative() && d1 != form.AIsT && d1 != 6 {
 			localint_v1 = localint_t2
 		}
 
@@ -786,7 +786,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 				d1 += 2
 			}
 
-			if d1 == 6 || d1%2 != 0 {
+			if d1 == 6 || d1.IsNegative() {
 				symbolTable.Symbols[localint_i1].DistributionCount++
 			}
 		}

@@ -14,10 +14,20 @@ const (
 	NoAIsB           = 3
 	AIsT             = 4
 	AIsNotT          = 5
+	// = 6???
 )
 
 // IsNegative determines if this form is negative.
 func (t Form) IsNegative() bool {
+	// TODO: don't rely on numeric values here?
+	// switch t {
+	// case SomeAIsNotB:
+	// 	fallthrough
+	// case NoAIsB:
+	// 	fallthrough
+	// case AIsNotT:
+	// 	return true
+	// }
 	return t%2 == 1
 }
 
