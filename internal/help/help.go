@@ -143,3 +143,9 @@ func ShowSyntaxHelp() {
 	tui.Clear()
 	fmt.Println(syllogismHelpForSyntax)
 }
+
+// ShowTermDistributionError prints a term distribution error.
+func ShowTermDistributionError(t string) {
+	fmt.Printf("** Term %q not distributed in premises\n", t)
+	fmt.Println("   may not be distributed in conclusion.")
+}
