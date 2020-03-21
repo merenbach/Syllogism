@@ -667,7 +667,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 	//---Add W$(1), W$(2) to table T$()---
 	var localint_b1 int
 	var termType term.Type // formerly g
-	if d1%2 == 1 {
+	if d1.IsNegative() {
 		symbolTable.NegativePremiseCount++
 
 		if symbolTable.NegativePremiseCount > 1 && msg {

@@ -16,6 +16,11 @@ const (
 	AIsNotT          = 5
 )
 
+// IsNegative determines if this form is negative.
+func (t Form) IsNegative() bool {
+	return t%2 == 1
+}
+
 // func (t Type) String() string {
 // 	switch t {
 // 	case TypeGeneralTerm:
