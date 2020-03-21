@@ -496,7 +496,9 @@ func basicGosub6630() {
 
 	if d1 == form.Undefined {
 		return
-	} else if d1 >= 4 {
+	}
+
+	if d1 >= 4 {
 		termType1 = term.TypeDesignator
 		termType2 = localint_p1
 	}
