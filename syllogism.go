@@ -516,10 +516,8 @@ func basicGosub6630() {
 				if symbol.TermType == term.TypeUndetermined {
 					fmt.Printf("Note: %q used in premises taken to be %s\n", symbol.Term, termType1)
 					goto Line6840
-				} else {
-					if termType1 == symbol.TermType {
-						goto Line6840
-					}
+				} else if termType1 == symbol.TermType {
+					goto Line6840
 				}
 			}
 		}
