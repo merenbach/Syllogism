@@ -689,54 +689,50 @@ func basicGosub3400(d1 form.Form, a1 int) {
 		localstring_w = stringutil.Singularize(localstring_w)
 		localint_i1 = 1
 
-	Line3500: // 3500
-		localint_i1, localint_b1 = symbolTable.Search(localint_i1, localstring_w)
+		for { // 3500
+			localint_i1, localint_b1 = symbolTable.Search(localint_i1, localstring_w)
 
-		if localint_i1 > symbolTable.HighestLocationUsed {
-			if localint_b1 > 0 {
-				localint_i1 = localint_b1
-			} else {
-				symbolTable.HighestLocationUsed++
+			if localint_i1 > symbolTable.HighestLocationUsed {
+				if localint_b1 > 0 {
+					localint_i1 = localint_b1
+				} else {
+					symbolTable.HighestLocationUsed++
+				}
+
+				symbolTable.Symbols[localint_i1].Term = localstring_w
+				symbolTable.Symbols[localint_i1].TermType = termType
+				break
 			}
 
-			symbolTable.Symbols[localint_i1].Term = localstring_w
-			goto Line3720
-		}
-
-		if termType == term.TypeUndetermined {
-			if symbolTable.Symbols[localint_i1].TermType != term.TypeUndetermined || msg {
-				fmt.Printf("Note: predicate term %q", localstring_w)
-				fmt.Printf(" taken as the %s used earlier\n", symbolTable.Symbols[localint_i1].TermType)
+			if termType == term.TypeUndetermined {
+				if symbolTable.Symbols[localint_i1].TermType != term.TypeUndetermined || msg {
+					fmt.Printf("Note: predicate term %q", localstring_w)
+					fmt.Printf(" taken as the %s used earlier\n", symbolTable.Symbols[localint_i1].TermType)
+				}
+				break
 			}
-			goto Line3730
-		}
-		if symbolTable.Symbols[localint_i1].TermType == term.TypeUndetermined {
+			if symbolTable.Symbols[localint_i1].TermType == term.TypeUndetermined {
+				if msg {
+					fmt.Printf("Note: earlier use of %q taken as the %s used here\n", localstring_w, termType)
+				}
+				if termType == term.TypeDesignator {
+					symbolTable.Symbols[localint_i1].DistributionCount = symbolTable.Symbols[localint_i1].Occurrences
+				}
+				symbolTable.Symbols[localint_i1].TermType = termType
+				break
+			}
+			if termType == symbolTable.Symbols[localint_i1].TermType {
+				break
+			}
+
 			if msg {
-				fmt.Printf("Note: earlier use of %q taken as the %s used here\n", localstring_w, termType)
+				// TODO: remove subtraction here--we really just want to use the other term type
+				fmt.Printf("Warning: %s %q has also occurred as a %s\n", termType, localstring_w, 3-termType)
 			}
-			goto Line3710
-		}
-		if termType == symbolTable.Symbols[localint_i1].TermType {
-			goto Line3730
+
+			localint_i1++
 		}
 
-		if msg {
-			// TODO: remove subtraction here--we really just want to use the other term type
-			fmt.Printf("Warning: %s %q has also occurred as a %s\n", termType, localstring_w, 3-termType)
-		}
-
-		localint_i1++
-		goto Line3500
-
-	Line3710: // 3710
-		if termType == term.TypeDesignator {
-			symbolTable.Symbols[localint_i1].DistributionCount = symbolTable.Symbols[localint_i1].Occurrences
-		}
-
-	Line3720: // 3720
-		symbolTable.Symbols[localint_i1].TermType = termType
-
-	Line3730: // 3730
 		if intarray_e[localint_j] == article.TypeNone {
 
 			// 3740
