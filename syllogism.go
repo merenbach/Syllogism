@@ -7,7 +7,6 @@ package main
 * Refactor into proper Golang project layout
 * Use Golang list type for Line collection?
 * Improve dumping further
-* Ensure that ssQuantifiers and ssCopulas match x$() and y$(), respectively, from original BASIC
 *
 * Porting notes on variables:
 *
