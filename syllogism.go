@@ -364,23 +364,23 @@ Line5750: // 5750
 	}
 }
 
-func basicGosub4890() {
+func basicGosub4890(j1 int) {
 	// 4890
 	//---Decrement table entries---
 	var intarray_j [5]int
 
-	intarray_j[1] = intarray_p[localint_j1]
-	intarray_j[2] = intarray_q[localint_j1]
-	if intarray_r[localint_j1].IsNegative() {
+	intarray_j[1] = intarray_p[j1]
+	intarray_j[2] = intarray_q[j1]
+	if intarray_r[j1].IsNegative() {
 		symbolTable.NegativePremiseCount--
 		intarray_j[4] = 1
-	} else if symbolTable.Symbols[intarray_q[localint_j1]].TermType == term.TypeDesignator {
+	} else if symbolTable.Symbols[intarray_q[j1]].TermType == term.TypeDesignator {
 		intarray_j[4] = 1
 	} else {
 		intarray_j[4] = 0
 	}
 
-	if intarray_r[localint_j1] >= 2 {
+	if intarray_r[j1] >= 2 {
 		intarray_j[3] = 1
 	} else {
 		intarray_j[3] = 0
@@ -418,7 +418,7 @@ func basicGosub4760() {
 			intarray_a[0]--
 			intarray_a[intarray_a[0]] = localint_j1
 			intarray_l[localint_i] = intarray_l[localint_j1]
-			basicGosub4890()
+			basicGosub4890(localint_j1)
 			break
 		}
 		localint_i = intarray_l[localint_i]
@@ -818,7 +818,7 @@ func basicGosub4530(s string) int {
 		}
 
 		if localint_n == programLines[localint_j1].Number {
-			basicGosub4890()
+			basicGosub4890(localint_j1)
 			programLines[localint_j1] = &tui.ProgramLine{
 				Number:    localint_n,
 				Statement: localstring_l,
