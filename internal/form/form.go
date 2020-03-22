@@ -56,6 +56,31 @@ func (t Form) Copula() string {
 	}
 }
 
+// Quantifier associated with this form.
+// TODO: add some tests!
+func (t Form) Quantifier() string {
+	switch t {
+	case SomeAIsB:
+		return "some"
+	case SomeAIsNotB:
+		return "some"
+	case AllAIsB:
+		return "all"
+	case NoAIsB:
+		return "no"
+	case AIsT:
+		return ""
+	case AIsNotT:
+		return ""
+	case 6:
+		return ""
+	case 7:
+		return ""
+	default:
+		return ""
+	}
+}
+
 // func (t Type) String() string {
 // 	switch t {
 // 	case TypeGeneralTerm:

@@ -76,7 +76,6 @@ var (
 
 	stringarray_s [7]string // appears to hold parsed line tokens
 	stringarray_w [3]string // appears to hold the most recently-input first and second terms for parsing or testing
-	ssQuantifiers [8]string
 	stringarray_z [8]string
 
 	localint_t1    int
@@ -358,7 +357,7 @@ Line5750: // 5750
 				prem.Form += 2
 			}
 			if prem.Form < 4 {
-				fmt.Printf("%s  ", ssQuantifiers[prem.Form])
+				fmt.Printf("%s  ", prem.Form.Quantifier())
 			}
 			fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[intarray_p[idx]].Term, prem.Form.Copula(), symbolTable.Symbols[intarray_q[idx]].Term, stringarray_z[prem.Form])
 		}
@@ -637,7 +636,7 @@ func basicGosub7460(analyze bool) {
 				qlocalinti := intarray_q[localint_i]
 
 				if prem.Form < 4 {
-					fmt.Printf("%s  ", ssQuantifiers[prem.Form])
+					fmt.Printf("%s  ", prem.Form.Quantifier())
 				}
 
 				fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[plocalinti].Term, prem.Form.Copula(), symbolTable.Symbols[qlocalinti].Term, stringarray_z[prem.Form])
@@ -1206,15 +1205,6 @@ func syllogize() {
 
 	help.ShowCopyright()
 	fmt.Println()
-
-	ssQuantifiers[0] = "some"
-	ssQuantifiers[1] = "some"
-	ssQuantifiers[2] = "all"
-	ssQuantifiers[3] = "no"
-	ssQuantifiers[4] = ""
-	ssQuantifiers[5] = ""
-	ssQuantifiers[6] = ""
-	ssQuantifiers[7] = ""
 
 	stringarray_z[0] = ""
 	stringarray_z[1] = "*"
