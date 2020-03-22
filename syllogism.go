@@ -368,27 +368,24 @@ Line5750: // 5750
 func basicGosub4890(j1 int) {
 	// 4890
 	//---Decrement table entries---
-	var intarray_j [5]int
+	var (
+		pDecrement bool
+		qDecrement bool
+	)
 
-	intarray_j[1] = intarray_p[j1]
-	intarray_j[2] = intarray_q[j1]
 	if intarray_r[j1].IsNegative() {
 		symbolTable.NegativePremiseCount--
-		intarray_j[4] = 1
+		qDecrement = true
 	} else if symbolTable.Symbols[intarray_q[j1]].TermType == term.TypeDesignator {
-		intarray_j[4] = 1
-	} else {
-		intarray_j[4] = 0
+		qDecrement = true
 	}
 
 	if intarray_r[j1] >= 2 {
-		intarray_j[3] = 1
-	} else {
-		intarray_j[3] = 0
+		pDecrement = true
 	}
 
-	reduceDistributionCount := func(k int) {
-		sym := symbolTable.Symbols[intarray_j[k]]
+	reduceDistributionCount := func(k int, decrement bool) {
+		sym := symbolTable.Symbols[k]
 		sym.Occurrences--
 		if sym.Empty() {
 			sym.Term = ""
@@ -396,10 +393,12 @@ func basicGosub4890(j1 int) {
 			sym.TermType = term.TypeUndetermined
 		}
 
-		sym.DistributionCount -= intarray_j[k+2]
+		if decrement {
+			sym.DistributionCount--
+		}
 	}
-	reduceDistributionCount(1)
-	reduceDistributionCount(2)
+	reduceDistributionCount(intarray_p[j1], pDecrement)
+	reduceDistributionCount(intarray_q[j1], qDecrement)
 }
 
 func basicGosub4760() {
