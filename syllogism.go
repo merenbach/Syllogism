@@ -38,6 +38,7 @@ package main
 * g1     => term type as integer
 * g2     => term type as integer
 * p1     => term type as integer
+* v1     => flag for modern validity
 */
 import (
 	"bufio"
@@ -104,7 +105,7 @@ var (
 	localstring_t  string
 	localstring_w  string
 
-	programLines = make([]*tui.ProgramLine, basicDimMax)
+	programLines = tui.NewPremiseSet(basicDimMax)
 
 	msg bool
 )
@@ -330,7 +331,7 @@ Line5700: // 5700
 	fmt.Println("closed loop in the term chain within the premise set--")
 
 Line5710: // 5710
-	fmt.Println(programLines[intarray_k[localint_i]])
+	fmt.Println(programLines.Premises[intarray_k[localint_i]])
 
 Line5730: // 5730
 	localint_i++
@@ -352,9 +353,9 @@ Line5750: // 5750
 
 		idx := intarray_k[localint_i]
 		if localstring_l1 == "link" {
-			fmt.Println(programLines[idx])
+			fmt.Println(programLines.Premises[idx])
 		} else {
-			fmt.Printf("%d  ", programLines[idx].Number)
+			fmt.Printf("%d  ", programLines.Premises[idx].Number)
 			if intarray_r[idx] < 6 && symbolTable.Symbols[intarray_q[idx]].TermType == term.TypeDesignator {
 				intarray_r[idx] += 2
 			}
@@ -415,7 +416,7 @@ func basicGosub4760() {
 		if localint_j1 == 0 {
 			fmt.Printf("Line %d not found\n", localint_n)
 			break
-		} else if localint_n == programLines[localint_j1].Number {
+		} else if localint_n == programLines.Premises[localint_j1].Number {
 			intarray_a[0]--
 			intarray_a[intarray_a[0]] = localint_j1
 			intarray_l[localint_i] = intarray_l[localint_j1]
@@ -620,11 +621,11 @@ func basicGosub7460(analyze bool) {
 	//---list---
 	if !analyze {
 		for localint_i = intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
-			fmt.Println(programLines[localint_i])
+			fmt.Println(programLines.Premises[localint_i])
 		}
 	} else {
 		for localint_i = intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
-			line := programLines[localint_i]
+			line := programLines.Premises[localint_i]
 			if !line.Empty() {
 				fmt.Printf("%d  ", line.Number)
 
@@ -818,22 +819,22 @@ func basicGosub4530(s string) int {
 			break
 		}
 
-		if localint_n == programLines[localint_j1].Number {
+		if localint_n == programLines.Premises[localint_j1].Number {
 			basicGosub4890(localint_j1)
-			programLines[localint_j1] = &tui.ProgramLine{
+			programLines.Premises[localint_j1] = &tui.ProgramLine{
 				Number:    localint_n,
 				Statement: localstring_l,
 			}
 			return localint_j1
 		}
 
-		if localint_n < programLines[localint_j1].Number {
+		if localint_n < programLines.Premises[localint_j1].Number {
 			break
 		}
 	}
 
 	a1 := intarray_a[intarray_a[0]]
-	programLines[a1] = &tui.ProgramLine{
+	programLines.Premises[a1] = &tui.ProgramLine{
 		Number:    localint_n,
 		Statement: localstring_l,
 	}
