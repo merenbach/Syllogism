@@ -350,17 +350,18 @@ Line5750: // 5750
 
 	for localint_i = 1; localint_i <= localint_l; localint_i++ {
 
+		idx := intarray_k[localint_i]
 		if localstring_l1 == "link" {
-			fmt.Println(programLines[intarray_k[localint_i]])
+			fmt.Println(programLines[idx])
 		} else {
-			fmt.Printf("%d  ", programLines[intarray_k[localint_i]].Number)
-			if intarray_r[intarray_k[localint_i]] < 6 && symbolTable.Symbols[intarray_q[intarray_k[localint_i]]].TermType == term.TypeDesignator {
-				intarray_r[intarray_k[localint_i]] += 2
+			fmt.Printf("%d  ", programLines[idx].Number)
+			if intarray_r[idx] < 6 && symbolTable.Symbols[intarray_q[idx]].TermType == term.TypeDesignator {
+				intarray_r[idx] += 2
 			}
-			if intarray_r[intarray_k[localint_i]] < 4 {
-				fmt.Printf("%s  ", ssQuantifiers[intarray_r[intarray_k[localint_i]]])
+			if intarray_r[idx] < 4 {
+				fmt.Printf("%s  ", ssQuantifiers[intarray_r[idx]])
 			}
-			fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[intarray_p[intarray_k[localint_i]]].Term, ssCopulas[intarray_r[intarray_k[localint_i]]], symbolTable.Symbols[intarray_q[intarray_k[localint_i]]].Term, stringarray_z[intarray_r[intarray_k[localint_i]]])
+			fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[intarray_p[idx]].Term, ssCopulas[intarray_r[idx]], symbolTable.Symbols[intarray_q[idx]].Term, stringarray_z[intarray_r[idx]])
 		}
 	}
 }
