@@ -387,17 +387,15 @@ func basicGosub4890() {
 	}
 
 	reduceDistributionCount := func(k int) {
-		idx := intarray_j[k]
-
-		localsymbol := symbolTable.Symbols[idx]
-		localsymbol.Occurrences--
-		if localsymbol.Empty() {
-			localsymbol.Term = ""
-			localsymbol.ArticleType = article.TypeNone
-			localsymbol.TermType = term.TypeUndetermined
+		sym := symbolTable.Symbols[intarray_j[k]]
+		sym.Occurrences--
+		if sym.Empty() {
+			sym.Term = ""
+			sym.ArticleType = article.TypeNone
+			sym.TermType = term.TypeUndetermined
 		}
 
-		localsymbol.DistributionCount -= intarray_j[k+2]
+		sym.DistributionCount -= intarray_j[k+2]
 	}
 	reduceDistributionCount(1)
 	reduceDistributionCount(2)
