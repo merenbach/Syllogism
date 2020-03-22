@@ -31,6 +31,31 @@ func (t Form) IsNegative() bool {
 	return t%2 == 1
 }
 
+// Copula associated with this form.
+// TODO: add some tests!
+func (t Form) Copula() string {
+	switch t {
+	case SomeAIsB:
+		return "  is"
+	case SomeAIsNotB:
+		return "  is not"
+	case AllAIsB:
+		return "*  is"
+	case NoAIsB:
+		return "*  is"
+	case AIsT:
+		return "+  is"
+	case AIsNotT:
+		return "+  is not"
+	case 6: // TODO: identity
+		return "+  = "
+	case 7: // TODO: not equal identity (meant to be slash equals)
+		return "+   = / = "
+	default:
+		return ""
+	}
+}
+
 // func (t Type) String() string {
 // 	switch t {
 // 	case TypeGeneralTerm:

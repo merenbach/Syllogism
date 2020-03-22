@@ -77,7 +77,6 @@ var (
 	stringarray_s [7]string // appears to hold parsed line tokens
 	stringarray_w [3]string // appears to hold the most recently-input first and second terms for parsing or testing
 	ssQuantifiers [8]string
-	ssCopulas     [8]string
 	stringarray_z [8]string
 
 	localint_t1    int
@@ -361,7 +360,7 @@ Line5750: // 5750
 			if prem.Form < 4 {
 				fmt.Printf("%s  ", ssQuantifiers[prem.Form])
 			}
-			fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[intarray_p[idx]].Term, ssCopulas[prem.Form], symbolTable.Symbols[intarray_q[idx]].Term, stringarray_z[prem.Form])
+			fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[intarray_p[idx]].Term, prem.Form.Copula(), symbolTable.Symbols[intarray_q[idx]].Term, stringarray_z[prem.Form])
 		}
 	}
 }
@@ -641,7 +640,7 @@ func basicGosub7460(analyze bool) {
 					fmt.Printf("%s  ", ssQuantifiers[prem.Form])
 				}
 
-				fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[plocalinti].Term, ssCopulas[prem.Form], symbolTable.Symbols[qlocalinti].Term, stringarray_z[prem.Form])
+				fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[plocalinti].Term, prem.Form.Copula(), symbolTable.Symbols[qlocalinti].Term, stringarray_z[prem.Form])
 			}
 		}
 	}
@@ -1216,15 +1215,6 @@ func syllogize() {
 	ssQuantifiers[5] = ""
 	ssQuantifiers[6] = ""
 	ssQuantifiers[7] = ""
-
-	ssCopulas[0] = "  is"
-	ssCopulas[1] = "  is not"
-	ssCopulas[2] = "*  is"
-	ssCopulas[3] = "*  is"
-	ssCopulas[4] = "+  is"
-	ssCopulas[5] = "+  is not"
-	ssCopulas[6] = "+  = "
-	ssCopulas[7] = "+   = / = "
 
 	stringarray_z[0] = ""
 	stringarray_z[1] = "*"
