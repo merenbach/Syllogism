@@ -69,7 +69,6 @@ var (
 	intarray_p [basicDimMax]int
 	intarray_q [basicDimMax]int
 
-	intarray_r [basicDimMax]form.Form
 	intarray_k [basicDimMax]int
 	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
@@ -356,13 +355,14 @@ Line5750: // 5750
 			fmt.Println(programLines.Premises[idx])
 		} else {
 			fmt.Printf("%d  ", programLines.Premises[idx].Number)
-			if intarray_r[idx] < 6 && symbolTable.Symbols[intarray_q[idx]].TermType == term.TypeDesignator {
-				intarray_r[idx] += 2
+			prem := programLines.Premises[idx]
+			if prem.Form < 6 && symbolTable.Symbols[intarray_q[idx]].TermType == term.TypeDesignator {
+				prem.Form += 2
 			}
-			if intarray_r[idx] < 4 {
-				fmt.Printf("%s  ", ssQuantifiers[intarray_r[idx]])
+			if prem.Form < 4 {
+				fmt.Printf("%s  ", ssQuantifiers[prem.Form])
 			}
-			fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[intarray_p[idx]].Term, ssCopulas[intarray_r[idx]], symbolTable.Symbols[intarray_q[idx]].Term, stringarray_z[intarray_r[idx]])
+			fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[intarray_p[idx]].Term, ssCopulas[prem.Form], symbolTable.Symbols[intarray_q[idx]].Term, stringarray_z[prem.Form])
 		}
 	}
 }
@@ -375,14 +375,15 @@ func basicGosub4890(j1 int) {
 		qDecrement bool
 	)
 
-	if intarray_r[j1].IsNegative() {
+	prem := programLines.Premises[j1]
+	if prem.Form.IsNegative() {
 		symbolTable.NegativePremiseCount--
 		qDecrement = true
 	} else if symbolTable.Symbols[intarray_q[j1]].TermType == term.TypeDesignator {
 		qDecrement = true
 	}
 
-	if intarray_r[j1] >= 2 {
+	if prem.Form >= 2 {
 		pDecrement = true
 	}
 
@@ -629,19 +630,19 @@ func basicGosub7460(analyze bool) {
 			if !line.Empty() {
 				fmt.Printf("%d  ", line.Number)
 
-				if intarray_r[localint_i] < 6 && symbolTable.Symbols[intarray_q[localint_i]].TermType == term.TypeDesignator {
-					intarray_r[localint_i] += 2
+				prem := programLines.Premises[localint_i]
+				if prem.Form < 6 && symbolTable.Symbols[intarray_q[localint_i]].TermType == term.TypeDesignator {
+					prem.Form += 2
 				}
 
 				plocalinti := intarray_p[localint_i]
 				qlocalinti := intarray_q[localint_i]
-				rlocalinti := intarray_r[localint_i]
 
-				if rlocalinti < 4 {
-					fmt.Printf("%s  ", ssQuantifiers[rlocalinti])
+				if prem.Form < 4 {
+					fmt.Printf("%s  ", ssQuantifiers[prem.Form])
 				}
 
-				fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[plocalinti].Term, ssCopulas[rlocalinti], symbolTable.Symbols[qlocalinti].Term, stringarray_z[rlocalinti])
+				fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[plocalinti].Term, ssCopulas[prem.Form], symbolTable.Symbols[qlocalinti].Term, stringarray_z[prem.Form])
 			}
 		}
 	}
@@ -800,7 +801,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 		}
 	}
 
-	intarray_r[a1] = d1
+	programLines.Premises[a1].Form = d1
 }
 
 // basicGosub4530 enters the provided line (string with line number + statement) into the list.

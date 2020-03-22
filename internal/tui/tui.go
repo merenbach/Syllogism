@@ -5,6 +5,8 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+
+	"github.com/merenbach/syllogism/internal/form"
 )
 
 // A PremiseSet stores a list of all premises.
@@ -20,10 +22,12 @@ func NewPremiseSet(size int) *PremiseSet {
 }
 
 // ProgramLine stores a line number and program statement.
-// TODO: name premise
+// TODO: rename to Premise
+// TODO: store numbers with PremiseSet if possible
 type ProgramLine struct {
 	Number    int
 	Statement string
+	Form      form.Form
 }
 
 func (pl *ProgramLine) String() string {
