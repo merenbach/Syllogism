@@ -246,7 +246,8 @@ func basicGosub5070() {
 
 			for i := 1; i <= localint_c; i++ {
 				// TODO: use tabwriter here?
-				fmt.Printf("%s%s -- %s\n", basicTabString(6), symbolTable.Symbols[intarray_c[i]].Term, symbolTable.Symbols[intarray_c[i]].TermType)
+				sym := symbolTable.Symbols[intarray_c[i]]
+				fmt.Printf("%s%s -- %s\n", basicTabString(6), sym.Term, sym.TermType)
 			}
 		} else {
 			fmt.Println("   no terms occur exactly once in premises.")
