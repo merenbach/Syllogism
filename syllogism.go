@@ -18,7 +18,9 @@ package main
 * g(63)  => term type (index in g$ of term type), so anywhere we see g(N) => symbols(N).TermType
 * o(63)  => term occurrence count, so anywhere we see o(N) => symbols(N).Occurrences
 * d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
-* k(63)  => linking order??? (TODO: figure this out), currently premises(N).ExperimentalLinkingOrder
+* k(63)  => linking order??? (TODO: figure this out), currently premises.LinkOrder
+* p(63)  => subject indices? (TODO: figure this out), currently premises.SubjIndices
+* q(63)  => predicate indices? (TODO: figure this out), currently premises.PredIndices
 * x$(7)  => quantifiers for each form
 * y$(7)  => term A types for each form, followed by copulas for each form
 * z$(7)  => term B types for each form
@@ -69,8 +71,6 @@ var (
 	intarray_a [basicDimMax]int
 	intarray_c [basicDimMax]int
 	intarray_l [basicDimMax]int
-	intarray_p [basicDimMax]int // TODO: linking order for terms?
-	intarray_q [basicDimMax]int // TODO: linking order for terms?
 
 	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
@@ -262,7 +262,7 @@ func basicGosub5070() {
 
 	for {
 		localint_l++
-		premiseSet.Premises[localint_l].ExperimentalLinkingOrder = localint_i
+		premiseSet.LinkOrder[localint_l] = localint_i
 		localint_i = intarray_l[localint_i]
 
 		if localint_i == 0 {
@@ -285,17 +285,17 @@ Line5460: // 5460
 	localint_k = localint_i
 
 Line5470: // 5470
-	if intarray_p[premiseSet.Premises[localint_k].ExperimentalLinkingOrder] == localint_t {
-		localint_t = intarray_q[premiseSet.Premises[localint_k].ExperimentalLinkingOrder]
-	} else if intarray_q[premiseSet.Premises[localint_k].ExperimentalLinkingOrder] == localint_t {
-		localint_t = intarray_p[premiseSet.Premises[localint_k].ExperimentalLinkingOrder]
+	if premiseSet.SubjIndices[premiseSet.LinkOrder[localint_k]] == localint_t {
+		localint_t = premiseSet.PredIndices[premiseSet.LinkOrder[localint_k]]
+	} else if premiseSet.PredIndices[premiseSet.LinkOrder[localint_k]] == localint_t {
+		localint_t = premiseSet.SubjIndices[premiseSet.LinkOrder[localint_k]]
 	} else {
 		localint_k++
 		if localint_k <= localint_l {
 			goto Line5470
 		}
 
-		localint_t = intarray_q[premiseSet.Premises[localint_i].ExperimentalLinkingOrder]
+		localint_t = premiseSet.PredIndices[premiseSet.LinkOrder[localint_i]]
 
 		if localint_j1 > 0 {
 			goto Line5700
@@ -308,15 +308,15 @@ Line5470: // 5470
 
 	if localint_k != localint_i {
 		localint_n = 1
-		intarray_h[1] = premiseSet.Premises[localint_i].ExperimentalLinkingOrder
+		intarray_h[1] = premiseSet.LinkOrder[localint_i]
 
 		for m := localint_i; m <= localint_k-1; m++ {
 			localint_n = 3 - localint_n
-			intarray_h[localint_n] = premiseSet.Premises[m+1].ExperimentalLinkingOrder
-			premiseSet.Premises[m+1].ExperimentalLinkingOrder = intarray_h[3-localint_n]
+			intarray_h[localint_n] = premiseSet.LinkOrder[m+1]
+			premiseSet.LinkOrder[m+1] = intarray_h[3-localint_n]
 		}
 
-		premiseSet.Premises[localint_i].ExperimentalLinkingOrder = intarray_h[localint_n]
+		premiseSet.LinkOrder[localint_i] = intarray_h[localint_n]
 	}
 
 	if localint_j1 != 0 {
@@ -329,7 +329,7 @@ Line5700: // 5700
 	fmt.Println("closed loop in the term chain within the premise set--")
 
 Line5710: // 5710
-	fmt.Println(premiseSet.Premises[premiseSet.Premises[localint_i].ExperimentalLinkingOrder])
+	fmt.Println(premiseSet.Premises[premiseSet.LinkOrder[localint_i]])
 
 Line5730: // 5730
 	localint_i++
@@ -349,19 +349,19 @@ Line5750: // 5750
 
 	for localint_i = 1; localint_i <= localint_l; localint_i++ {
 
-		idx := premiseSet.Premises[localint_i].ExperimentalLinkingOrder
+		idx := premiseSet.LinkOrder[localint_i]
 		if localstring_l1 == "link" {
 			fmt.Println(premiseSet.Premises[idx])
 		} else {
 			fmt.Printf("%d  ", premiseSet.Premises[idx].Number)
 			prem := premiseSet.Premises[idx]
-			if prem.Form < 6 && symbolTable.Symbols[intarray_q[idx]].TermType == term.TypeDesignator {
+			if prem.Form < 6 && symbolTable.Symbols[premiseSet.PredIndices[idx]].TermType == term.TypeDesignator {
 				prem.Form += 2
 			}
 			if prem.Form < 4 {
 				fmt.Printf("%s  ", prem.Form.Quantifier())
 			}
-			fmt.Printf("%s%s%s  %s%s\n", symbolTable.Symbols[intarray_p[idx]].Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), symbolTable.Symbols[intarray_q[idx]].Term, prem.Form.SymbolForTermB())
+			fmt.Printf("%s%s%s  %s%s\n", symbolTable.Symbols[premiseSet.SubjIndices[idx]].Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), symbolTable.Symbols[premiseSet.PredIndices[idx]].Term, prem.Form.SymbolForTermB())
 		}
 	}
 }
@@ -378,7 +378,7 @@ func basicGosub4890(j1 int) {
 	if prem.Form.IsNegative() {
 		symbolTable.NegativePremiseCount--
 		qDecrement = true
-	} else if symbolTable.Symbols[intarray_q[j1]].TermType == term.TypeDesignator {
+	} else if symbolTable.Symbols[premiseSet.PredIndices[j1]].TermType == term.TypeDesignator {
 		qDecrement = true
 	}
 
@@ -399,8 +399,8 @@ func basicGosub4890(j1 int) {
 			sym.DistributionCount--
 		}
 	}
-	reduceDistributionCount(intarray_p[j1], pDecrement)
-	reduceDistributionCount(intarray_q[j1], qDecrement)
+	reduceDistributionCount(premiseSet.SubjIndices[j1], pDecrement)
+	reduceDistributionCount(premiseSet.PredIndices[j1], qDecrement)
 }
 
 func basicGosub4760() {
@@ -630,12 +630,12 @@ func basicGosub7460(analyze bool) {
 				fmt.Printf("%d  ", line.Number)
 
 				prem := premiseSet.Premises[localint_i]
-				if prem.Form < 6 && symbolTable.Symbols[intarray_q[localint_i]].TermType == term.TypeDesignator {
+				if prem.Form < 6 && symbolTable.Symbols[premiseSet.PredIndices[localint_i]].TermType == term.TypeDesignator {
 					prem.Form += 2
 				}
 
-				plocalinti := intarray_p[localint_i]
-				qlocalinti := intarray_q[localint_i]
+				plocalinti := premiseSet.SubjIndices[localint_i]
+				qlocalinti := premiseSet.PredIndices[localint_i]
 
 				if prem.Form < 4 {
 					fmt.Printf("%s  ", prem.Form.Quantifier())
@@ -768,7 +768,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 	Line3810: // 3810
 		if localint_j != 2 {
 
-			intarray_p[a1] = localint_i1
+			premiseSet.SubjIndices[a1] = localint_i1
 
 			if d1 >= 2 {
 				symbolTable.Symbols[localint_i1].DistributionCount++
@@ -776,9 +776,9 @@ func basicGosub3400(d1 form.Form, a1 int) {
 
 		} else {
 
-			intarray_q[a1] = localint_i1
+			premiseSet.PredIndices[a1] = localint_i1
 
-			if intarray_p[a1] == intarray_q[a1] {
+			if premiseSet.SubjIndices[a1] == premiseSet.PredIndices[a1] {
 				if msg {
 					fmt.Printf("Warning: same term occurs twice in line %s\n", stringarray_s[1])
 				}

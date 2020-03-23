@@ -8,13 +8,19 @@ import (
 
 // A PremiseSet stores a list of all premises.
 type PremiseSet struct {
-	Premises []*Premise
+	Premises    []*Premise
+	SubjIndices []int
+	PredIndices []int
+	LinkOrder   []int
 }
 
 // NewPremiseSet creates a new premise set with the given size.
 func NewPremiseSet(size int) *PremiseSet {
 	return &PremiseSet{
-		Premises: make([]*Premise, size),
+		Premises:    make([]*Premise, size),
+		SubjIndices: make([]int, size),
+		PredIndices: make([]int, size),
+		LinkOrder:   make([]int, size),
 	}
 }
 
