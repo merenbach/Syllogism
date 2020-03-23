@@ -775,13 +775,18 @@ func basicGosub3400(d1 form.Form, a1 int) {
 
 			premiseSet.SubjIndices[a1] = localint_i1
 
+			subj := symbolTable.Symbols[localint_i1]
+			premiseSet.Premises[a1].Subject = subj
+
 			if d1 >= 2 {
-				symbolTable.Symbols[localint_i1].DistributionCount++
+				subj.DistributionCount++
 			}
 
 		} else {
 
 			premiseSet.PredIndices[a1] = localint_i1
+			pred := symbolTable.Symbols[localint_i1]
+			premiseSet.Premises[a1].Predicate = pred
 
 			if premiseSet.SubjIndices[a1] == premiseSet.PredIndices[a1] {
 				if msg {
@@ -789,12 +794,12 @@ func basicGosub3400(d1 form.Form, a1 int) {
 				}
 			}
 
-			if symbolTable.Symbols[localint_i1].TermType == term.TypeDesignator {
+			if pred.TermType == term.TypeDesignator {
 				d1 += 2
 			}
 
 			if d1 == 6 || d1.IsNegative() {
-				symbolTable.Symbols[localint_i1].DistributionCount++
+				pred.DistributionCount++
 			}
 		}
 

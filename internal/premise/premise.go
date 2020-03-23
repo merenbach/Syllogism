@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/merenbach/syllogism/internal/form"
+	"github.com/merenbach/syllogism/internal/symbol"
 )
 
 // A PremiseSet stores a list of all premises.
@@ -31,6 +32,8 @@ type Premise struct {
 	Statement                string
 	Form                     form.Form
 	ExperimentalLinkingOrder int
+	Subject                  *symbol.Symbol
+	Predicate                *symbol.Symbol
 }
 
 func (pr *Premise) String() string {
