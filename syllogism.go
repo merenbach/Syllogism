@@ -18,10 +18,11 @@ package main
 * g(63)  => term type (index in g$ of term type), so anywhere we see g(N) => symbols(N).TermType
 * o(63)  => term occurrence count, so anywhere we see o(N) => symbols(N).Occurrences
 * d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
+* k(63)  => linking order??? (TODO: figure this out), currently premises(N).ExperimentalLinkingOrder
 * x$(7)  => quantifiers for each form
 * y$(7)  => term A types for each form, followed by copulas for each form
 * z$(7)  => term B types for each form
-* r(63)  => forms for each premise
+* r(63)  => forms for each premise, currently premises(N).Form
 * g$(2)  => term type names
 * e(2)   => article type (index in a$ of article type)
 * a$(3)  => article type names
@@ -54,12 +55,12 @@ import (
 	"github.com/merenbach/syllogism/internal/article"
 	"github.com/merenbach/syllogism/internal/form"
 	"github.com/merenbach/syllogism/internal/help"
+	"github.com/merenbach/syllogism/internal/premise"
 	"github.com/merenbach/syllogism/internal/stringutil"
 	"github.com/merenbach/syllogism/internal/symbol"
 	"github.com/merenbach/syllogism/internal/symboltable"
 	"github.com/merenbach/syllogism/internal/term"
 	"github.com/merenbach/syllogism/internal/token"
-	"github.com/merenbach/syllogism/internal/tui"
 )
 
 const basicDimMax = 64
@@ -68,10 +69,9 @@ var (
 	intarray_a [basicDimMax]int
 	intarray_c [basicDimMax]int
 	intarray_l [basicDimMax]int
-	intarray_p [basicDimMax]int
-	intarray_q [basicDimMax]int
+	intarray_p [basicDimMax]int // TODO: linking order for terms?
+	intarray_q [basicDimMax]int // TODO: linking order for terms?
 
-	intarray_k [basicDimMax]int
 	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
 
@@ -103,7 +103,7 @@ var (
 	localstring_t  string
 	localstring_w  string
 
-	programLines = tui.NewPremiseSet(basicDimMax)
+	programLines = premise.NewPremiseSet(basicDimMax)
 
 	msg bool
 )
@@ -262,7 +262,7 @@ func basicGosub5070() {
 
 	for {
 		localint_l++
-		intarray_k[localint_l] = localint_i
+		programLines.Premises[localint_l].ExperimentalLinkingOrder = localint_i
 		localint_i = intarray_l[localint_i]
 
 		if localint_i == 0 {
@@ -285,17 +285,17 @@ Line5460: // 5460
 	localint_k = localint_i
 
 Line5470: // 5470
-	if intarray_p[intarray_k[localint_k]] == localint_t {
-		localint_t = intarray_q[intarray_k[localint_k]]
-	} else if intarray_q[intarray_k[localint_k]] == localint_t {
-		localint_t = intarray_p[intarray_k[localint_k]]
+	if intarray_p[programLines.Premises[localint_k].ExperimentalLinkingOrder] == localint_t {
+		localint_t = intarray_q[programLines.Premises[localint_k].ExperimentalLinkingOrder]
+	} else if intarray_q[programLines.Premises[localint_k].ExperimentalLinkingOrder] == localint_t {
+		localint_t = intarray_p[programLines.Premises[localint_k].ExperimentalLinkingOrder]
 	} else {
 		localint_k++
 		if localint_k <= localint_l {
 			goto Line5470
 		}
 
-		localint_t = intarray_q[intarray_k[localint_i]]
+		localint_t = intarray_q[programLines.Premises[localint_i].ExperimentalLinkingOrder]
 
 		if localint_j1 > 0 {
 			goto Line5700
@@ -308,15 +308,15 @@ Line5470: // 5470
 
 	if localint_k != localint_i {
 		localint_n = 1
-		intarray_h[1] = intarray_k[localint_i]
+		intarray_h[1] = programLines.Premises[localint_i].ExperimentalLinkingOrder
 
 		for m := localint_i; m <= localint_k-1; m++ {
 			localint_n = 3 - localint_n
-			intarray_h[localint_n] = intarray_k[m+1]
-			intarray_k[m+1] = intarray_h[3-localint_n]
+			intarray_h[localint_n] = programLines.Premises[m+1].ExperimentalLinkingOrder
+			programLines.Premises[m+1].ExperimentalLinkingOrder = intarray_h[3-localint_n]
 		}
 
-		intarray_k[localint_i] = intarray_h[localint_n]
+		programLines.Premises[localint_i].ExperimentalLinkingOrder = intarray_h[localint_n]
 	}
 
 	if localint_j1 != 0 {
@@ -329,7 +329,7 @@ Line5700: // 5700
 	fmt.Println("closed loop in the term chain within the premise set--")
 
 Line5710: // 5710
-	fmt.Println(programLines.Premises[intarray_k[localint_i]])
+	fmt.Println(programLines.Premises[programLines.Premises[localint_i].ExperimentalLinkingOrder])
 
 Line5730: // 5730
 	localint_i++
@@ -349,7 +349,7 @@ Line5750: // 5750
 
 	for localint_i = 1; localint_i <= localint_l; localint_i++ {
 
-		idx := intarray_k[localint_i]
+		idx := programLines.Premises[localint_i].ExperimentalLinkingOrder
 		if localstring_l1 == "link" {
 			fmt.Println(programLines.Premises[idx])
 		} else {
@@ -821,7 +821,7 @@ func basicGosub4530(s string) int {
 
 		if localint_n == programLines.Premises[localint_j1].Number {
 			basicGosub4890(localint_j1)
-			programLines.Premises[localint_j1] = &tui.ProgramLine{
+			programLines.Premises[localint_j1] = &premise.Premise{
 				Number:    localint_n,
 				Statement: localstring_l,
 			}
@@ -834,7 +834,7 @@ func basicGosub4530(s string) int {
 	}
 
 	a1 := intarray_a[intarray_a[0]]
-	programLines.Premises[a1] = &tui.ProgramLine{
+	programLines.Premises[a1] = &premise.Premise{
 		Number:    localint_n,
 		Statement: localstring_l,
 	}
