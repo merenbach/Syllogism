@@ -94,7 +94,6 @@ var (
 	localint_n     int
 	localint_p1    term.Type
 	localint_s     int
-	localint_t     int
 	localint_v1    int
 	localstring_l  string
 	localstring_l1 string
@@ -210,6 +209,7 @@ func basicGosub5070() {
 	// 5070
 	//---See if syllogism---
 	var intarray_h [3]int
+	var temp_symbol *symbol.Symbol
 
 	localint_j1 = 0
 	localint_v1 = 0 // flag for modern validity
@@ -275,9 +275,9 @@ func basicGosub5070() {
 	}
 
 	if symbolTable.Symbols[intarray_c[1]].DistributionCount == 0 && symbolTable.Symbols[intarray_c[2]].DistributionCount == 1 {
-		localint_t = intarray_c[2]
+		temp_symbol = symbolTable.Symbols[intarray_c[2]]
 	} else {
-		localint_t = intarray_c[1]
+		temp_symbol = symbolTable.Symbols[intarray_c[1]]
 	}
 	localint_i = 1
 
@@ -285,17 +285,17 @@ Line5460: // 5460
 	localint_k = localint_i
 
 Line5470: // 5470
-	if premiseSet.SubjIndices[premiseSet.LinkOrder[localint_k]] == localint_t {
-		localint_t = premiseSet.PredIndices[premiseSet.LinkOrder[localint_k]]
-	} else if premiseSet.PredIndices[premiseSet.LinkOrder[localint_k]] == localint_t {
-		localint_t = premiseSet.SubjIndices[premiseSet.LinkOrder[localint_k]]
+	if premiseSet.Premises[premiseSet.LinkOrder[localint_k]].Subject == temp_symbol {
+		temp_symbol = premiseSet.Premises[premiseSet.LinkOrder[localint_k]].Predicate
+	} else if premiseSet.Premises[premiseSet.LinkOrder[localint_k]].Predicate == temp_symbol {
+		temp_symbol = premiseSet.Premises[premiseSet.LinkOrder[localint_k]].Subject
 	} else {
 		localint_k++
 		if localint_k <= localint_l {
 			goto Line5470
 		}
 
-		localint_t = premiseSet.PredIndices[premiseSet.LinkOrder[localint_i]]
+		temp_symbol = premiseSet.Premises[premiseSet.LinkOrder[localint_i]].Predicate
 
 		if localint_j1 > 0 {
 			goto Line5700
