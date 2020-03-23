@@ -511,13 +511,13 @@ func basicGosub6630() {
 		stringarray_w[1] = localstring_w
 	} else {
 		symbolIsUndeterminedTerm := func(j int) bool {
-			sym := symbolTable.Symbols[intarray_c[localint_j]]
+			sym := symbolTable.Symbols[intarray_c[j]]
 			if localstring_w == sym.Term {
 				switch sym.TermType {
 				case term.TypeUndetermined:
 					fmt.Printf("Note: %q used in premises taken to be %s\n", sym.Term, termType1)
 					return true
-				case sym.TermType:
+				case termType1:
 					return true
 				}
 			}
