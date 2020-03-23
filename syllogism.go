@@ -355,13 +355,13 @@ Line5750: // 5750
 		} else {
 			fmt.Printf("%d  ", premiseSet.Premises[idx].Number)
 			prem := premiseSet.Premises[idx]
-			if prem.Form < 6 && symbolTable.Symbols[premiseSet.PredIndices[idx]].TermType == term.TypeDesignator {
+			if prem.Form < 6 && premiseSet.Premises[idx].Predicate.TermType == term.TypeDesignator {
 				prem.Form += 2
 			}
 			if prem.Form < 4 {
 				fmt.Printf("%s  ", prem.Form.Quantifier())
 			}
-			fmt.Printf("%s%s%s  %s%s\n", symbolTable.Symbols[premiseSet.SubjIndices[idx]].Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), symbolTable.Symbols[premiseSet.PredIndices[idx]].Term, prem.Form.SymbolForTermB())
+			fmt.Printf("%s%s%s  %s%s\n", premiseSet.Premises[idx].Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), premiseSet.Premises[idx].Predicate.Term, prem.Form.SymbolForTermB())
 		}
 	}
 }
@@ -378,7 +378,7 @@ func basicGosub4890(j1 int) {
 	if prem.Form.IsNegative() {
 		symbolTable.NegativePremiseCount--
 		qDecrement = true
-	} else if symbolTable.Symbols[premiseSet.PredIndices[j1]].TermType == term.TypeDesignator {
+	} else if premiseSet.Premises[j1].Predicate.TermType == term.TypeDesignator {
 		qDecrement = true
 	}
 
@@ -635,7 +635,7 @@ func basicGosub7460(analyze bool) {
 				fmt.Printf("%d  ", line.Number)
 
 				prem := premiseSet.Premises[localint_i]
-				if prem.Form < 6 && symbolTable.Symbols[premiseSet.PredIndices[localint_i]].TermType == term.TypeDesignator {
+				if prem.Form < 6 && premiseSet.Premises[localint_i].Predicate.TermType == term.TypeDesignator {
 					prem.Form += 2
 				}
 
