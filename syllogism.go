@@ -103,7 +103,7 @@ var (
 	localstring_t  string
 	localstring_w  string
 
-	programLines = premise.NewPremiseSet(basicDimMax)
+	premiseSet = premise.NewPremiseSet(basicDimMax)
 
 	msg bool
 )
@@ -262,7 +262,7 @@ func basicGosub5070() {
 
 	for {
 		localint_l++
-		programLines.Premises[localint_l].ExperimentalLinkingOrder = localint_i
+		premiseSet.Premises[localint_l].ExperimentalLinkingOrder = localint_i
 		localint_i = intarray_l[localint_i]
 
 		if localint_i == 0 {
@@ -285,17 +285,17 @@ Line5460: // 5460
 	localint_k = localint_i
 
 Line5470: // 5470
-	if intarray_p[programLines.Premises[localint_k].ExperimentalLinkingOrder] == localint_t {
-		localint_t = intarray_q[programLines.Premises[localint_k].ExperimentalLinkingOrder]
-	} else if intarray_q[programLines.Premises[localint_k].ExperimentalLinkingOrder] == localint_t {
-		localint_t = intarray_p[programLines.Premises[localint_k].ExperimentalLinkingOrder]
+	if intarray_p[premiseSet.Premises[localint_k].ExperimentalLinkingOrder] == localint_t {
+		localint_t = intarray_q[premiseSet.Premises[localint_k].ExperimentalLinkingOrder]
+	} else if intarray_q[premiseSet.Premises[localint_k].ExperimentalLinkingOrder] == localint_t {
+		localint_t = intarray_p[premiseSet.Premises[localint_k].ExperimentalLinkingOrder]
 	} else {
 		localint_k++
 		if localint_k <= localint_l {
 			goto Line5470
 		}
 
-		localint_t = intarray_q[programLines.Premises[localint_i].ExperimentalLinkingOrder]
+		localint_t = intarray_q[premiseSet.Premises[localint_i].ExperimentalLinkingOrder]
 
 		if localint_j1 > 0 {
 			goto Line5700
@@ -308,15 +308,15 @@ Line5470: // 5470
 
 	if localint_k != localint_i {
 		localint_n = 1
-		intarray_h[1] = programLines.Premises[localint_i].ExperimentalLinkingOrder
+		intarray_h[1] = premiseSet.Premises[localint_i].ExperimentalLinkingOrder
 
 		for m := localint_i; m <= localint_k-1; m++ {
 			localint_n = 3 - localint_n
-			intarray_h[localint_n] = programLines.Premises[m+1].ExperimentalLinkingOrder
-			programLines.Premises[m+1].ExperimentalLinkingOrder = intarray_h[3-localint_n]
+			intarray_h[localint_n] = premiseSet.Premises[m+1].ExperimentalLinkingOrder
+			premiseSet.Premises[m+1].ExperimentalLinkingOrder = intarray_h[3-localint_n]
 		}
 
-		programLines.Premises[localint_i].ExperimentalLinkingOrder = intarray_h[localint_n]
+		premiseSet.Premises[localint_i].ExperimentalLinkingOrder = intarray_h[localint_n]
 	}
 
 	if localint_j1 != 0 {
@@ -329,7 +329,7 @@ Line5700: // 5700
 	fmt.Println("closed loop in the term chain within the premise set--")
 
 Line5710: // 5710
-	fmt.Println(programLines.Premises[programLines.Premises[localint_i].ExperimentalLinkingOrder])
+	fmt.Println(premiseSet.Premises[premiseSet.Premises[localint_i].ExperimentalLinkingOrder])
 
 Line5730: // 5730
 	localint_i++
@@ -349,12 +349,12 @@ Line5750: // 5750
 
 	for localint_i = 1; localint_i <= localint_l; localint_i++ {
 
-		idx := programLines.Premises[localint_i].ExperimentalLinkingOrder
+		idx := premiseSet.Premises[localint_i].ExperimentalLinkingOrder
 		if localstring_l1 == "link" {
-			fmt.Println(programLines.Premises[idx])
+			fmt.Println(premiseSet.Premises[idx])
 		} else {
-			fmt.Printf("%d  ", programLines.Premises[idx].Number)
-			prem := programLines.Premises[idx]
+			fmt.Printf("%d  ", premiseSet.Premises[idx].Number)
+			prem := premiseSet.Premises[idx]
 			if prem.Form < 6 && symbolTable.Symbols[intarray_q[idx]].TermType == term.TypeDesignator {
 				prem.Form += 2
 			}
@@ -374,7 +374,7 @@ func basicGosub4890(j1 int) {
 		qDecrement bool
 	)
 
-	prem := programLines.Premises[j1]
+	prem := premiseSet.Premises[j1]
 	if prem.Form.IsNegative() {
 		symbolTable.NegativePremiseCount--
 		qDecrement = true
@@ -416,7 +416,7 @@ func basicGosub4760() {
 		if localint_j1 == 0 {
 			fmt.Printf("Line %d not found\n", localint_n)
 			break
-		} else if localint_n == programLines.Premises[localint_j1].Number {
+		} else if localint_n == premiseSet.Premises[localint_j1].Number {
 			intarray_a[0]--
 			intarray_a[intarray_a[0]] = localint_j1
 			intarray_l[localint_i] = intarray_l[localint_j1]
@@ -621,15 +621,15 @@ func basicGosub7460(analyze bool) {
 	//---list---
 	if !analyze {
 		for localint_i = intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
-			fmt.Println(programLines.Premises[localint_i])
+			fmt.Println(premiseSet.Premises[localint_i])
 		}
 	} else {
 		for localint_i = intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
-			line := programLines.Premises[localint_i]
+			line := premiseSet.Premises[localint_i]
 			if !line.Empty() {
 				fmt.Printf("%d  ", line.Number)
 
-				prem := programLines.Premises[localint_i]
+				prem := premiseSet.Premises[localint_i]
 				if prem.Form < 6 && symbolTable.Symbols[intarray_q[localint_i]].TermType == term.TypeDesignator {
 					prem.Form += 2
 				}
@@ -800,7 +800,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 		}
 	}
 
-	programLines.Premises[a1].Form = d1
+	premiseSet.Premises[a1].Form = d1
 }
 
 // basicGosub4530 enters the provided line (string with line number + statement) into the list.
@@ -819,22 +819,22 @@ func basicGosub4530(s string) int {
 			break
 		}
 
-		if localint_n == programLines.Premises[localint_j1].Number {
+		if localint_n == premiseSet.Premises[localint_j1].Number {
 			basicGosub4890(localint_j1)
-			programLines.Premises[localint_j1] = &premise.Premise{
+			premiseSet.Premises[localint_j1] = &premise.Premise{
 				Number:    localint_n,
 				Statement: localstring_l,
 			}
 			return localint_j1
 		}
 
-		if localint_n < programLines.Premises[localint_j1].Number {
+		if localint_n < premiseSet.Premises[localint_j1].Number {
 			break
 		}
 	}
 
 	a1 := intarray_a[intarray_a[0]]
-	programLines.Premises[a1] = &premise.Premise{
+	premiseSet.Premises[a1] = &premise.Premise{
 		Number:    localint_n,
 		Statement: localstring_l,
 	}
