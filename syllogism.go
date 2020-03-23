@@ -19,8 +19,8 @@ package main
 * o(63)  => term occurrence count, so anywhere we see o(N) => symbols(N).Occurrences
 * d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
 * k(63)  => linking order??? (TODO: figure this out), currently premises.LinkOrder
-* p(63)  => subject indices? (TODO: figure this out), currently premises.SubjIndices
-* q(63)  => predicate indices? (TODO: figure this out), currently premises.PredIndices
+* p(63)  => index of subject in symbol table for premise at given index, currently premises(N).Symbol
+* q(63)  => index of predicate in symbol table for premise at given index, currently premises(N).Symbol
 * x$(7)  => quantifiers for each form
 * y$(7)  => term A types for each form, followed by copulas for each form
 * z$(7)  => term B types for each form
@@ -386,8 +386,7 @@ func basicGosub4890(j1 int) {
 		pDecrement = true
 	}
 
-	reduceDistributionCount := func(k int, decrement bool) {
-		sym := symbolTable.Symbols[k]
+	reduceDistributionCount := func(sym *symbol.Symbol, decrement bool) {
 		sym.Occurrences--
 		if sym.Empty() {
 			sym.Term = ""
@@ -399,8 +398,8 @@ func basicGosub4890(j1 int) {
 			sym.DistributionCount--
 		}
 	}
-	reduceDistributionCount(premiseSet.SubjIndices[j1], pDecrement)
-	reduceDistributionCount(premiseSet.PredIndices[j1], qDecrement)
+	reduceDistributionCount(premiseSet.Premises[j1].Subject, pDecrement)
+	reduceDistributionCount(premiseSet.Premises[j1].Predicate, qDecrement)
 }
 
 func basicGosub4760() {
@@ -639,14 +638,11 @@ func basicGosub7460(analyze bool) {
 					prem.Form += 2
 				}
 
-				plocalinti := premiseSet.SubjIndices[localint_i]
-				qlocalinti := premiseSet.PredIndices[localint_i]
-
 				if prem.Form < 4 {
 					fmt.Printf("%s  ", prem.Form.Quantifier())
 				}
 
-				fmt.Printf("%s%s%s  %s%s\n", symbolTable.Symbols[plocalinti].Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), symbolTable.Symbols[qlocalinti].Term, prem.Form.SymbolForTermB())
+				fmt.Printf("%s%s%s  %s%s\n", premiseSet.Premises[localint_i].Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), premiseSet.Premises[localint_i].Predicate.Term, prem.Form.SymbolForTermB())
 			}
 		}
 	}
@@ -772,9 +768,6 @@ func basicGosub3400(d1 form.Form, a1 int) {
 
 	Line3810: // 3810
 		if localint_j != 2 {
-
-			premiseSet.SubjIndices[a1] = localint_i1
-
 			subj := symbolTable.Symbols[localint_i1]
 			premiseSet.Premises[a1].Subject = subj
 
@@ -783,12 +776,11 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			}
 
 		} else {
-
-			premiseSet.PredIndices[a1] = localint_i1
 			pred := symbolTable.Symbols[localint_i1]
 			premiseSet.Premises[a1].Predicate = pred
 
-			if premiseSet.SubjIndices[a1] == premiseSet.PredIndices[a1] {
+			prem := premiseSet.Premises[a1]
+			if prem.Subject == prem.Predicate {
 				if msg {
 					fmt.Printf("Warning: same term occurs twice in line %s\n", stringarray_s[1])
 				}
