@@ -18,6 +18,9 @@ package main
 * g(63)  => term type (index in g$ of term type), so anywhere we see g(N) => symbols(N).TermType
 * o(63)  => term occurrence count, so anywhere we see o(N) => symbols(N).Occurrences
 * d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
+* x$(7)  => quantifiers for each form
+* y$(7)  => term A types for each form, followed by copulas for each form
+* z$(7)  => term B types for each form
 * r(63)  => forms for each premise
 * g$(2)  => term type names
 * e(2)   => article type (index in a$ of article type)
@@ -76,7 +79,6 @@ var (
 
 	stringarray_s [7]string // appears to hold parsed line tokens
 	stringarray_w [3]string // appears to hold the most recently-input first and second terms for parsing or testing
-	stringarray_z [8]string
 
 	localint_t1    int
 	localint_t2    int
@@ -359,7 +361,7 @@ Line5750: // 5750
 			if prem.Form < 4 {
 				fmt.Printf("%s  ", prem.Form.Quantifier())
 			}
-			fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[intarray_p[idx]].Term, prem.Form.Copula(), symbolTable.Symbols[intarray_q[idx]].Term, stringarray_z[prem.Form])
+			fmt.Printf("%s%s%s  %s%s\n", symbolTable.Symbols[intarray_p[idx]].Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), symbolTable.Symbols[intarray_q[idx]].Term, prem.Form.SymbolForTermB())
 		}
 	}
 }
@@ -639,7 +641,7 @@ func basicGosub7460(analyze bool) {
 					fmt.Printf("%s  ", prem.Form.Quantifier())
 				}
 
-				fmt.Printf("%s%s  %s%s\n", symbolTable.Symbols[plocalinti].Term, prem.Form.Copula(), symbolTable.Symbols[qlocalinti].Term, stringarray_z[prem.Form])
+				fmt.Printf("%s%s%s  %s%s\n", symbolTable.Symbols[plocalinti].Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), symbolTable.Symbols[qlocalinti].Term, prem.Form.SymbolForTermB())
 			}
 		}
 	}
@@ -1205,15 +1207,6 @@ func syllogize() {
 
 	help.ShowCopyright()
 	fmt.Println()
-
-	stringarray_z[0] = ""
-	stringarray_z[1] = "*"
-	stringarray_z[2] = ""
-	stringarray_z[3] = "*"
-	stringarray_z[4] = ""
-	stringarray_z[5] = "*"
-	stringarray_z[6] = "+"
-	stringarray_z[7] = "*"
 
 	/*
 

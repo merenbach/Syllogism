@@ -32,6 +32,8 @@ func (t Form) IsNegative() bool {
 }
 
 // Copula associated with this form.
+// * => general term
+// + => designator
 // TODO: add some tests!
 func (t Form) Copula() string {
 	switch t {
@@ -40,17 +42,17 @@ func (t Form) Copula() string {
 	case SomeAIsNotB:
 		return "  is not"
 	case AllAIsB:
-		return "*  is"
+		return "  is"
 	case NoAIsB:
-		return "*  is"
+		return "  is"
 	case AIsT:
-		return "+  is"
+		return "  is"
 	case AIsNotT:
-		return "+  is not"
+		return "  is not"
 	case 6: // TODO: identity
-		return "+  = "
+		return "  = "
 	case 7: // TODO: not equal identity (meant to be slash equals)
-		return "+   = / = "
+		return "   = / = "
 	default:
 		return ""
 	}
@@ -76,6 +78,61 @@ func (t Form) Quantifier() string {
 		return ""
 	case 7:
 		return ""
+	default:
+		return ""
+	}
+}
+
+// SymbolForTermA returns a symbol for term A associated with this form.
+// * => general term
+// + => designator
+// TODO: add some tests!
+func (t Form) SymbolForTermA() string {
+	switch t {
+	case SomeAIsB:
+		return ""
+	case SomeAIsNotB:
+		return ""
+	case AllAIsB:
+		return "*"
+	case NoAIsB:
+		return "*"
+	case AIsT:
+		return "+"
+	case AIsNotT:
+		return "+"
+	case 6: // TODO: identity
+		return "+"
+	case 7: // TODO: not equal identity (meant to be slash equals)
+		return "+"
+	default:
+		return ""
+	}
+}
+
+// SymbolForTermB returns a symbol for term B associated with this form.
+// * => general term?
+// + => designator?
+// TODO: figure this out
+// TODO: add some tests
+func (t Form) SymbolForTermB() string {
+	switch t {
+	case SomeAIsB:
+		return ""
+	case SomeAIsNotB:
+		return "*"
+	case AllAIsB:
+		return ""
+	case NoAIsB:
+		return "*"
+	case AIsT:
+		return ""
+	case AIsNotT:
+		return "*"
+	case 6:
+		return "+"
+	case 7:
+		return "*"
 	default:
 		return ""
 	}
