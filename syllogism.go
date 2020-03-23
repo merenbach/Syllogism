@@ -510,26 +510,23 @@ func basicGosub6630() {
 	if localint_j1 != 0 {
 		stringarray_w[1] = localstring_w
 	} else {
-		symbolIsUndeterminedTerm := func(j int) bool {
-			sym := symbolTable.Symbols[intarray_c[j]]
-			if localstring_w == sym.Term {
-				switch sym.TermType {
-				case term.TypeUndetermined:
-					fmt.Printf("Note: %q used in premises taken to be %s\n", sym.Term, termType1)
-					return true
-				case termType1:
-					return true
+		for localint_j = 1; localint_j <= 2; localint_j++ {
+			symbol := symbolTable.Symbols[intarray_c[localint_j]]
+			if localstring_w == symbol.Term {
+				if symbol.TermType == term.TypeUndetermined {
+					fmt.Printf("Note: %q used in premises taken to be %s\n", symbol.Term, termType1)
+					goto Line6840
+				} else if termType1 == symbol.TermType {
+					goto Line6840
 				}
 			}
-			return false
 		}
 
-		if !symbolIsUndeterminedTerm(1) && !symbolIsUndeterminedTerm(2) {
-			fmt.Printf("** Conclusion may not contain %s %q.\n", termType1, localstring_w)
-			localint_j = 0
-		}
+		fmt.Printf("** Conclusion may not contain %s %q.\n", termType1, localstring_w)
+		localint_j = 0
 	}
 
+Line6840: // 6840
 	localstring_w = stringutil.Singularize(stringarray_w[2])
 	if localint_j1 != 0 {
 		if localstring_w == stringarray_w[1] {
