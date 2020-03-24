@@ -2,7 +2,6 @@ package premise
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/merenbach/syllogism/internal/form"
 	"github.com/merenbach/syllogism/internal/symbol"
@@ -15,52 +14,48 @@ type Set struct {
 	LinkOrder []int
 }
 
-// List output for premises.
+// List output for premises, optionally in distribution-analysis format.
 // TODO: use tabwriter for distribution-analysis format?
-func (ps *Set) List(lSlice []int, analyze bool) string {
-	var b strings.Builder
+func (ps *Set) List(lSlice []int, analyze bool) {
 	for i := lSlice[0]; i != 0; i = lSlice[i] {
 		prem := ps.Premises[i]
 		if !analyze {
-			b.WriteString(fmt.Sprintf("%d  %s\n", prem.Number, prem.Statement))
+			fmt.Printf("%d  %s\n", prem.Number, prem.Statement)
 		} else {
-			b.WriteString(fmt.Sprintf("%d  ", prem.Number))
+			fmt.Printf("%d  ", prem.Number)
 
 			if prem.Form < 6 && prem.Predicate.TermType == term.TypeDesignator {
 				prem.Form += 2
 			}
 
 			if prem.Form < 4 {
-				b.WriteString(fmt.Sprintf("%s  ", prem.Form.Quantifier()))
+				fmt.Printf("%s  ", prem.Form.Quantifier())
 			}
 
-			b.WriteString(fmt.Sprintf("%s%s%s  %s%s\n", prem.Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), prem.Predicate.Term, prem.Form.SymbolForTermB()))
+			fmt.Printf("%s%s%s  %s%s\n", prem.Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), prem.Predicate.Term, prem.Form.SymbolForTermB())
 		}
 	}
-	return b.String()
 }
 
-// Link output for premises.
+// Link output for premises, optionally in distribution-analysis format.
 // TODO: use tabwriter for distribution-analysis format?
-func (ps *Set) Link(max int, analyze bool) string {
-	var b strings.Builder
+func (ps *Set) Link(max int, analyze bool) {
 	for i := 1; i <= max; i++ {
 		idx := ps.LinkOrder[i]
 		prem := ps.Premises[idx]
 		if !analyze {
-			b.WriteString(fmt.Sprintf("%d  %s\n", prem.Number, prem.Statement))
+			fmt.Printf("%d  %s\n", prem.Number, prem.Statement)
 		} else {
-			b.WriteString(fmt.Sprintf("%d  ", prem.Number))
+			fmt.Printf("%d  ", prem.Number)
 			if prem.Form < 6 && prem.Predicate.TermType == term.TypeDesignator {
 				prem.Form += 2
 			}
 			if prem.Form < 4 {
-				b.WriteString(fmt.Sprintf("%s  ", prem.Form.Quantifier()))
+				fmt.Printf("%s  ", prem.Form.Quantifier())
 			}
-			b.WriteString(fmt.Sprintf("%s%s%s  %s%s\n", prem.Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), prem.Predicate.Term, prem.Form.SymbolForTermB()))
+			fmt.Printf("%s%s%s  %s%s\n", prem.Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), prem.Predicate.Term, prem.Form.SymbolForTermB())
 		}
 	}
-	return b.String()
 }
 
 // NewPremiseSet creates a new premise set with the given size.

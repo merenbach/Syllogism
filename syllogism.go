@@ -346,7 +346,7 @@ Line5750: // 5750
 		return
 	}
 	fmt.Println("Premises of syllogism in order of term links:")
-	fmt.Print(premiseSet.Link(localint_l, strings.HasSuffix(localstring_l1, "*")))
+	premiseSet.Link(localint_l, strings.HasSuffix(localstring_l1, "*"))
 }
 
 func basicGosub4890(j1 int) {
@@ -1294,7 +1294,7 @@ Line1190: // 1190
 			goto Line1612
 		}
 
-		fmt.Print(premiseSet.List(intarray_l[:], strings.HasSuffix(localstring_l1, "*")))
+		premiseSet.List(intarray_l[:], strings.HasSuffix(localstring_l1, "*"))
 		goto Line1080
 	}
 
