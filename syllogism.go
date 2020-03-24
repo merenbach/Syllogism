@@ -241,7 +241,7 @@ func basicGosub5070() {
 		localint_j1 = 3
 
 		if localint_c > 0 {
-			fmt.Printf("   %d terms occur exactly once in premises.\n", localint_c)
+			fmt.Printf("   %d  terms occur exactly once in premises.\n", localint_c)
 
 			for i := 1; i <= localint_c; i++ {
 				// TODO: use tabwriter here?
