@@ -298,12 +298,14 @@ Line5470: // 5470
 		temp_symbol = premiseSet.Premises[premiseSet.LinkOrder[localint_i]].Predicate
 
 		if localint_j1 > 0 {
-			goto Line5700
+			fmt.Println(help.ClosedLoopHelp)
+			goto Line5710
 		}
 		localint_j1 = 4
 		fmt.Println("Not a syllogism: no way to order premises so that each premise")
 		fmt.Println("shares exactly one term with its successor; there is a")
-		goto Line5700
+		fmt.Println(help.ClosedLoopHelp)
+		goto Line5710
 	}
 
 	if localint_k != localint_i {
@@ -324,9 +326,6 @@ Line5470: // 5470
 	} else {
 		goto Line5730
 	}
-
-Line5700: // 5700
-	fmt.Println("closed loop in the term chain within the premise set--")
 
 Line5710: // 5710
 	fmt.Println(premiseSet.Premises[premiseSet.LinkOrder[localint_i]])

@@ -149,3 +149,6 @@ func ShowTermDistributionError(t string) {
 	fmt.Printf("** Term %q not distributed in premises\n", t)
 	fmt.Println("   may not be distributed in conclusion.")
 }
+
+// ClosedLoopHelp is a help message to print when erroring about a closed loop.
+const ClosedLoopHelp = "closed loop in the term chain within the premise set--"
