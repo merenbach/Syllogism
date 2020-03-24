@@ -346,24 +346,7 @@ Line5750: // 5750
 		return
 	}
 	fmt.Println("Premises of syllogism in order of term links:")
-
-	for localint_i = 1; localint_i <= localint_l; localint_i++ {
-
-		idx := premiseSet.LinkOrder[localint_i]
-		prem := premiseSet.Premises[idx]
-		if localstring_l1 == "link" {
-			fmt.Println(prem)
-		} else {
-			fmt.Printf("%d  ", prem.Number)
-			if prem.Form < 6 && prem.Predicate.TermType == term.TypeDesignator {
-				prem.Form += 2
-			}
-			if prem.Form < 4 {
-				fmt.Printf("%s  ", prem.Form.Quantifier())
-			}
-			fmt.Printf("%s%s%s  %s%s\n", prem.Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), prem.Predicate.Term, prem.Form.SymbolForTermB())
-		}
-	}
+	fmt.Print(premiseSet.Link(localint_l, localstring_l1 == "link*"))
 }
 
 func basicGosub4890(j1 int) {
