@@ -24,19 +24,17 @@ func (ps *Set) List(lSlice []int, analyze bool) string {
 		if !analyze {
 			b.WriteString(fmt.Sprintf("%d  %s\n", prem.Number, prem.Statement))
 		} else {
-			if !prem.Empty() {
-				b.WriteString(fmt.Sprintf("%d  ", prem.Number))
+			b.WriteString(fmt.Sprintf("%d  ", prem.Number))
 
-				if prem.Form < 6 && prem.Predicate.TermType == term.TypeDesignator {
-					prem.Form += 2
-				}
-
-				if prem.Form < 4 {
-					b.WriteString(fmt.Sprintf("%s  ", prem.Form.Quantifier()))
-				}
-
-				b.WriteString(fmt.Sprintf("%s%s%s  %s%s\n", prem.Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), prem.Predicate.Term, prem.Form.SymbolForTermB()))
+			if prem.Form < 6 && prem.Predicate.TermType == term.TypeDesignator {
+				prem.Form += 2
 			}
+
+			if prem.Form < 4 {
+				b.WriteString(fmt.Sprintf("%s  ", prem.Form.Quantifier()))
+			}
+
+			b.WriteString(fmt.Sprintf("%s%s%s  %s%s\n", prem.Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), prem.Predicate.Term, prem.Form.SymbolForTermB()))
 		}
 	}
 	return b.String()
@@ -88,7 +86,7 @@ func (pr *Premise) String() string {
 	return fmt.Sprintf("%d  %s", pr.Number, pr.Statement)
 }
 
-// Empty determines whether a line is empty.
-func (pr *Premise) Empty() bool {
-	return pr.Statement == ""
-}
+// // Empty determines whether a line is empty.
+// func (pr *Premise) Empty() bool {
+// 	return pr.Statement == ""
+// }
