@@ -350,18 +350,18 @@ Line5750: // 5750
 	for localint_i = 1; localint_i <= localint_l; localint_i++ {
 
 		idx := premiseSet.LinkOrder[localint_i]
+		prem := premiseSet.Premises[idx]
 		if localstring_l1 == "link" {
-			fmt.Println(premiseSet.Premises[idx])
+			fmt.Println(prem)
 		} else {
-			fmt.Printf("%d  ", premiseSet.Premises[idx].Number)
-			prem := premiseSet.Premises[idx]
-			if prem.Form < 6 && premiseSet.Premises[idx].Predicate.TermType == term.TypeDesignator {
+			fmt.Printf("%d  ", prem.Number)
+			if prem.Form < 6 && prem.Predicate.TermType == term.TypeDesignator {
 				prem.Form += 2
 			}
 			if prem.Form < 4 {
 				fmt.Printf("%s  ", prem.Form.Quantifier())
 			}
-			fmt.Printf("%s%s%s  %s%s\n", premiseSet.Premises[idx].Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), premiseSet.Premises[idx].Predicate.Term, prem.Form.SymbolForTermB())
+			fmt.Printf("%s%s%s  %s%s\n", prem.Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), prem.Predicate.Term, prem.Form.SymbolForTermB())
 		}
 	}
 }
