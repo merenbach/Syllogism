@@ -346,7 +346,7 @@ Line5750: // 5750
 		return
 	}
 	fmt.Println("Premises of syllogism in order of term links:")
-	fmt.Print(premiseSet.Link(localint_l, localstring_l1 == "link*"))
+	fmt.Print(premiseSet.Link(localint_l, strings.HasSuffix(localstring_l1, "*")))
 }
 
 func basicGosub4890(j1 int) {
@@ -600,35 +600,6 @@ Line7120: // 7120
 
 	fmt.Println("    but on Aristotelian interpretation only, i.e. on requirement")
 	fmt.Printf("    that term %q denotes.\n", symbolTable.Symbols[localint_v1].Term)
-}
-
-// TODO: make this a method on a line collection type
-func basicGosub7460(analyze bool) {
-	// 7460
-	//---list---
-	if !analyze {
-		for localint_i = intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
-			fmt.Println(premiseSet.Premises[localint_i])
-		}
-	} else {
-		for localint_i = intarray_l[0]; localint_i != 0; localint_i = intarray_l[localint_i] {
-			line := premiseSet.Premises[localint_i]
-			if !line.Empty() {
-				fmt.Printf("%d  ", line.Number)
-
-				prem := premiseSet.Premises[localint_i]
-				if prem.Form < 6 && premiseSet.Premises[localint_i].Predicate.TermType == term.TypeDesignator {
-					prem.Form += 2
-				}
-
-				if prem.Form < 4 {
-					fmt.Printf("%s  ", prem.Form.Quantifier())
-				}
-
-				fmt.Printf("%s%s%s  %s%s\n", premiseSet.Premises[localint_i].Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), premiseSet.Premises[localint_i].Predicate.Term, prem.Form.SymbolForTermB())
-			}
-		}
-	}
 }
 
 func basicGosub1840() {
@@ -1323,7 +1294,7 @@ Line1190: // 1190
 			goto Line1612
 		}
 
-		basicGosub7460(strings.HasSuffix(localstring_l1, "*"))
+		fmt.Print(premiseSet.List(intarray_l[:], strings.HasSuffix(localstring_l1, "*")))
 		goto Line1080
 	}
 
