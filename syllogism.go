@@ -598,6 +598,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 		for { // 3500
 			localint_i1, localint_b1 = symbolTable.Search(localint_i1, localstring_w)
 
+			sym := symbolTable.Symbols[localint_i1]
 			if localint_i1 > symbolTable.HighestLocationUsed {
 				if localint_b1 > 0 {
 					localint_i1 = localint_b1
@@ -605,29 +606,29 @@ func basicGosub3400(d1 form.Form, a1 int) {
 					symbolTable.HighestLocationUsed++
 				}
 
-				symbolTable.Symbols[localint_i1].Term = localstring_w
-				symbolTable.Symbols[localint_i1].TermType = termType
+				sym.Term = localstring_w
+				sym.TermType = termType
 				break
 			}
 
 			if termType == term.TypeUndetermined {
-				if symbolTable.Symbols[localint_i1].TermType != term.TypeUndetermined || msg {
+				if sym.TermType != term.TypeUndetermined || msg {
 					fmt.Printf("Note: predicate term %q", localstring_w)
-					fmt.Printf(" taken as the %s used earlier\n", symbolTable.Symbols[localint_i1].TermType)
+					fmt.Printf(" taken as the %s used earlier\n", sym.TermType)
 				}
 				break
 			}
-			if symbolTable.Symbols[localint_i1].TermType == term.TypeUndetermined {
+			if sym.TermType == term.TypeUndetermined {
 				if msg {
 					fmt.Printf("Note: earlier use of %q taken as the %s used here\n", localstring_w, termType)
 				}
 				if termType == term.TypeDesignator {
-					symbolTable.Symbols[localint_i1].DistributionCount = symbolTable.Symbols[localint_i1].Occurrences
+					sym.DistributionCount = sym.Occurrences
 				}
-				symbolTable.Symbols[localint_i1].TermType = termType
+				sym.TermType = termType
 				break
 			}
-			if termType == symbolTable.Symbols[localint_i1].TermType {
+			if termType == sym.TermType {
 				break
 			}
 
