@@ -1115,10 +1115,195 @@ func lineInput(prompt string) string {
 	return strings.TrimSpace(input)
 }
 
-func syllogize() {
+func syllogize() bool {
 	// TODO: factor into more local scope for conditionals
 	var err error
-	fmt.Println("Running...")
+
+	//---Input line---
+
+	localstring_l1 = lineInput("> ")
+	localint_l = len(localstring_l1)
+
+	if localint_l == 0 {
+		if msg {
+			fmt.Println("Enter HELP for list of commands")
+		}
+		return true
+	}
+
+	for {
+		localstring_l2 = basicRight(localstring_l1, 1)
+		if localstring_l2 != " " {
+
+			if localstring_l2 != "." && localstring_l2 != "?" && localstring_l2 != "!" {
+				break
+			}
+
+			fmt.Printf("%s ^   Punctuation mark ignored\n", basicTabString(localint_l))
+		}
+
+		if localint_l == 1 {
+			return true
+		}
+
+		localint_l--
+		localstring_l1 = basicLeft(localstring_l1, localint_l)
+	}
+
+	for {
+		if basicLeft(localstring_l1, 1) != " " {
+			break
+		}
+		if localint_l == 1 {
+			return true
+		}
+		localint_l--
+		localstring_l1 = basicRight(localstring_l1, localint_l)
+	}
+
+	/*
+	   rem / FOR I = 1 TO L
+	    rem / V = ASC(MID$(L1$,I,1))
+	    rem / IF V >= 65 AND V <= 90  THEN  MID$(L1$,I,1) = CHR$(V+32)
+	    rem / NEXT
+	   rem Metal doesn't support mid$ as command, but lcase$() is well supported...
+
+	*/
+
+	localstring_l1 = strings.ToLower(localstring_l1)
+
+	switch localstring_l1 {
+	case "stop":
+		if msg {
+			fmt.Println("(Some versions support typing CONT to continue)")
+		}
+		return false
+	case "new":
+		fmt.Println("Begin new syllogism")
+		basicGosub1840()
+		return true
+	case "sample":
+		basicGosub1840()
+		basicGosub8980()
+		return true
+	case "help":
+		help.ShowInputsHelp()
+		return true
+	case "syntax":
+		help.ShowSyntaxHelp()
+		return true
+	case "info":
+		help.ShowGeneralHelp()
+		return true
+	case "dump":
+		fmt.Println(symbolTable.Dump())
+		return true
+	case "msg":
+		msg = !msg
+
+		fmt.Print("Messages turned ")
+		if msg {
+			fmt.Println("on")
+		} else {
+			fmt.Println("off")
+		}
+		return true
+
+	case "substitute":
+		if intarray_l[0] == 0 {
+			fmt.Println(help.NoPremises)
+		} else {
+			basicGosub9060()
+		}
+		return true
+	case "link":
+		fallthrough
+	case "link*":
+		if intarray_l[0] == 0 {
+			fmt.Println(help.NoPremises)
+		} else {
+			basicGosub5070()
+		}
+		return true
+	case "list":
+		fallthrough
+	case "list*":
+		if intarray_l[0] == 0 {
+			fmt.Println(help.NoPremises)
+		} else {
+			premiseSet.List(intarray_l[:], strings.HasSuffix(localstring_l1, "*"))
+		}
+		return true
+	}
+
+	//--scan line L1$ into array S$()
+
+	stringarray_s, intarray_t, intarray_e, err = tokenize()
+	if err != nil {
+		fmt.Println(err)
+	}
+	if intarray_t[1] != token.TypeLineNumber {
+		goto Line1745
+	}
+	if intarray_t[2] != token.TypeReserved {
+		goto Line1640
+	}
+
+	if intarray_l[0] == 0 {
+		fmt.Println(help.NoPremises)
+	} else {
+		basicGosub4760() // delete line
+	}
+	return true
+
+Line1640: // 1640
+	func() {
+		d1, err := basicGosub2890() // parse the line in S$()
+		if err != nil {
+			fmt.Println(err)
+			if msg {
+				fmt.Println("Enter SYNTAX for help with statements")
+			}
+		}
+		if d1 != form.Undefined {
+			a1 := basicGosub4530(localstring_l1) // enter line into list
+			basicGosub3400(d1, a1)               // add terms to symbol table
+		}
+	}()
+	return true
+
+Line1745: // 1745
+	if intarray_t[1] == token.TypeReserved {
+		if msg {
+			fmt.Println("Enter HELP for list of commands")
+		}
+		return true
+	}
+
+	// draw/test conclusion
+
+	basicGosub5070() // is it a syl?
+	if localint_j1 > 1 {
+		return true
+	}
+	if localint_j1 == 0 {
+		basicGosub5880() // poss. conclusion?
+	}
+
+	if localint_j1 > 1 {
+		return true
+	}
+
+	if intarray_t[2] != token.TypeReserved {
+		basicGosub6630()
+	} else {
+		basicGosub6200() // test/draw conclusion
+	}
+
+	return true
+}
+
+func main() {
 	/*
 	   Syllogism 1.0. November 8, 2002
 	   I edited this program in 2002, for compatibility with freeware BASIC
@@ -1154,204 +1339,17 @@ func syllogize() {
 	help.ShowCopyright()
 	fmt.Println()
 
-	/*
-
-	   // 602
-	    rem /error check/ for err = 0 to 7 : print x$(err),y$(err),z$(err) : next err
-	*/
-
 	msg = true
 	for i := range intarray_a {
 		intarray_a[i] = i
 	}
 	intarray_a[0] = 1
 
-Line1070: // 1070
 	if msg {
 		fmt.Println("Enter HELP for list of commands")
 	}
 
-Line1080: // 1080
-	//---Input line---
-
-	localstring_l1 = lineInput("> ")
-	localint_l = len(localstring_l1)
-
-	if localint_l == 0 {
-		goto Line1070
+	for syllogize() {
+		// Keep running till syllogize() returns false
 	}
-
-	for {
-		localstring_l2 = basicRight(localstring_l1, 1)
-		if localstring_l2 != " " {
-
-			if localstring_l2 != "." && localstring_l2 != "?" && localstring_l2 != "!" {
-				break
-			}
-
-			fmt.Printf("%s ^   Punctuation mark ignored\n", basicTabString(localint_l))
-		}
-
-		if localint_l == 1 {
-			goto Line1080
-		}
-
-		localint_l--
-		localstring_l1 = basicLeft(localstring_l1, localint_l)
-	}
-
-	for {
-		if basicLeft(localstring_l1, 1) != " " {
-			break
-		}
-		if localint_l == 1 {
-			goto Line1080
-		}
-		localint_l--
-		localstring_l1 = basicRight(localstring_l1, localint_l)
-	}
-
-	/*
-	   rem / FOR I = 1 TO L
-	    rem / V = ASC(MID$(L1$,I,1))
-	    rem / IF V >= 65 AND V <= 90  THEN  MID$(L1$,I,1) = CHR$(V+32)
-	    rem / NEXT
-	   rem Metal doesn't support mid$ as command, but lcase$() is well supported...
-
-	*/
-
-	localstring_l1 = strings.ToLower(localstring_l1)
-
-	switch localstring_l1 {
-	case "stop":
-		if msg {
-			fmt.Println("(Some versions support typing CONT to continue)")
-		}
-		os.Exit(0)
-		goto Line1080
-	case "new":
-		fmt.Println("Begin new syllogism")
-		basicGosub1840()
-		goto Line1080
-	case "sample":
-		basicGosub1840()
-		basicGosub8980()
-		goto Line1080
-	case "help":
-		help.ShowInputsHelp()
-		goto Line1080
-	case "syntax":
-		help.ShowSyntaxHelp()
-		goto Line1080
-	case "info":
-		help.ShowGeneralHelp()
-		goto Line1080
-	case "dump":
-		fmt.Println(symbolTable.Dump())
-		goto Line1080
-	case "msg":
-		msg = !msg
-
-		fmt.Print("Messages turned ")
-		if msg {
-			fmt.Println("on")
-		} else {
-			fmt.Println("off")
-		}
-		goto Line1080
-
-	case "substitute":
-		if intarray_l[0] == 0 {
-			fmt.Println(help.NoPremises)
-		} else {
-			basicGosub9060()
-		}
-		goto Line1080
-	case "link":
-		fallthrough
-	case "link*":
-		if intarray_l[0] == 0 {
-			fmt.Println(help.NoPremises)
-		} else {
-			basicGosub5070()
-		}
-		goto Line1080
-	case "list":
-		fallthrough
-	case "list*":
-		if intarray_l[0] == 0 {
-			fmt.Println(help.NoPremises)
-		} else {
-			premiseSet.List(intarray_l[:], strings.HasSuffix(localstring_l1, "*"))
-		}
-		goto Line1080
-	}
-
-	//--scan line L1$ into array S$()
-
-	stringarray_s, intarray_t, intarray_e, err = tokenize()
-	if err != nil {
-		fmt.Println(err)
-	}
-	if intarray_t[1] != token.TypeLineNumber {
-		goto Line1745
-	}
-	if intarray_t[2] != token.TypeReserved {
-		goto Line1640
-	}
-
-	if intarray_l[0] == 0 {
-		fmt.Println(help.NoPremises)
-	} else {
-		basicGosub4760() // delete line
-	}
-	goto Line1080
-
-Line1640: // 1640
-	func() {
-		d1, err := basicGosub2890() // parse the line in S$()
-		if err != nil {
-			fmt.Println(err)
-			if msg {
-				fmt.Println("Enter SYNTAX for help with statements")
-			}
-		}
-		if d1 != form.Undefined {
-			a1 := basicGosub4530(localstring_l1) // enter line into list
-			basicGosub3400(d1, a1)               // add terms to symbol table
-		}
-	}()
-	goto Line1080
-
-Line1745: // 1745
-	if intarray_t[1] == token.TypeReserved {
-		goto Line1070
-	}
-
-	// draw/test conclusion
-
-	basicGosub5070() // is it a syl?
-	if localint_j1 > 1 {
-		goto Line1080
-	}
-	if localint_j1 == 0 {
-		basicGosub5880() // poss. conclusion?
-	}
-
-	if localint_j1 > 1 {
-		goto Line1080
-	}
-
-	if intarray_t[2] != token.TypeReserved {
-		basicGosub6630()
-	} else {
-		basicGosub6200() // test/draw conclusion
-	}
-
-	goto Line1080
-
-}
-
-func main() {
-	syllogize()
 }
