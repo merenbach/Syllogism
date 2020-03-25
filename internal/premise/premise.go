@@ -92,6 +92,29 @@ func (pr *Premise) String() string {
 	return fmt.Sprintf("%d  %s", pr.Number, pr.Statement)
 }
 
+// // Decrement table entries.
+// TODO: this will be perfect if we can note the negative premise count automatically, rather than keeping a variable for it
+// func (pr *Premise) Decrement(st *symboltable.SymbolTable) {
+// 	var (
+// 		pDecrement bool
+// 		qDecrement bool
+// 	)
+
+// 	if pr.Form.IsNegative() {
+// 		st.NegativePremiseCount--
+// 		qDecrement = true
+// 	} else if pr.Predicate.TermType == term.TypeDesignator {
+// 		qDecrement = true
+// 	}
+
+// 	if pr.Form >= 2 {
+// 		pDecrement = true
+// 	}
+
+// 	pr.Subject.ReduceDistributionCount(pDecrement)
+// 	pr.Predicate.ReduceDistributionCount(qDecrement)
+// }
+
 // // Empty determines whether a line is empty.
 // func (pr *Premise) Empty() bool {
 // 	return pr.Statement == ""
