@@ -20,14 +20,28 @@ const (
 	TypeSm
 )
 
+const (
+	// WordA represents the word "a."
+	WordA = "a"
+
+	// WordAn represents the word "an."
+	WordAn = "an"
+
+	// WordSm represents the word "sm."
+	WordSm = "sm"
+
+	// WordThe represents the word "the."
+	WordThe = "the"
+)
+
 // TypeFromString returns an article type based on the provided string.
 func TypeFromString(s string) Type {
 	switch s {
-	case "a":
+	case WordA:
 		return TypeA
-	case "an":
+	case WordAn:
 		return TypeAn
-	case "sm":
+	case WordSm:
 		return TypeSm
 	default:
 		return TypeNone
@@ -37,11 +51,11 @@ func TypeFromString(s string) Type {
 func (t Type) String() string {
 	switch t {
 	case TypeA:
-		return "a "
+		return WordA + " "
 	case TypeAn:
-		return "an "
+		return WordAn + " "
 	case TypeSm:
-		return "sm "
+		return WordSm + " "
 	default:
 		return ""
 	}
