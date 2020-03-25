@@ -1241,32 +1241,30 @@ func syllogize() bool {
 	if err != nil {
 		fmt.Println(err)
 	}
-	if intarray_t[1] != token.TypeLineNumber {
-		goto Line1745
-	}
-	if intarray_t[2] != token.TypeReserved {
-		d1, err := basicGosub2890() // parse the line in S$()
-		if err != nil {
-			fmt.Println(err)
-			if msg {
-				fmt.Println("Enter SYNTAX for help with statements")
+	if intarray_t[1] == token.TypeLineNumber {
+		if intarray_t[2] != token.TypeReserved {
+			d1, err := basicGosub2890() // parse the line in S$()
+			if err != nil {
+				fmt.Println(err)
+				if msg {
+					fmt.Println("Enter SYNTAX for help with statements")
+				}
 			}
+			if d1 != form.Undefined {
+				a1 := basicGosub4530(localstring_l1) // enter line into list
+				basicGosub3400(d1, a1)               // add terms to symbol table
+			}
+			return true
 		}
-		if d1 != form.Undefined {
-			a1 := basicGosub4530(localstring_l1) // enter line into list
-			basicGosub3400(d1, a1)               // add terms to symbol table
+
+		if intarray_l[0] == 0 {
+			fmt.Println(help.NoPremises)
+		} else {
+			basicGosub4760() // delete line
 		}
 		return true
 	}
 
-	if intarray_l[0] == 0 {
-		fmt.Println(help.NoPremises)
-	} else {
-		basicGosub4760() // delete line
-	}
-	return true
-
-Line1745: // 1745
 	if intarray_t[1] == token.TypeReserved {
 		if msg {
 			fmt.Println("Enter HELP for list of commands")
