@@ -676,10 +676,8 @@ func basicGosub3400(d1 form.Form, a1 int) {
 		} else {
 			prem.Predicate = sym
 
-			if prem.Subject == prem.Predicate {
-				if msg {
-					fmt.Printf("Warning: same term occurs twice in line %s\n", stringarray_s[1])
-				}
+			if prem.Subject == prem.Predicate && msg {
+				fmt.Printf("Warning: same term occurs twice in line %s\n", stringarray_s[1])
 			}
 
 			if sym.TermType == term.TypeDesignator {
