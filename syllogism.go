@@ -505,17 +505,16 @@ func basicGosub6630() {
 			return false
 		}
 
-		for localint_j = 1; localint_j <= 2; localint_j++ {
-			if symbolIsUndeterminedTerm(localint_j) {
-				goto Line6840
+		localint_j = 1
+		if !symbolIsUndeterminedTerm(localint_j) {
+			localint_j = 2
+			if !symbolIsUndeterminedTerm(localint_j) {
+				fmt.Printf("** Conclusion may not contain %s %q.\n", termType1, localstring_w)
+				localint_j = 0
 			}
 		}
-
-		fmt.Printf("** Conclusion may not contain %s %q.\n", termType1, localstring_w)
-		localint_j = 0
 	}
 
-Line6840: // 6840
 	localstring_w = stringutil.Singularize(stringarray_w[2])
 	if localint_j1 != 0 {
 		if localstring_w == stringarray_w[1] {
