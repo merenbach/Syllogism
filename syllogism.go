@@ -582,8 +582,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 	}
 
 	intarray_e[1] = article.TypeNone
-	for localint_j = 1; localint_j <= 2; localint_j++ {
-		localstring_w = stringarray_w[localint_j]
+	temp := func(localint_j int, raw_string string) {
 		if d1 < 4 {
 			termType = term.TypeGeneralTerm
 		} else if localint_j == 1 {
@@ -592,7 +591,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			termType = localint_p1
 		}
 
-		localstring_w = stringutil.Singularize(localstring_w)
+		localstring_w := stringutil.Singularize(raw_string)
 		localint_i1 = 1
 
 		for { // 3500
@@ -642,7 +641,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 		sym := symbolTable.Symbols[localint_i1]
 		if intarray_e[localint_j] != article.TypeNone {
 			sym.ArticleType = intarray_e[localint_j]
-		} else if sym.ArticleType == article.TypeNone && localstring_w != stringarray_w[localint_j] {
+		} else if sym.ArticleType == article.TypeNone && localstring_w != raw_string {
 			if stringutil.HasPrefixVowel(localstring_w) {
 				// AN
 				intarray_e[localint_j] = article.TypeAn
@@ -687,6 +686,11 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			fmt.Printf("Warning: undistributed middle term %q\n", sym.Term)
 		}
 	}
+
+	localint_j = 1
+	temp(localint_j, stringarray_w[localint_j])
+	localint_j = 2
+	temp(localint_j, stringarray_w[localint_j])
 
 	premiseSet.Premises[a1].Form = d1
 }
