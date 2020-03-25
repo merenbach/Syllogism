@@ -639,25 +639,21 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			localint_i1++
 		}
 
-		if intarray_e[localint_j] == article.TypeNone {
-
-			// 3740
-			if symbolTable.Symbols[localint_i1].ArticleType != article.TypeNone || localstring_w == stringarray_w[localint_j] {
-				goto Line3780
-			}
-
-			if stringutil.HasPrefixVowel(localstring_w) {
-				// AN
-				intarray_e[localint_j] = article.TypeAn
-			} else {
-				// A
-				intarray_e[localint_j] = article.TypeA
+		if intarray_e[localint_j] != article.TypeNone {
+			symbolTable.Symbols[localint_i1].ArticleType = intarray_e[localint_j]
+		} else {
+			if symbolTable.Symbols[localint_i1].ArticleType == article.TypeNone && localstring_w != stringarray_w[localint_j] {
+				if stringutil.HasPrefixVowel(localstring_w) {
+					// AN
+					intarray_e[localint_j] = article.TypeAn
+				} else {
+					// A
+					intarray_e[localint_j] = article.TypeA
+				}
+				symbolTable.Symbols[localint_i1].ArticleType = intarray_e[localint_j]
 			}
 		}
 
-		symbolTable.Symbols[localint_i1].ArticleType = intarray_e[localint_j]
-
-	Line3780: // 3780
 		sym := symbolTable.Symbols[localint_i1]
 		sym.Occurrences++
 
