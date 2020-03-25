@@ -152,3 +152,12 @@ func ShowTermDistributionError(t string) {
 
 // ClosedLoopHelp is a help message to print when erroring about a closed loop.
 const ClosedLoopHelp = "closed loop in the term chain within the premise set--"
+
+// MissingCopula indicates a missing copula.
+const MissingCopula = "** Missing copula is/are"
+
+// MissingPredicate indicates a missing predicate term.
+const MissingPredicate = "** Predicate term bad or missing"
+
+// MissingSubject indicates a missing subject term.
+const MissingSubject = "** Subject term bad or missing"

@@ -891,13 +891,13 @@ func basicGosub2890() (form.Form, error) {
 	return form.AllAIsB, nil // all A is B
 
 Line3330: // 3330
-	return form.Undefined, errors.New("** Missing copula is/are")
+	return form.Undefined, errors.New(help.MissingCopula)
 
 Line3350: // 3350
-	return form.Undefined, errors.New("** Subject term bad or missing")
+	return form.Undefined, errors.New(help.MissingSubject)
 
 Line3370: // 3370
-	return form.Undefined, errors.New("** Predicate term bad or missing")
+	return form.Undefined, errors.New(help.MissingPredicate)
 }
 
 func tokenize() ([7]string, [8]token.Type, [3]article.Type, error) {
