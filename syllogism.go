@@ -1120,7 +1120,6 @@ func syllogize() bool {
 	var err error
 
 	//---Input line---
-
 	localstring_l1 = lineInput("> ")
 	localint_l = len(localstring_l1)
 
@@ -1246,18 +1245,6 @@ func syllogize() bool {
 		goto Line1745
 	}
 	if intarray_t[2] != token.TypeReserved {
-		goto Line1640
-	}
-
-	if intarray_l[0] == 0 {
-		fmt.Println(help.NoPremises)
-	} else {
-		basicGosub4760() // delete line
-	}
-	return true
-
-Line1640: // 1640
-	func() {
 		d1, err := basicGosub2890() // parse the line in S$()
 		if err != nil {
 			fmt.Println(err)
@@ -1269,7 +1256,14 @@ Line1640: // 1640
 			a1 := basicGosub4530(localstring_l1) // enter line into list
 			basicGosub3400(d1, a1)               // add terms to symbol table
 		}
-	}()
+		return true
+	}
+
+	if intarray_l[0] == 0 {
+		fmt.Println(help.NoPremises)
+	} else {
+		basicGosub4760() // delete line
+	}
 	return true
 
 Line1745: // 1745
