@@ -660,16 +660,10 @@ func basicGosub3400(d1 form.Form, a1 int) {
 	Line3780: // 3780
 		symbolTable.Symbols[localint_i1].Occurrences++
 
-		if symbolTable.Symbols[localint_i1].Occurrences < 3 {
-			goto Line3810
+		if symbolTable.Symbols[localint_i1].Occurrences >= 3 && msg {
+			fmt.Printf("Warning: %s %q has occurred %d times\n", symbolTable.Symbols[localint_i1].TermType, localstring_w, symbolTable.Symbols[localint_i1].Occurrences)
 		}
 
-		if !msg {
-			goto Line3810
-		}
-		fmt.Printf("Warning: %s %q has occurred %d times\n", symbolTable.Symbols[localint_i1].TermType, localstring_w, symbolTable.Symbols[localint_i1].Occurrences)
-
-	Line3810: // 3810
 		if localint_j != 2 {
 			subj := symbolTable.Symbols[localint_i1]
 			premiseSet.Premises[a1].Subject = subj
