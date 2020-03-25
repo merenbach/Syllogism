@@ -1266,28 +1266,27 @@ Line1190: // 1190
 	case "substitute":
 		if intarray_l[0] == 0 {
 			fmt.Println(help.NoPremises)
-			goto Line1080
+		} else {
+			basicGosub9060()
 		}
-		basicGosub9060()
 		goto Line1080
 	case "link":
 		fallthrough
 	case "link*":
 		if intarray_l[0] == 0 {
 			fmt.Println(help.NoPremises)
-			goto Line1080
+		} else {
+			basicGosub5070()
 		}
-		basicGosub5070()
 		goto Line1080
 	case "list":
 		fallthrough
 	case "list*":
 		if intarray_l[0] == 0 {
 			fmt.Println(help.NoPremises)
-			goto Line1080
+		} else {
+			premiseSet.List(intarray_l[:], strings.HasSuffix(localstring_l1, "*"))
 		}
-
-		premiseSet.List(intarray_l[:], strings.HasSuffix(localstring_l1, "*"))
 		goto Line1080
 	}
 
@@ -1304,12 +1303,11 @@ Line1190: // 1190
 		goto Line1640
 	}
 
-	if intarray_l[0] != 0 {
+	if intarray_l[0] == 0 {
+		fmt.Println(help.NoPremises)
+	} else {
 		basicGosub4760() // delete line
-		goto Line1080
 	}
-
-	fmt.Println(help.NoPremises)
 	goto Line1080
 
 Line1640: // 1640
