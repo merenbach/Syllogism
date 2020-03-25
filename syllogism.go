@@ -1181,39 +1181,36 @@ Line1080: // 1080
 		goto Line1070
 	}
 
-Line1120: // 1120
-	localstring_l2 = basicRight(localstring_l1, 1)
-	if localstring_l2 == " " {
-		goto Line1160
+	for {
+		localstring_l2 = basicRight(localstring_l1, 1)
+		if localstring_l2 != " " {
+
+			if localstring_l2 != "." && localstring_l2 != "?" && localstring_l2 != "!" {
+				break
+			}
+
+			fmt.Printf("%s ^   Punctuation mark ignored\n", basicTabString(localint_l))
+		}
+
+		if localint_l == 1 {
+			goto Line1080
+		}
+
+		localint_l--
+		localstring_l1 = basicLeft(localstring_l1, localint_l)
 	}
 
-	if localstring_l2 != "." && localstring_l2 != "?" && localstring_l2 != "!" {
-		goto Line1181
+	for {
+		if basicLeft(localstring_l1, 1) != " " {
+			break
+		}
+		if localint_l == 1 {
+			goto Line1080
+		}
+		localint_l--
+		localstring_l1 = basicRight(localstring_l1, localint_l)
 	}
 
-	fmt.Printf("%s ^   Punctuation mark ignored\n", basicTabString(localint_l))
-
-Line1160: // 1160
-	if localint_l == 1 {
-		goto Line1080
-	}
-
-	localint_l--
-	localstring_l1 = basicLeft(localstring_l1, localint_l)
-	goto Line1120
-
-Line1181: // 1181
-	if basicLeft(localstring_l1, 1) != " " {
-		goto Line1190
-	}
-	if localint_l == 1 {
-		goto Line1080
-	}
-	localint_l--
-	localstring_l1 = basicRight(localstring_l1, localint_l)
-	goto Line1181
-
-Line1190: // 1190
 	/*
 	   rem / FOR I = 1 TO L
 	    rem / V = ASC(MID$(L1$,I,1))
