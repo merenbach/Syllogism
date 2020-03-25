@@ -1254,13 +1254,12 @@ func syllogize() bool {
 				a1 := basicGosub4530(localstring_l1) // enter line into list
 				basicGosub3400(d1, a1)               // add terms to symbol table
 			}
-			return true
-		}
-
-		if intarray_l[0] == 0 {
-			fmt.Println(help.NoPremises)
 		} else {
-			basicGosub4760() // delete line
+			if intarray_l[0] == 0 {
+				fmt.Println(help.NoPremises)
+			} else {
+				basicGosub4760() // delete line
+			}
 		}
 		return true
 	}
