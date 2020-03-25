@@ -26,6 +26,7 @@ package main
 * k(63)  => linking order??? (TODO: figure this out), currently premises.LinkOrder
 * i1     => local iterator index that is passed through different functions
             appears independent in substitution routine, but spans gosubs 3400 and 3950.
+* l(63) => occupied line slots (???) in premise list; l(N) => premiseset.LArray (for now)
 * l$(63) => line statements
 * l1     => highest symbol table location used, so symboltable.HighestLocationUsed
 * n(63)  => line numbers
@@ -1194,7 +1195,7 @@ func syllogize() bool {
 		if premiseSet.LArray[0] == 0 {
 			fmt.Println(help.NoPremises)
 		} else {
-			premiseSet.List(premiseSet.LArray, strings.HasSuffix(localstring_l1, "*"))
+			premiseSet.List(strings.HasSuffix(localstring_l1, "*"))
 		}
 		return true
 	}

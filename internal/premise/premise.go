@@ -17,8 +17,8 @@ type Set struct {
 
 // List output for premises, optionally in distribution-analysis format.
 // TODO: use tabwriter for distribution-analysis format?
-func (ps *Set) List(lSlice []int, analyze bool) {
-	for i := lSlice[0]; i != 0; i = lSlice[i] {
+func (ps *Set) List(analyze bool) {
+	for i := ps.LArray[0]; i != 0; i = ps.LArray[i] {
 		prem := ps.Premises[i]
 		if !analyze {
 			fmt.Printf("%d  %s\n", prem.Number, prem.Statement)
