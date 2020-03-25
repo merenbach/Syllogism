@@ -809,9 +809,9 @@ func basicGosub4530(s string) int {
 func basicGosub2890() (form.Form, error) {
 	// 2890
 	//---Parse line in S$()---
-	if stringarray_s[2] != "all" {
-		if stringarray_s[2] != "some" {
-			if stringarray_s[2] != "no" {
+	if stringarray_s[2] != form.WordAll {
+		if stringarray_s[2] != form.WordSome {
+			if stringarray_s[2] != form.WordNo {
 				if intarray_t[2] != token.TypeTerm {
 					return form.Undefined, errors.New(help.MissingSubject)
 				}
@@ -820,7 +820,7 @@ func basicGosub2890() (form.Form, error) {
 					return form.Undefined, errors.New(help.MissingCopula)
 				}
 
-				if stringarray_s[4] == "not" {
+				if stringarray_s[4] == form.WordNot {
 					if intarray_t[5] != token.TypeTerm {
 						return form.Undefined, errors.New(help.MissingPredicate)
 					}
@@ -862,7 +862,7 @@ func basicGosub2890() (form.Form, error) {
 		if intarray_t[4] != token.TypeCopula {
 			return form.Undefined, errors.New(help.MissingCopula)
 		}
-		if stringarray_s[5] == "not" {
+		if stringarray_s[5] == form.WordNot {
 			if intarray_t[6] != token.TypeTerm {
 				return form.Undefined, errors.New(help.MissingPredicate)
 			}
@@ -986,14 +986,14 @@ Iterate:
 			line2670(localint_i + localint_k - 1)
 			break Iterate
 
-		case "all", "some":
+		case form.WordAll, form.WordSome:
 			if shadowintarray_t[localint_j] == token.TypeTerm {
 				line2670(localint_i + localint_k - 1)
 				break Iterate
 			}
 			closeToken(localstring_s, token.TypeQuantifier)
 
-		case "no", "not":
+		case form.WordNo, form.WordNot:
 			if shadowintarray_t[localint_j] == token.TypeTerm {
 				line2670(localint_i + localint_k - 1)
 				break Iterate
@@ -1021,8 +1021,8 @@ Iterate:
 			} else if shadowintarray_t[localint_j-1] != token.TypeCopula && shadowintarray_t[localint_j-2] != token.TypeCopula {
 				addTermToken(localstring_s)
 
-			} else if localstring_s != "a" && localstring_s != "an" && localstring_s != "sm" {
-				if localstring_s == "the" {
+			} else if localstring_s != article.WordA && localstring_s != article.WordAn && localstring_s != article.WordSm {
+				if localstring_s == article.WordThe {
 					// DESIGNATOR (definite article)
 					localint_p1 = term.TypeDesignator
 				}
