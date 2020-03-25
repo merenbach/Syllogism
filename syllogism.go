@@ -1262,9 +1262,7 @@ func syllogize() bool {
 			}
 		}
 		return true
-	}
-
-	if intarray_t[1] == token.TypeReserved {
+	} else if intarray_t[1] == token.TypeReserved {
 		if msg {
 			fmt.Println("Enter HELP for list of commands")
 		}
