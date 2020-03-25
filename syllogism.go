@@ -665,17 +665,17 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			fmt.Printf("Warning: %s %q has occurred %d times\n", sym.TermType, localstring_w, sym.Occurrences)
 		}
 
+		prem := premiseSet.Premises[a1]
 		if localint_j != 2 {
-			premiseSet.Premises[a1].Subject = sym
+			prem.Subject = sym
 
 			if d1 >= 2 {
 				sym.DistributionCount++
 			}
 
 		} else {
-			premiseSet.Premises[a1].Predicate = sym
+			prem.Predicate = sym
 
-			prem := premiseSet.Premises[a1]
 			if prem.Subject == prem.Predicate {
 				if msg {
 					fmt.Printf("Warning: same term occurs twice in line %s\n", stringarray_s[1])
