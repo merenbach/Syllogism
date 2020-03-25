@@ -349,6 +349,7 @@ Line5750: // 5750
 func basicGosub4890(j1 int) {
 	// 4890
 	//---Decrement table entries---
+	// Performed upon deletion or replacement of a line
 	var (
 		pDecrement bool
 		qDecrement bool

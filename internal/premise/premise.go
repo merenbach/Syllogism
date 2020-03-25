@@ -60,6 +60,19 @@ func (ps *Set) Link(max int, analyze bool) {
 	}
 }
 
+// // NegativePremiseCount returns the count of negative premises.
+// func (ps *Set) NegativePremiseCount() int {
+// 	var negativePremises int
+// 	// TODO: is there a better way to iterate?
+// 	for i := ps.LArray[0]; i != 0; i = ps.LArray[i] {
+// 		prem := ps.Premises[i]
+// 		if prem.Form.IsNegative() {
+// 			negativePremises++
+// 		}
+// 	}
+// 	return negativePremises
+// }
+
 // NewPremiseSet creates a new premise set with the given size.
 func NewPremiseSet(size int) *Set {
 	ps := &Set{
