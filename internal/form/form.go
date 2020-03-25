@@ -17,6 +17,20 @@ const (
 	// = 6???
 )
 
+const (
+	// WordAll is the word "all."
+	WordAll = "all"
+
+	// WordSome is the word "some."
+	WordSome = "some"
+
+	// WordNo is the word "no."
+	WordNo = "no"
+
+	// WordNot is the word "not."
+	WordNot = "not"
+)
+
 // IsNegative determines if this form is negative.
 func (t Form) IsNegative() bool {
 	// TODO: don't rely on numeric values here?
@@ -63,13 +77,13 @@ func (t Form) Copula() string {
 func (t Form) Quantifier() string {
 	switch t {
 	case SomeAIsB:
-		return "some"
+		return WordSome
 	case SomeAIsNotB:
-		return "some"
+		return WordSome
 	case AllAIsB:
-		return "all"
+		return WordAll
 	case NoAIsB:
-		return "no"
+		return WordNo
 	case AIsT:
 		return ""
 	case AIsNotT:
