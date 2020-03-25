@@ -1302,15 +1302,12 @@ Line1190: // 1190
 	}
 
 	if intarray_l[0] != 0 {
-		goto Line1620
+		basicGosub4760() // delete line
+		goto Line1080
 	}
 
 Line1612: // 1612
 	fmt.Println("No premises")
-	goto Line1080
-
-Line1620: // 1620
-	basicGosub4760() // delete line
 	goto Line1080
 
 Line1640: // 1640
