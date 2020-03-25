@@ -13,6 +13,7 @@ type Set struct {
 	Premises  []*Premise
 	LinkOrder []int
 	LArray    []int
+	AArray    []int
 }
 
 // List output for premises, optionally in distribution-analysis format.
@@ -64,6 +65,7 @@ func NewPremiseSet(size int) *Set {
 	return &Set{
 		Premises:  make([]*Premise, size),
 		LinkOrder: make([]int, size),
+		AArray:    make([]int, size),
 		LArray:    make([]int, size),
 	}
 }

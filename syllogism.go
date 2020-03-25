@@ -10,12 +10,13 @@ package main
 *
 * Porting notes on variables:
 *
+* a(63)  => unknown, but for premises; currently a(N) => premiseset.AArray(N)
 * a$(3)  => article type names
 * a1     => address of recently-entered line in the list of lines (???)
 * b(63)  => term article type (index in a$ of proper article), so anywhere we see b(N) => symbols(N).ArticleType
 * b1     => first unused location in symbol table after a particular starting point
 			(first slot with symbols(N).Occurrences == 0)
-* c(63)  => unknown, but for symbols; currently c(N) => symboltable.CArray (for now)
+* c(63)  => unknown, but for symbols; currently c(N) => symboltable.CArray(N)
 * d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
 * d1     => form of most recently entered premise, either for entry into l$ or for evaluation with /
 * e(2)   => article type (index in a$ of article type)
@@ -27,7 +28,7 @@ package main
 * k(63)  => linking order??? (TODO: figure this out), currently premises.LinkOrder
 * i1     => local iterator index that is passed through different functions
             appears independent in substitution routine, but spans gosubs 3400 and 3950.
-* l(63) => occupied line slots (???) in premise list; l(N) => premiseset.LArray (for now)
+* l(63) => occupied line slots (???) in premise list; currently l(N) => premiseset.LArray(N)
 * l$(63) => line statements
 * l1     => highest symbol table location used, so symboltable.HighestLocationUsed
 * n(63)  => line numbers
@@ -70,8 +71,6 @@ import (
 const basicDimMax = 64
 
 var (
-	intarray_a [basicDimMax]int
-
 	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
 
@@ -398,8 +397,8 @@ func basicGosub4760() {
 			fmt.Printf("Line %d not found\n", localint_n)
 			break
 		} else if localint_n == premiseSet.Premises[localint_j1].Number {
-			intarray_a[0]--
-			intarray_a[intarray_a[0]] = localint_j1
+			premiseSet.AArray[0]--
+			premiseSet.AArray[premiseSet.AArray[0]] = localint_j1
 			premiseSet.LArray[localint_i] = premiseSet.LArray[localint_j1]
 			basicGosub4890(localint_j1)
 			break
@@ -576,8 +575,8 @@ func basicGosub1840() {
 	symbolTable = symboltable.New(basicDimMax + 2)
 
 	for localint_j = premiseSet.LArray[0]; localint_j > 0; localint_j = premiseSet.LArray[localint_j] {
-		intarray_a[0]--
-		intarray_a[intarray_a[0]] = localint_j
+		premiseSet.AArray[0]--
+		premiseSet.AArray[premiseSet.AArray[0]] = localint_j
 	}
 	premiseSet.LArray[0] = 0
 }
@@ -753,14 +752,14 @@ func basicGosub4530(s string) int {
 		}
 	}
 
-	a1 := intarray_a[intarray_a[0]]
+	a1 := premiseSet.AArray[premiseSet.AArray[0]]
 	premiseSet.Premises[a1] = &premise.Premise{
 		Number:    localint_n,
 		Statement: localstring_l,
 	}
 	premiseSet.LArray[localint_i] = a1
 	premiseSet.LArray[a1] = localint_j1
-	intarray_a[0]++
+	premiseSet.AArray[0]++
 
 	return a1
 }
@@ -1294,10 +1293,10 @@ func main() {
 	fmt.Println()
 
 	msg = true
-	for i := range intarray_a {
-		intarray_a[i] = i
+	for i := range premiseSet.AArray {
+		premiseSet.AArray[i] = i
 	}
-	intarray_a[0] = 1
+	premiseSet.AArray[0] = 1
 
 	if msg {
 		fmt.Println("Enter HELP for list of commands")
