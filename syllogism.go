@@ -14,7 +14,8 @@ package main
 * a1     => address of recently-entered line in the list of lines (???)
 * b(63)  => term article type (index in a$ of proper article), so anywhere we see b(N) => symbols(N).ArticleType
 * b1     => first unused location in symbol table after a particular starting point
-            (first slot with symbols(N).Occurrences == 0)
+			(first slot with symbols(N).Occurrences == 0)
+* c(63)  => unknown, but for symbols; currently c(N) => symboltable.CArray (for now)
 * d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
 * d1     => form of most recently entered premise, either for entry into l$ or for evaluation with /
 * e(2)   => article type (index in a$ of article type)
@@ -70,7 +71,6 @@ const basicDimMax = 64
 
 var (
 	intarray_a [basicDimMax]int
-	intarray_c [basicDimMax]int
 
 	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
@@ -148,8 +148,8 @@ func basicGosub5880() {
 	// 5880
 	//---See if conclusion possible---
 
-	localint_c1 = intarray_c[1]
-	localint_c2 = intarray_c[2]
+	localint_c1 = symbolTable.CArray[1]
+	localint_c2 = symbolTable.CArray[2]
 
 	symbol1 := symbolTable.Symbols[localint_c1]
 	symbol2 := symbolTable.Symbols[localint_c2]
@@ -231,7 +231,7 @@ func basicGosub5070() {
 				fmt.Printf("   %s %q occurs %d times in premises.\n", s.TermType, s.Term, s.Occurrences)
 			}
 			localint_c++
-			intarray_c[localint_c] = i
+			symbolTable.CArray[localint_c] = i
 		}
 		return false
 	})
@@ -245,7 +245,7 @@ func basicGosub5070() {
 
 			for i := 1; i <= localint_c; i++ {
 				// TODO: use tabwriter here?
-				sym := symbolTable.Symbols[intarray_c[i]]
+				sym := symbolTable.Symbols[symbolTable.CArray[i]]
 				fmt.Printf("%s%s -- %s\n", basicTabString(6), sym.Term, sym.TermType)
 			}
 		} else {
@@ -274,10 +274,10 @@ func basicGosub5070() {
 		goto Line5750
 	}
 
-	if symbolTable.Symbols[intarray_c[1]].DistributionCount == 0 && symbolTable.Symbols[intarray_c[2]].DistributionCount == 1 {
-		temp_symbol = symbolTable.Symbols[intarray_c[2]]
+	if symbolTable.Symbols[symbolTable.CArray[1]].DistributionCount == 0 && symbolTable.Symbols[symbolTable.CArray[2]].DistributionCount == 1 {
+		temp_symbol = symbolTable.Symbols[symbolTable.CArray[2]]
 	} else {
-		temp_symbol = symbolTable.Symbols[intarray_c[1]]
+		temp_symbol = symbolTable.Symbols[symbolTable.CArray[1]]
 	}
 	localint_i = 1
 
@@ -457,7 +457,7 @@ func basicGosub6630() {
 		stringarray_w[1] = localstring_w
 	} else {
 		symbolIsUndeterminedTerm := func(j int) bool {
-			sym := symbolTable.Symbols[intarray_c[j]]
+			sym := symbolTable.Symbols[symbolTable.CArray[j]]
 			if localstring_w == sym.Term {
 				switch sym.TermType {
 				case term.TypeUndetermined:
@@ -494,8 +494,8 @@ func basicGosub6630() {
 	}
 
 	if localint_j > 0 {
-		localint_t1 = intarray_c[localint_j]
-		localint_t2 = intarray_c[3-localint_j]
+		localint_t1 = symbolTable.CArray[localint_j]
+		localint_t2 = symbolTable.CArray[3-localint_j]
 		if localstring_w != symbolTable.Symbols[localint_t2].Term {
 			goto Line7060
 		}
@@ -512,10 +512,10 @@ func basicGosub6630() {
 		}
 		goto Line7120
 	}
-	if localstring_w == symbolTable.Symbols[intarray_c[1]].Term {
-		localint_t2 = intarray_c[2]
+	if localstring_w == symbolTable.Symbols[symbolTable.CArray[1]].Term {
+		localint_t2 = symbolTable.CArray[2]
 	} else {
-		localint_t2 = intarray_c[1]
+		localint_t2 = symbolTable.CArray[1]
 	}
 	goto Line7070
 

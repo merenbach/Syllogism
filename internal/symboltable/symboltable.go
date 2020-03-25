@@ -15,12 +15,14 @@ type SymbolTable struct {
 	Symbols              []*symbol.Symbol
 	HighestLocationUsed  int
 	NegativePremiseCount int
+	CArray               []int
 }
 
 // New symbol table.
 func New(size int) *SymbolTable {
 	t := SymbolTable{
 		Symbols: make([]*symbol.Symbol, size),
+		CArray:  make([]int, size),
 	}
 	for i := range t.Symbols {
 		t.Symbols[i] = &symbol.Symbol{}
