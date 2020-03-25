@@ -366,20 +366,8 @@ func basicGosub4890(j1 int) {
 		pDecrement = true
 	}
 
-	reduceDistributionCount := func(sym *symbol.Symbol, decrement bool) {
-		sym.Occurrences--
-		if sym.Empty() {
-			sym.Term = ""
-			sym.ArticleType = article.TypeNone
-			sym.TermType = term.TypeUndetermined
-		}
-
-		if decrement {
-			sym.DistributionCount--
-		}
-	}
-	reduceDistributionCount(premiseSet.Premises[j1].Subject, pDecrement)
-	reduceDistributionCount(premiseSet.Premises[j1].Predicate, qDecrement)
+	premiseSet.Premises[j1].Subject.ReduceDistributionCount(pDecrement)
+	premiseSet.Premises[j1].Predicate.ReduceDistributionCount(qDecrement)
 }
 
 func basicGosub4760() {
