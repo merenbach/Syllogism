@@ -591,11 +591,11 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			termType = localint_p1
 		}
 
-		localstring_w := stringutil.Singularize(raw_string)
+		w := stringutil.Singularize(raw_string)
 		localint_i1 = 1
 
 		for { // 3500
-			localint_i1, localint_b1 = symbolTable.Search(localint_i1, localstring_w)
+			localint_i1, localint_b1 = symbolTable.Search(localint_i1, w)
 
 			sym := symbolTable.Symbols[localint_i1]
 			if localint_i1 > symbolTable.HighestLocationUsed {
@@ -605,21 +605,21 @@ func basicGosub3400(d1 form.Form, a1 int) {
 					symbolTable.HighestLocationUsed++
 				}
 
-				sym.Term = localstring_w
+				sym.Term = w
 				sym.TermType = termType
 				break
 			}
 
 			if termType == term.TypeUndetermined {
 				if sym.TermType != term.TypeUndetermined || msg {
-					fmt.Printf("Note: predicate term %q", localstring_w)
+					fmt.Printf("Note: predicate term %q", w)
 					fmt.Printf(" taken as the %s used earlier\n", sym.TermType)
 				}
 				break
 			}
 			if sym.TermType == term.TypeUndetermined {
 				if msg {
-					fmt.Printf("Note: earlier use of %q taken as the %s used here\n", localstring_w, termType)
+					fmt.Printf("Note: earlier use of %q taken as the %s used here\n", w, termType)
 				}
 				if termType == term.TypeDesignator {
 					sym.DistributionCount = sym.Occurrences
@@ -632,7 +632,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			}
 
 			if msg {
-				fmt.Printf("Warning: %s %q has also occurred as a %s\n", termType, localstring_w, termType.Other())
+				fmt.Printf("Warning: %s %q has also occurred as a %s\n", termType, w, termType.Other())
 			}
 
 			localint_i1++
@@ -641,8 +641,8 @@ func basicGosub3400(d1 form.Form, a1 int) {
 		sym := symbolTable.Symbols[localint_i1]
 		if intarray_e[localint_j] != article.TypeNone {
 			sym.ArticleType = intarray_e[localint_j]
-		} else if sym.ArticleType == article.TypeNone && localstring_w != raw_string {
-			if stringutil.HasPrefixVowel(localstring_w) {
+		} else if sym.ArticleType == article.TypeNone && w != raw_string {
+			if stringutil.HasPrefixVowel(w) {
 				// AN
 				intarray_e[localint_j] = article.TypeAn
 			} else {
@@ -655,7 +655,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 		sym.Occurrences++
 
 		if sym.Occurrences >= 3 && msg {
-			fmt.Printf("Warning: %s %q has occurred %d times\n", sym.TermType, localstring_w, sym.Occurrences)
+			fmt.Printf("Warning: %s %q has occurred %d times\n", sym.TermType, w, sym.Occurrences)
 		}
 
 		prem := premiseSet.Premises[a1]
