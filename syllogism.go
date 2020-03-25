@@ -658,23 +658,22 @@ func basicGosub3400(d1 form.Form, a1 int) {
 		symbolTable.Symbols[localint_i1].ArticleType = intarray_e[localint_j]
 
 	Line3780: // 3780
-		symbolTable.Symbols[localint_i1].Occurrences++
+		sym := symbolTable.Symbols[localint_i1]
+		sym.Occurrences++
 
-		if symbolTable.Symbols[localint_i1].Occurrences >= 3 && msg {
-			fmt.Printf("Warning: %s %q has occurred %d times\n", symbolTable.Symbols[localint_i1].TermType, localstring_w, symbolTable.Symbols[localint_i1].Occurrences)
+		if sym.Occurrences >= 3 && msg {
+			fmt.Printf("Warning: %s %q has occurred %d times\n", sym.TermType, localstring_w, sym.Occurrences)
 		}
 
 		if localint_j != 2 {
-			subj := symbolTable.Symbols[localint_i1]
-			premiseSet.Premises[a1].Subject = subj
+			premiseSet.Premises[a1].Subject = sym
 
 			if d1 >= 2 {
-				subj.DistributionCount++
+				sym.DistributionCount++
 			}
 
 		} else {
-			pred := symbolTable.Symbols[localint_i1]
-			premiseSet.Premises[a1].Predicate = pred
+			premiseSet.Premises[a1].Predicate = sym
 
 			prem := premiseSet.Premises[a1]
 			if prem.Subject == prem.Predicate {
@@ -683,16 +682,15 @@ func basicGosub3400(d1 form.Form, a1 int) {
 				}
 			}
 
-			if pred.TermType == term.TypeDesignator {
+			if sym.TermType == term.TypeDesignator {
 				d1 += 2
 			}
 
 			if d1 == 6 || d1.IsNegative() {
-				pred.DistributionCount++
+				sym.DistributionCount++
 			}
 		}
 
-		sym := symbolTable.Symbols[localint_i1]
 		if sym.Occurrences == 2 && sym.DistributionCount == 0 && msg {
 			fmt.Printf("Warning: undistributed middle term %q\n", sym.Term)
 		}
