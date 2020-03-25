@@ -62,12 +62,19 @@ func (ps *Set) Link(max int, analyze bool) {
 
 // NewPremiseSet creates a new premise set with the given size.
 func NewPremiseSet(size int) *Set {
-	return &Set{
+	ps := &Set{
 		Premises:  make([]*Premise, size),
 		LinkOrder: make([]int, size),
 		AArray:    make([]int, size),
 		LArray:    make([]int, size),
 	}
+
+	for i := range ps.AArray {
+		ps.AArray[i] = i
+	}
+	ps.AArray[0] = 1
+
+	return ps
 }
 
 // Premise stores a line number and program statement.

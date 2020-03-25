@@ -1293,10 +1293,6 @@ func main() {
 	fmt.Println()
 
 	msg = true
-	for i := range premiseSet.AArray {
-		premiseSet.AArray[i] = i
-	}
-	premiseSet.AArray[0] = 1
 
 	if msg {
 		fmt.Println("Enter HELP for list of commands")
