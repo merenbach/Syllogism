@@ -594,7 +594,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 		w := stringutil.Singularize(raw_string)
 		localint_i1 = 1
 
-		for { // 3500
+		for ; ; localint_i1++ { // 3500
 			localint_i1, localint_b1 = symbolTable.Search(localint_i1, w)
 
 			sym := symbolTable.Symbols[localint_i1]
@@ -634,8 +634,6 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			if msg {
 				fmt.Printf("Warning: %s %q has also occurred as a %s\n", termType, w, termType.Other())
 			}
-
-			localint_i1++
 		}
 
 		sym := symbolTable.Symbols[localint_i1]
