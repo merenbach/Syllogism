@@ -80,12 +80,11 @@ func NewPremiseSet(size int) *Set {
 // Premise stores a line number and program statement.
 // TODO: store numbers with PremiseSet if possible
 type Premise struct {
-	Number                   int
-	Statement                string
-	Form                     form.Form
-	ExperimentalLinkingOrder int
-	Subject                  *symbol.Symbol
-	Predicate                *symbol.Symbol
+	Number    int
+	Statement string
+	Form      form.Form
+	Subject   *symbol.Symbol
+	Predicate *symbol.Symbol
 }
 
 func (pr *Premise) String() string {
