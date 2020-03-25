@@ -21,8 +21,8 @@ package main
 * g      => term type as integer
 * g(63)  => term type (index in g$ of term type), so anywhere we see g(N) => symbols(N).TermType
 * g$(2)  => term type names
-* g1     => term type as integer
-* g2     => term type as integer
+* g1     => term type as integer (termType1)
+* g2     => term type as integer (termType2)
 * k(63)  => linking order??? (TODO: figure this out), currently premises.LinkOrder
 * i1     => local iterator index that is passed through different functions
             appears independent in substitution routine, but spans gosubs 3400 and 3950.
