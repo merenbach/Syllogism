@@ -74,6 +74,7 @@ var (
 	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
 
+	premiseSet  = premise.NewPremiseSet(basicDimMax)
 	symbolTable = symboltable.New(basicDimMax + 2)
 
 	stringarray_s [7]string // appears to hold parsed line tokens
@@ -100,8 +101,6 @@ var (
 	localstring_s  string
 	localstring_t  string
 	localstring_w  string
-
-	premiseSet = premise.NewPremiseSet(basicDimMax)
 
 	msg bool
 )
