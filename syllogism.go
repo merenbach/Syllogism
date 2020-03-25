@@ -642,17 +642,15 @@ func basicGosub3400(d1 form.Form, a1 int) {
 		sym := symbolTable.Symbols[localint_i1]
 		if intarray_e[localint_j] != article.TypeNone {
 			sym.ArticleType = intarray_e[localint_j]
-		} else {
-			if sym.ArticleType == article.TypeNone && localstring_w != stringarray_w[localint_j] {
-				if stringutil.HasPrefixVowel(localstring_w) {
-					// AN
-					intarray_e[localint_j] = article.TypeAn
-				} else {
-					// A
-					intarray_e[localint_j] = article.TypeA
-				}
-				sym.ArticleType = intarray_e[localint_j]
+		} else if sym.ArticleType == article.TypeNone && localstring_w != stringarray_w[localint_j] {
+			if stringutil.HasPrefixVowel(localstring_w) {
+				// AN
+				intarray_e[localint_j] = article.TypeAn
+			} else {
+				// A
+				intarray_e[localint_j] = article.TypeA
 			}
+			sym.ArticleType = intarray_e[localint_j]
 		}
 
 		sym.Occurrences++
