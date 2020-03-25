@@ -10,40 +10,40 @@ package main
 *
 * Porting notes on variables:
 *
-* l$(63) => line statements
-* n(63)  => line numbers
-* t(7)   => token type in parsing
-* t$(65) => term array: words like man, socrates, etc., so anywhere we see t$(N) => symbols(N).Term
-* b(63)  => term article type (index in a$ of proper article), so anywhere we see b(N) => symbols(N).ArticleType
-* g(63)  => term type (index in g$ of term type), so anywhere we see g(N) => symbols(N).TermType
-* o(63)  => term occurrence count, so anywhere we see o(N) => symbols(N).Occurrences
-* d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
-* k(63)  => linking order??? (TODO: figure this out), currently premises.LinkOrder
-* p(63)  => index of subject in symbol table for premise at given index, currently premises(N).Symbol
-* q(63)  => index of predicate in symbol table for premise at given index, currently premises(N).Symbol
-* x$(7)  => quantifiers for each form
-* y$(7)  => term A types for each form, followed by copulas for each form
-* z$(7)  => term B types for each form
-* r(63)  => forms for each premise, currently premises(N).Form
-* g$(2)  => term type names
-* e(2)   => article type (index in a$ of article type)
 * a$(3)  => article type names
-* z$     => conclusion (during computation)
+* a1     => address of recently-entered line in the list of lines (???)
+* b(63)  => term article type (index in a$ of proper article), so anywhere we see b(N) => symbols(N).ArticleType
 * b1     => first unused location in symbol table after a particular starting point
             (first slot with symbols(N).Occurrences == 0)
-* i1     => local iterator index that is passed through different functions
-            appears independent in substitution routine, but spans gosubs 3400 and 3950.
-* l1     => highest symbol table location used, so symboltable.HighestLocationUsed
-* n1     => negative premise count on symbol table, so symboltable.NegativePremiseCount
-* s$     => parsed line tokens
-* w$     => most recently entered premise, either for entry into l$ or for evaluation with /
+* d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
 * d1     => form of most recently entered premise, either for entry into l$ or for evaluation with /
-* a1     => address of recently-entered line in the list of lines (???)
+* e(2)   => article type (index in a$ of article type)
 * g      => term type as integer
+* g(63)  => term type (index in g$ of term type), so anywhere we see g(N) => symbols(N).TermType
+* g$(2)  => term type names
 * g1     => term type as integer
 * g2     => term type as integer
+* k(63)  => linking order??? (TODO: figure this out), currently premises.LinkOrder
+* i1     => local iterator index that is passed through different functions
+            appears independent in substitution routine, but spans gosubs 3400 and 3950.
+* l$(63) => line statements
+* l1     => highest symbol table location used, so symboltable.HighestLocationUsed
+* n(63)  => line numbers
+* n1     => negative premise count on symbol table, so symboltable.NegativePremiseCount
+* o(63)  => term occurrence count, so anywhere we see o(N) => symbols(N).Occurrences
+* p(63)  => index of subject in symbol table for premise at given index, currently premises(N).Symbol
 * p1     => term type as integer
+* q(63)  => index of predicate in symbol table for premise at given index, currently premises(N).Symbol
+* r(63)  => forms for each premise, currently premises(N).Form
+* s$     => parsed line tokens
+* t(7)   => token type in parsing
+* t$(65) => term array: words like man, socrates, etc., so anywhere we see t$(N) => symbols(N).Term
 * v1     => flag for modern validity
+* w$     => most recently entered premise, either for entry into l$ or for evaluation with /
+* x$(7)  => quantifiers for each form
+* y$(7)  => term A types for each form, followed by copulas for each form
+* z$     => conclusion (during computation)
+* z$(7)  => term B types for each form
 */
 import (
 	"bufio"
