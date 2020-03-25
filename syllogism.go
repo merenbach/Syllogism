@@ -692,10 +692,9 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			}
 		}
 
-		if symbolTable.Symbols[localint_i1].Occurrences == 2 && symbolTable.Symbols[localint_i1].DistributionCount == 0 {
-			if msg {
-				fmt.Printf("Warning: undistributed middle term %q\n", symbolTable.Symbols[localint_i1].Term)
-			}
+		sym := symbolTable.Symbols[localint_i1]
+		if sym.Occurrences == 2 && sym.DistributionCount == 0 && msg {
+			fmt.Printf("Warning: undistributed middle term %q\n", sym.Term)
 		}
 	}
 
