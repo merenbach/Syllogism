@@ -358,7 +358,7 @@ func basicGosub4890(j1 int) {
 	if prem.Form.IsNegative() {
 		symbolTable.NegativePremiseCount--
 		qDecrement = true
-	} else if premiseSet.Premises[j1].Predicate.TermType == term.TypeDesignator {
+	} else if prem.Predicate.TermType == term.TypeDesignator {
 		qDecrement = true
 	}
 
@@ -366,8 +366,8 @@ func basicGosub4890(j1 int) {
 		pDecrement = true
 	}
 
-	premiseSet.Premises[j1].Subject.ReduceDistributionCount(pDecrement)
-	premiseSet.Premises[j1].Predicate.ReduceDistributionCount(qDecrement)
+	prem.Subject.ReduceDistributionCount(pDecrement)
+	prem.Predicate.ReduceDistributionCount(qDecrement)
 }
 
 func basicGosub4760() {
