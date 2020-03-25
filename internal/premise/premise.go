@@ -24,6 +24,10 @@ type Set struct {
 
 // Compute a conclusion.
 func (ps *Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
+	if ps.LArray[0] == 0 {
+		return "A is A"
+	}
+
 	if ps.NegativePremiseCount == 0 {
 		// affirmative conclusion
 		// TODO: can we push more of these conditionals inside the symbol type?

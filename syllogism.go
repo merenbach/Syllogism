@@ -397,11 +397,7 @@ func basicGosub4760() {
 func basicGosub6200() {
 	// 6200
 	//---Compute conclusion---
-
-	var z = "A is A"
-	if premiseSet.LArray[0] != 0 {
-		z = premiseSet.Compute(premiseSet.SymbolTable.Symbols[localint_c1], premiseSet.SymbolTable.Symbols[localint_c2])
-	}
+	z := premiseSet.Compute(premiseSet.SymbolTable.Symbols[localint_c1], premiseSet.SymbolTable.Symbols[localint_c2])
 
 	// PRINT  conclusion
 	fmt.Printf("  / %s\n", z)
