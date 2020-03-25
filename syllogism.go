@@ -813,16 +813,16 @@ func basicGosub2890() (form.Form, error) {
 		if stringarray_s[2] != "some" {
 			if stringarray_s[2] != "no" {
 				if intarray_t[2] != token.TypeTerm {
-					goto Line3350
+					return form.Undefined, errors.New(help.MissingSubject)
 				}
 
 				if intarray_t[3] != token.TypeCopula {
-					goto Line3330
+					return form.Undefined, errors.New(help.MissingCopula)
 				}
 
 				if stringarray_s[4] == "not" {
 					if intarray_t[5] != token.TypeTerm {
-						goto Line3370
+						return form.Undefined, errors.New(help.MissingPredicate)
 					}
 
 					stringarray_w[1] = stringarray_s[2]
@@ -830,7 +830,7 @@ func basicGosub2890() (form.Form, error) {
 					return form.AIsNotT, nil // a is not T
 				} else {
 					if intarray_t[4] != token.TypeTerm {
-						goto Line3370
+						return form.Undefined, errors.New(help.MissingPredicate)
 					}
 
 					stringarray_w[1] = stringarray_s[2]
@@ -840,15 +840,15 @@ func basicGosub2890() (form.Form, error) {
 			}
 
 			if intarray_t[3] != token.TypeTerm {
-				goto Line3350
+				return form.Undefined, errors.New(help.MissingSubject)
 			}
 
 			if intarray_t[4] != token.TypeCopula {
-				goto Line3330
+				return form.Undefined, errors.New(help.MissingCopula)
 			}
 
 			if intarray_t[5] != token.TypeTerm {
-				goto Line3370
+				return form.Undefined, errors.New(help.MissingPredicate)
 			}
 
 			stringarray_w[1] = stringarray_s[3]
@@ -857,47 +857,38 @@ func basicGosub2890() (form.Form, error) {
 			return form.NoAIsB, nil // no A is B
 		}
 		if intarray_t[3] != token.TypeTerm {
-			goto Line3350
+			return form.Undefined, errors.New(help.MissingSubject)
 		}
 		if intarray_t[4] != token.TypeCopula {
-			goto Line3330
+			return form.Undefined, errors.New(help.MissingCopula)
 		}
 		if stringarray_s[5] == "not" {
 			if intarray_t[6] != token.TypeTerm {
-				goto Line3370
+				return form.Undefined, errors.New(help.MissingPredicate)
 			}
 			stringarray_w[1] = stringarray_s[3]
 			stringarray_w[2] = stringarray_s[6]
 			return form.SomeAIsNotB, nil // some A is not B
 		}
 		if intarray_t[5] != token.TypeTerm {
-			goto Line3370
+			return form.Undefined, errors.New(help.MissingPredicate)
 		}
 		stringarray_w[1] = stringarray_s[3]
 		stringarray_w[2] = stringarray_s[5]
 		return form.SomeAIsB, nil // Some A is B
 	}
 	if intarray_t[3] != token.TypeTerm {
-		goto Line3350
+		return form.Undefined, errors.New(help.MissingSubject)
 	}
 	if intarray_t[4] != token.TypeCopula {
-		goto Line3330
+		return form.Undefined, errors.New(help.MissingCopula)
 	}
 	if intarray_t[5] != token.TypeTerm {
-		goto Line3370
+		return form.Undefined, errors.New(help.MissingPredicate)
 	}
 	stringarray_w[1] = stringarray_s[3]
 	stringarray_w[2] = stringarray_s[5]
 	return form.AllAIsB, nil // all A is B
-
-Line3330: // 3330
-	return form.Undefined, errors.New(help.MissingCopula)
-
-Line3350: // 3350
-	return form.Undefined, errors.New(help.MissingSubject)
-
-Line3370: // 3370
-	return form.Undefined, errors.New(help.MissingPredicate)
 }
 
 func tokenize() ([7]string, [8]token.Type, [3]article.Type, error) {
