@@ -161,3 +161,6 @@ const MissingPredicate = "** Predicate term bad or missing"
 
 // MissingSubject indicates a missing subject term.
 const MissingSubject = "** Subject term bad or missing"
+
+// NoPremises indicates an empty premise set.
+const NoPremises = "No premises"
