@@ -639,10 +639,11 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			localint_i1++
 		}
 
+		sym := symbolTable.Symbols[localint_i1]
 		if intarray_e[localint_j] != article.TypeNone {
-			symbolTable.Symbols[localint_i1].ArticleType = intarray_e[localint_j]
+			sym.ArticleType = intarray_e[localint_j]
 		} else {
-			if symbolTable.Symbols[localint_i1].ArticleType == article.TypeNone && localstring_w != stringarray_w[localint_j] {
+			if sym.ArticleType == article.TypeNone && localstring_w != stringarray_w[localint_j] {
 				if stringutil.HasPrefixVowel(localstring_w) {
 					// AN
 					intarray_e[localint_j] = article.TypeAn
@@ -650,11 +651,10 @@ func basicGosub3400(d1 form.Form, a1 int) {
 					// A
 					intarray_e[localint_j] = article.TypeA
 				}
-				symbolTable.Symbols[localint_i1].ArticleType = intarray_e[localint_j]
+				sym.ArticleType = intarray_e[localint_j]
 			}
 		}
 
-		sym := symbolTable.Symbols[localint_i1]
 		sym.Occurrences++
 
 		if sym.Occurrences >= 3 && msg {
