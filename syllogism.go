@@ -412,45 +412,10 @@ func basicGosub6200() {
 	// 6200
 	//---Compute conclusion---
 
-	compute := func() string {
-		if intarray_l[0] == 0 {
-			return "A is A"
-		}
-
-		symbol1 := symbolTable.Symbols[localint_c1]
-		symbol2 := symbolTable.Symbols[localint_c2]
-		if symbolTable.NegativePremiseCount == 0 {
-			// affirmative conclusion
-			// TODO: can we push more of these conditionals inside the symbol type?
-			if symbol1.DistributionCount > 0 {
-				return symbol1.ConclusionForAllIs(symbol2)
-			} else if symbol2.DistributionCount > 0 {
-				return symbol2.ConclusionForAllIs(symbol1)
-			} else if symbol1.ArticleType != article.TypeNone || symbol2.ArticleType == article.TypeNone {
-				return symbol1.ConclusionForSomeIs(symbol2)
-			} else {
-				return symbol2.ConclusionForSomeIs(symbol1)
-			}
-
-		} else {
-			// negative conclusion
-			if symbol2.DistributionCount == 0 {
-				return fmt.Sprintf("Some %s is not %s%s", symbol2.Term, symbol1.ArticleType, symbol1.Term)
-			} else if symbol1.DistributionCount == 0 {
-				return fmt.Sprintf("Some %s is not %s%s", symbol1.Term, symbol2.ArticleType, symbol2.Term)
-			} else if symbol1.TermType == term.TypeDesignator {
-				return fmt.Sprintf("%s is not %s%s", symbol1.Term, symbol2.ArticleType, symbol2.Term)
-			} else if symbol2.TermType == term.TypeDesignator {
-				return fmt.Sprintf("%s is not %s%s", symbol2.Term, symbol1.ArticleType, symbol1.Term)
-			} else if symbol1.ArticleType == article.TypeNone && symbol2.ArticleType != article.TypeNone {
-				return fmt.Sprintf("No %s is %s%s", symbol2.Term, symbol1.ArticleType, symbol1.Term)
-			} else {
-				return fmt.Sprintf("No %s is %s%s", symbol1.Term, symbol2.ArticleType, symbol2.Term)
-			}
-		}
+	var z = "A is A"
+	if intarray_l[0] != 0 {
+		z = symbolTable.Compute(symbolTable.Symbols[localint_c1], symbolTable.Symbols[localint_c2])
 	}
-
-	z := compute()
 
 	// PRINT  conclusion
 	fmt.Printf("  / %s\n", z)
