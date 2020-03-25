@@ -70,7 +70,6 @@ const basicDimMax = 64
 var (
 	intarray_a [basicDimMax]int
 	intarray_c [basicDimMax]int
-	intarray_l [basicDimMax]int
 
 	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
@@ -213,7 +212,7 @@ func basicGosub5070() {
 
 	localint_j1 = 0
 	localint_v1 = 0 // flag for modern validity
-	if intarray_l[0] == 0 {
+	if premiseSet.LArray[0] == 0 {
 		localint_j1 = 1
 		return
 	}
@@ -257,13 +256,13 @@ func basicGosub5070() {
 		return
 	}
 
-	localint_i = intarray_l[0]
+	localint_i = premiseSet.LArray[0]
 	localint_l = 0
 
 	for {
 		localint_l++
 		premiseSet.LinkOrder[localint_l] = localint_i
-		localint_i = intarray_l[localint_i]
+		localint_i = premiseSet.LArray[localint_i]
 
 		if localint_i == 0 {
 			break
@@ -392,7 +391,7 @@ func basicGosub4760() {
 	localint_i = 0
 
 	for {
-		localint_j1 = intarray_l[localint_i]
+		localint_j1 = premiseSet.LArray[localint_i]
 
 		if localint_j1 == 0 {
 			fmt.Printf("Line %d not found\n", localint_n)
@@ -400,11 +399,11 @@ func basicGosub4760() {
 		} else if localint_n == premiseSet.Premises[localint_j1].Number {
 			intarray_a[0]--
 			intarray_a[intarray_a[0]] = localint_j1
-			intarray_l[localint_i] = intarray_l[localint_j1]
+			premiseSet.LArray[localint_i] = premiseSet.LArray[localint_j1]
 			basicGosub4890(localint_j1)
 			break
 		}
-		localint_i = intarray_l[localint_i]
+		localint_i = premiseSet.LArray[localint_i]
 	}
 }
 
@@ -413,7 +412,7 @@ func basicGosub6200() {
 	//---Compute conclusion---
 
 	var z = "A is A"
-	if intarray_l[0] != 0 {
+	if premiseSet.LArray[0] != 0 {
 		z = symbolTable.Compute(symbolTable.Symbols[localint_c1], symbolTable.Symbols[localint_c2])
 	}
 
@@ -569,17 +568,17 @@ func basicGosub1840() {
 	// 1840
 	//---New---
 
-	if intarray_l[0] == 0 {
+	if premiseSet.LArray[0] == 0 {
 		return
 	}
 
 	symbolTable = symboltable.New(basicDimMax + 2)
 
-	for localint_j = intarray_l[0]; localint_j > 0; localint_j = intarray_l[localint_j] {
+	for localint_j = premiseSet.LArray[0]; localint_j > 0; localint_j = premiseSet.LArray[localint_j] {
 		intarray_a[0]--
 		intarray_a[intarray_a[0]] = localint_j
 	}
-	intarray_l[0] = 0
+	premiseSet.LArray[0] = 0
 }
 
 func basicGosub3400(d1 form.Form, a1 int) {
@@ -726,13 +725,14 @@ func basicGosub3400(d1 form.Form, a1 int) {
 func basicGosub4530(s string) int {
 	// 4530
 	//---Enter line into list---
+
 	localint_n, _ = strconv.Atoi(stringarray_s[1])
 	localint_s = len(stringarray_s[1]) + 1
 	localint_l = len(s)
 	localstring_l = basicMid(s, localint_s+1, localint_l-localint_s)
 
 	for localint_i = 0; ; localint_i = localint_j1 {
-		localint_j1 = intarray_l[localint_i]
+		localint_j1 = premiseSet.LArray[localint_i]
 
 		if localint_j1 == 0 {
 			break
@@ -757,8 +757,8 @@ func basicGosub4530(s string) int {
 		Number:    localint_n,
 		Statement: localstring_l,
 	}
-	intarray_l[localint_i] = a1
-	intarray_l[a1] = localint_j1
+	premiseSet.LArray[localint_i] = a1
+	premiseSet.LArray[a1] = localint_j1
 	intarray_a[0]++
 
 	return a1
@@ -1173,7 +1173,7 @@ func syllogize() bool {
 		return true
 
 	case "substitute":
-		if intarray_l[0] == 0 {
+		if premiseSet.LArray[0] == 0 {
 			fmt.Println(help.NoPremises)
 		} else {
 			basicGosub9060()
@@ -1182,7 +1182,7 @@ func syllogize() bool {
 	case "link":
 		fallthrough
 	case "link*":
-		if intarray_l[0] == 0 {
+		if premiseSet.LArray[0] == 0 {
 			fmt.Println(help.NoPremises)
 		} else {
 			basicGosub5070()
@@ -1191,10 +1191,10 @@ func syllogize() bool {
 	case "list":
 		fallthrough
 	case "list*":
-		if intarray_l[0] == 0 {
+		if premiseSet.LArray[0] == 0 {
 			fmt.Println(help.NoPremises)
 		} else {
-			premiseSet.List(intarray_l[:], strings.HasSuffix(localstring_l1, "*"))
+			premiseSet.List(premiseSet.LArray, strings.HasSuffix(localstring_l1, "*"))
 		}
 		return true
 	}
@@ -1219,7 +1219,7 @@ func syllogize() bool {
 				basicGosub3400(d1, a1)               // add terms to symbol table
 			}
 		} else {
-			if intarray_l[0] == 0 {
+			if premiseSet.LArray[0] == 0 {
 				fmt.Println(help.NoPremises)
 			} else {
 				basicGosub4760() // delete line
