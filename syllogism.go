@@ -633,8 +633,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			}
 
 			if msg {
-				// TODO: remove subtraction here--we really just want to use the other term type
-				fmt.Printf("Warning: %s %q has also occurred as a %s\n", termType, localstring_w, 3-termType)
+				fmt.Printf("Warning: %s %q has also occurred as a %s\n", termType, localstring_w, termType.Other())
 			}
 
 			localint_i1++
