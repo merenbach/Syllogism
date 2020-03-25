@@ -16,7 +16,7 @@ package main
 * b(63)  => term article type (index in a$ of proper article), so anywhere we see b(N) => symbols(N).ArticleType
 * b1     => first unused location in symbol table after a particular starting point
 			(first slot with symbols(N).Occurrences == 0)
-* c(63)  => unknown, but for symbols; currently c(N) => symboltable.CArray(N)
+* c(63)  => unknown, but for symbols; currently c(N) => premiseSet.SymbolTable.CArray(N)
 * d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
 * d1     => form of most recently entered premise, either for entry into l$ or for evaluation with /
 * e(2)   => article type (index in a$ of article type)
@@ -30,9 +30,9 @@ package main
             appears independent in substitution routine, but spans gosubs 3400 and 3950.
 * l(63) => occupied line slots (???) in premise list; currently l(N) => premiseset.LArray(N)
 * l$(63) => line statements
-* l1     => highest symbol table location used, so symboltable.HighestLocationUsed
+* l1     => highest symbol table location used, so premiseSet.SymbolTable.HighestLocationUsed
 * n(63)  => line numbers
-* n1     => negative premise count on symbol table, so symboltable.NegativePremiseCount
+* n1     => negative premise count on symbol table, so premiseSet.SymbolTable.NegativePremiseCount
 * o(63)  => term occurrence count, so anywhere we see o(N) => symbols(N).Occurrences
 * p(63)  => index of subject in symbol table for premise at given index, currently premises(N).Symbol
 * p1     => term type as integer
@@ -74,8 +74,7 @@ var (
 	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
 
-	premiseSet  = premise.NewPremiseSet(basicDimMax)
-	symbolTable = symboltable.New(basicDimMax + 2)
+	premiseSet = premise.NewPremiseSet(basicDimMax)
 
 	stringarray_s [7]string // appears to hold parsed line tokens
 	stringarray_w [3]string // appears to hold the most recently-input first and second terms for parsing or testing
@@ -121,21 +120,21 @@ func basicGosub9060() {
 		}
 		if localint_i1 != -2 {
 			if localint_i1 > 0 {
-				if localint_i1 <= symbolTable.HighestLocationUsed {
-					fmt.Printf("Enter new term to replace %s %q\n", symbolTable.Symbols[localint_i1].TermType, symbolTable.Symbols[localint_i1].Term)
+				if localint_i1 <= premiseSet.SymbolTable.HighestLocationUsed {
+					fmt.Printf("Enter new term to replace %s %q\n", premiseSet.SymbolTable.Symbols[localint_i1].TermType, premiseSet.SymbolTable.Symbols[localint_i1].Term)
 
 					localstring_w = lineInput("? ")
-					symbolTable.Symbols[localint_i1].Term = localstring_w
+					premiseSet.SymbolTable.Symbols[localint_i1].Term = localstring_w
 					fmt.Printf("Replaced by %q\n", localstring_w)
 				} else {
-					fmt.Printf("Address %d too large.  Symbol table only of length %d.\n", localint_i1, symbolTable.HighestLocationUsed)
+					fmt.Printf("Address %d too large.  Symbol table only of length %d.\n", localint_i1, premiseSet.SymbolTable.HighestLocationUsed)
 				}
 			} else {
 				fmt.Println(help.SyllogismHelpForSubstitute)
 			}
 			fmt.Println()
 		} else {
-			fmt.Println(symbolTable.Dump())
+			fmt.Println(premiseSet.SymbolTable.Dump())
 		}
 	}
 
@@ -146,13 +145,13 @@ func basicGosub5880() {
 	// 5880
 	//---See if conclusion possible---
 
-	localint_c1 = symbolTable.CArray[1]
-	localint_c2 = symbolTable.CArray[2]
+	localint_c1 = premiseSet.SymbolTable.CArray[1]
+	localint_c2 = premiseSet.SymbolTable.CArray[2]
 
-	symbol1 := symbolTable.Symbols[localint_c1]
-	symbol2 := symbolTable.Symbols[localint_c2]
+	symbol1 := premiseSet.SymbolTable.Symbols[localint_c1]
+	symbol2 := premiseSet.SymbolTable.Symbols[localint_c2]
 
-	symbolTable.Iterate(1, func(i int, s *symbol.Symbol) bool {
+	premiseSet.SymbolTable.Iterate(1, func(i int, s *symbol.Symbol) bool {
 		if s.Occurrences < 2 {
 			return false
 		}
@@ -172,7 +171,7 @@ func basicGosub5880() {
 		return false
 	})
 
-	if symbolTable.NegativePremiseCount > 1 {
+	if premiseSet.SymbolTable.NegativePremiseCount > 1 {
 		localint_j1 = 6
 		fmt.Println("More than one negative premise:")
 	}
@@ -181,7 +180,7 @@ func basicGosub5880() {
 		goto Line6180
 	}
 
-	if symbolTable.NegativePremiseCount == 0 {
+	if premiseSet.SymbolTable.NegativePremiseCount == 0 {
 		return
 	}
 
@@ -218,7 +217,7 @@ func basicGosub5070() {
 
 	localint_c = 0
 
-	symbolTable.Iterate(1, func(i int, s *symbol.Symbol) bool {
+	premiseSet.SymbolTable.Iterate(1, func(i int, s *symbol.Symbol) bool {
 		if s.Occurrences != 0 && s.Occurrences != 2 {
 			if s.Occurrences != 1 {
 				if localint_j1 != 2 {
@@ -229,7 +228,7 @@ func basicGosub5070() {
 				fmt.Printf("   %s %q occurs %d times in premises.\n", s.TermType, s.Term, s.Occurrences)
 			}
 			localint_c++
-			symbolTable.CArray[localint_c] = i
+			premiseSet.SymbolTable.CArray[localint_c] = i
 		}
 		return false
 	})
@@ -243,7 +242,7 @@ func basicGosub5070() {
 
 			for i := 1; i <= localint_c; i++ {
 				// TODO: use tabwriter here?
-				sym := symbolTable.Symbols[symbolTable.CArray[i]]
+				sym := premiseSet.SymbolTable.Symbols[premiseSet.SymbolTable.CArray[i]]
 				fmt.Printf("%s%s -- %s\n", basicTabString(6), sym.Term, sym.TermType)
 			}
 		} else {
@@ -272,10 +271,10 @@ func basicGosub5070() {
 		goto Line5750
 	}
 
-	if symbolTable.Symbols[symbolTable.CArray[1]].DistributionCount == 0 && symbolTable.Symbols[symbolTable.CArray[2]].DistributionCount == 1 {
-		temp_symbol = symbolTable.Symbols[symbolTable.CArray[2]]
+	if premiseSet.SymbolTable.Symbols[premiseSet.SymbolTable.CArray[1]].DistributionCount == 0 && premiseSet.SymbolTable.Symbols[premiseSet.SymbolTable.CArray[2]].DistributionCount == 1 {
+		temp_symbol = premiseSet.SymbolTable.Symbols[premiseSet.SymbolTable.CArray[2]]
 	} else {
-		temp_symbol = symbolTable.Symbols[symbolTable.CArray[1]]
+		temp_symbol = premiseSet.SymbolTable.Symbols[premiseSet.SymbolTable.CArray[1]]
 	}
 	localint_i = 1
 
@@ -357,7 +356,7 @@ func basicGosub4890(j1 int) {
 
 	prem := premiseSet.Premises[j1]
 	if prem.Form.IsNegative() {
-		symbolTable.NegativePremiseCount--
+		premiseSet.SymbolTable.NegativePremiseCount--
 		qDecrement = true
 	} else if prem.Predicate.TermType == term.TypeDesignator {
 		qDecrement = true
@@ -401,14 +400,14 @@ func basicGosub6200() {
 
 	var z = "A is A"
 	if premiseSet.LArray[0] != 0 {
-		z = symbolTable.Compute(symbolTable.Symbols[localint_c1], symbolTable.Symbols[localint_c2])
+		z = premiseSet.SymbolTable.Compute(premiseSet.SymbolTable.Symbols[localint_c1], premiseSet.SymbolTable.Symbols[localint_c2])
 	}
 
 	// PRINT  conclusion
 	fmt.Printf("  / %s\n", z)
 	if localint_v1 != 0 {
 		fmt.Print("  * Aristotle-valid only, i.e. on requirement that term ")
-		fmt.Printf("%q denotes.\n", symbolTable.Symbols[localint_v1].Term)
+		fmt.Printf("%q denotes.\n", premiseSet.SymbolTable.Symbols[localint_v1].Term)
 	}
 }
 
@@ -444,7 +443,7 @@ func basicGosub6630() {
 		stringarray_w[1] = localstring_w
 	} else {
 		symbolIsUndeterminedTerm := func(j int) bool {
-			sym := symbolTable.Symbols[symbolTable.CArray[j]]
+			sym := premiseSet.SymbolTable.Symbols[premiseSet.SymbolTable.CArray[j]]
 			if localstring_w == sym.Term {
 				switch sym.TermType {
 				case term.TypeUndetermined:
@@ -481,28 +480,28 @@ func basicGosub6630() {
 	}
 
 	if localint_j > 0 {
-		localint_t1 = symbolTable.CArray[localint_j]
-		localint_t2 = symbolTable.CArray[3-localint_j]
-		if localstring_w != symbolTable.Symbols[localint_t2].Term {
+		localint_t1 = premiseSet.SymbolTable.CArray[localint_j]
+		localint_t2 = premiseSet.SymbolTable.CArray[3-localint_j]
+		if localstring_w != premiseSet.SymbolTable.Symbols[localint_t2].Term {
 			goto Line7060
 		}
-		if symbolTable.Symbols[localint_t2].TermType != term.TypeUndetermined {
-			if termType2 != term.TypeUndetermined && termType2 != symbolTable.Symbols[localint_t2].TermType {
+		if premiseSet.SymbolTable.Symbols[localint_t2].TermType != term.TypeUndetermined {
+			if termType2 != term.TypeUndetermined && termType2 != premiseSet.SymbolTable.Symbols[localint_t2].TermType {
 				goto Line7060
 			}
 		} else if termType2 != term.TypeUndetermined {
-			fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[localint_t2].Term, termType2)
+			fmt.Printf("Note: %q used in premises taken to be %s\n", premiseSet.SymbolTable.Symbols[localint_t2].Term, termType2)
 		}
-		if symbolTable.NegativePremiseCount > 0 && !d1.IsNegative() {
+		if premiseSet.SymbolTable.NegativePremiseCount > 0 && !d1.IsNegative() {
 			fmt.Println("** Negative conclusion required.")
 			return
 		}
 		goto Line7120
 	}
-	if localstring_w == symbolTable.Symbols[symbolTable.CArray[1]].Term {
-		localint_t2 = symbolTable.CArray[2]
+	if localstring_w == premiseSet.SymbolTable.Symbols[premiseSet.SymbolTable.CArray[1]].Term {
+		localint_t2 = premiseSet.SymbolTable.CArray[2]
 	} else {
-		localint_t2 = symbolTable.CArray[1]
+		localint_t2 = premiseSet.SymbolTable.CArray[1]
 	}
 	goto Line7070
 
@@ -510,21 +509,21 @@ Line7060: // 7060
 	fmt.Printf("** Conclusion may not contain %s %q;\n", termType2, localstring_w)
 
 Line7070: // 7070
-	fmt.Printf("** Conclusion must contain %s %q.\n", symbolTable.Symbols[localint_t2].TermType, symbolTable.Symbols[localint_t2].Term)
+	fmt.Printf("** Conclusion must contain %s %q.\n", premiseSet.SymbolTable.Symbols[localint_t2].TermType, premiseSet.SymbolTable.Symbols[localint_t2].Term)
 	return
 
 Line7120: // 7120
-	if symbolTable.NegativePremiseCount == 0 && d1.IsNegative() {
+	if premiseSet.SymbolTable.NegativePremiseCount == 0 && d1.IsNegative() {
 		fmt.Println("** Affirmative conclusion required.")
 		return
 	}
 
 	if localint_j1 != 1 {
-		if symbolTable.Symbols[localint_t1].DistributionCount == 0 && d1 > 1 && d1 < 4 {
-			help.ShowTermDistributionError(symbolTable.Symbols[localint_t1].Term)
+		if premiseSet.SymbolTable.Symbols[localint_t1].DistributionCount == 0 && d1 > 1 && d1 < 4 {
+			help.ShowTermDistributionError(premiseSet.SymbolTable.Symbols[localint_t1].Term)
 			return
-		} else if symbolTable.Symbols[localint_t2].DistributionCount == 0 && (d1.IsNegative() || d1 == 6) {
-			help.ShowTermDistributionError(symbolTable.Symbols[localint_t2].Term)
+		} else if premiseSet.SymbolTable.Symbols[localint_t2].DistributionCount == 0 && (d1.IsNegative() || d1 == 6) {
+			help.ShowTermDistributionError(premiseSet.SymbolTable.Symbols[localint_t2].Term)
 			return
 		}
 	}
@@ -535,11 +534,11 @@ Line7120: // 7120
 		if d1 > 0 {
 			return
 		}
-		symbolTable.Symbols[0].Term = localstring_w
-	} else if symbolTable.Symbols[localint_t1].DistributionCount > 0 && d1 < 2 {
+		premiseSet.SymbolTable.Symbols[0].Term = localstring_w
+	} else if premiseSet.SymbolTable.Symbols[localint_t1].DistributionCount > 0 && d1 < 2 {
 		localint_v1 = localint_t1
 	} else {
-		if symbolTable.Symbols[localint_t2].DistributionCount > 0 && !d1.IsNegative() && d1 != form.AIsT && d1 != 6 {
+		if premiseSet.SymbolTable.Symbols[localint_t2].DistributionCount > 0 && !d1.IsNegative() && d1 != form.AIsT && d1 != 6 {
 			localint_v1 = localint_t2
 		}
 
@@ -549,7 +548,7 @@ Line7120: // 7120
 	}
 
 	fmt.Println("    but on Aristotelian interpretation only, i.e. on requirement")
-	fmt.Printf("    that term %q denotes.\n", symbolTable.Symbols[localint_v1].Term)
+	fmt.Printf("    that term %q denotes.\n", premiseSet.SymbolTable.Symbols[localint_v1].Term)
 }
 
 func basicGosub1840() {
@@ -560,7 +559,8 @@ func basicGosub1840() {
 		return
 	}
 
-	symbolTable = symboltable.New(basicDimMax + 2)
+	// TODO: can we just create a new premiseSet here?
+	premiseSet.SymbolTable = symboltable.New(basicDimMax + 2)
 
 	for localint_j = premiseSet.LArray[0]; localint_j > 0; localint_j = premiseSet.LArray[localint_j] {
 		premiseSet.AArray[0]--
@@ -575,10 +575,10 @@ func basicGosub3400(d1 form.Form, a1 int) {
 	var localint_b1 int
 	var termType term.Type // formerly g
 	if d1.IsNegative() {
-		symbolTable.NegativePremiseCount++
+		premiseSet.SymbolTable.NegativePremiseCount++
 
-		if symbolTable.NegativePremiseCount > 1 && msg {
-			fmt.Printf("Warning: %d negative premises\n", symbolTable.NegativePremiseCount)
+		if premiseSet.SymbolTable.NegativePremiseCount > 1 && msg {
+			fmt.Printf("Warning: %d negative premises\n", premiseSet.SymbolTable.NegativePremiseCount)
 		}
 	}
 
@@ -596,14 +596,14 @@ func basicGosub3400(d1 form.Form, a1 int) {
 		localint_i1 = 1
 
 		for ; ; localint_i1++ { // 3500
-			localint_i1, localint_b1 = symbolTable.Search(localint_i1, w)
+			localint_i1, localint_b1 = premiseSet.SymbolTable.Search(localint_i1, w)
 
-			sym := symbolTable.Symbols[localint_i1]
-			if localint_i1 > symbolTable.HighestLocationUsed {
+			sym := premiseSet.SymbolTable.Symbols[localint_i1]
+			if localint_i1 > premiseSet.SymbolTable.HighestLocationUsed {
 				if localint_b1 > 0 {
 					localint_i1 = localint_b1
 				} else {
-					symbolTable.HighestLocationUsed++
+					premiseSet.SymbolTable.HighestLocationUsed++
 				}
 
 				sym.Term = w
@@ -637,7 +637,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			}
 		}
 
-		sym := symbolTable.Symbols[localint_i1]
+		sym := premiseSet.SymbolTable.Symbols[localint_i1]
 		if intarray_e[localint_j] != article.TypeNone {
 			sym.ArticleType = intarray_e[localint_j]
 		} else if sym.ArticleType == article.TypeNone && w != raw_string {
@@ -1132,7 +1132,7 @@ func syllogize() bool {
 		help.ShowGeneralHelp()
 		return true
 	case "dump":
-		fmt.Println(symbolTable.Dump())
+		fmt.Println(premiseSet.SymbolTable.Dump())
 		return true
 	case "msg":
 		msg = !msg

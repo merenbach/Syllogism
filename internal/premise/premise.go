@@ -5,15 +5,17 @@ import (
 
 	"github.com/merenbach/syllogism/internal/form"
 	"github.com/merenbach/syllogism/internal/symbol"
+	"github.com/merenbach/syllogism/internal/symboltable"
 	"github.com/merenbach/syllogism/internal/term"
 )
 
 // Set of all premises.
 type Set struct {
-	Premises  []*Premise
-	LinkOrder []int
-	LArray    []int
-	AArray    []int
+	Premises    []*Premise
+	SymbolTable *symboltable.SymbolTable
+	LinkOrder   []int
+	LArray      []int
+	AArray      []int
 }
 
 // List output for premises, optionally in distribution-analysis format.
@@ -76,10 +78,11 @@ func (ps *Set) Link(max int, analyze bool) {
 // NewPremiseSet creates a new premise set with the given size.
 func NewPremiseSet(size int) *Set {
 	ps := &Set{
-		Premises:  make([]*Premise, size),
-		LinkOrder: make([]int, size),
-		AArray:    make([]int, size),
-		LArray:    make([]int, size),
+		Premises:    make([]*Premise, size),
+		SymbolTable: symboltable.New(size + 2),
+		LinkOrder:   make([]int, size),
+		AArray:      make([]int, size),
+		LArray:      make([]int, size),
 	}
 
 	for i := range ps.AArray {
