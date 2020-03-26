@@ -32,7 +32,7 @@ package main
 * l$(63) => line statements
 * l1     => highest symbol table location used, so premiseSet.SymbolTable.HighestLocationUsed
 * n(63)  => line numbers
-* n1     => negative premise count on symbol table, so premiseSet.NegativePremiseCount
+* n1     => negative premise count on symbol table, supplanted by premiseSet.NegativePremiseCount()
 * o(63)  => term occurrence count, so anywhere we see o(N) => symbols(N).Occurrences
 * p(63)  => index of subject in symbol table for premise at given index, currently premises(N).Symbol
 * p1     => term type as integer
@@ -171,7 +171,8 @@ func basicGosub5880() {
 		return false
 	})
 
-	if premiseSet.NegativePremiseCount > 1 {
+	negativePremiseCount := premiseSet.NegativePremiseCount()
+	if negativePremiseCount > 1 {
 		localint_j1 = 6
 		fmt.Println("More than one negative premise:")
 	}
@@ -180,7 +181,7 @@ func basicGosub5880() {
 		goto Line6180
 	}
 
-	if premiseSet.NegativePremiseCount == 0 {
+	if negativePremiseCount == 0 {
 		return
 	}
 
@@ -345,31 +346,6 @@ Line5750: // 5750
 	premiseSet.Link(localint_l, strings.HasSuffix(localstring_l1, "*"))
 }
 
-func basicGosub4890(j1 int) {
-	// 4890
-	//---Decrement table entries---
-	// Performed upon deletion or replacement of a line
-	var (
-		pDecrement bool
-		qDecrement bool
-	)
-
-	prem := premiseSet.Premises[j1]
-	if prem.Form.IsNegative() {
-		premiseSet.NegativePremiseCount--
-		qDecrement = true
-	} else if prem.Predicate.TermType == term.TypeDesignator {
-		qDecrement = true
-	}
-
-	if prem.Form >= 2 {
-		pDecrement = true
-	}
-
-	prem.Subject.ReduceDistributionCount(pDecrement)
-	prem.Predicate.ReduceDistributionCount(qDecrement)
-}
-
 func basicGosub4760() {
 	// 4760
 	//---Delete a line---
@@ -387,7 +363,7 @@ func basicGosub4760() {
 			premiseSet.AArray[0]--
 			premiseSet.AArray[premiseSet.AArray[0]] = localint_j1
 			premiseSet.LArray[localint_i] = premiseSet.LArray[localint_j1]
-			basicGosub4890(localint_j1)
+			premiseSet.Premises[localint_j1].Decrement()
 			break
 		}
 		localint_i = premiseSet.LArray[localint_i]
@@ -488,7 +464,7 @@ func basicGosub6630() {
 		} else if termType2 != term.TypeUndetermined {
 			fmt.Printf("Note: %q used in premises taken to be %s\n", premiseSet.SymbolTable.Symbols[localint_t2].Term, termType2)
 		}
-		if premiseSet.NegativePremiseCount > 0 && !d1.IsNegative() {
+		if premiseSet.NegativePremiseCount() > 0 && !d1.IsNegative() {
 			fmt.Println("** Negative conclusion required.")
 			return
 		}
@@ -509,7 +485,7 @@ Line7070: // 7070
 	return
 
 Line7120: // 7120
-	if premiseSet.NegativePremiseCount == 0 && d1.IsNegative() {
+	if premiseSet.NegativePremiseCount() == 0 && d1.IsNegative() {
 		fmt.Println("** Affirmative conclusion required.")
 		return
 	}
@@ -571,10 +547,9 @@ func basicGosub3400(d1 form.Form, a1 int) {
 	var localint_b1 int
 	var termType term.Type // formerly g
 	if d1.IsNegative() {
-		premiseSet.NegativePremiseCount++
-
-		if premiseSet.NegativePremiseCount > 1 && msg {
-			fmt.Printf("Warning: %d negative premises\n", premiseSet.NegativePremiseCount)
+		negativePremiseCount := premiseSet.NegativePremiseCount()
+		if negativePremiseCount > 1 && msg {
+			fmt.Printf("Warning: %d negative premises\n", negativePremiseCount)
 		}
 	}
 
@@ -708,7 +683,7 @@ func basicGosub4530(s string) int {
 		}
 
 		if localint_n == premiseSet.Premises[localint_j1].Number {
-			basicGosub4890(localint_j1)
+			premiseSet.Premises[localint_j1].Decrement()
 			premiseSet.Premises[localint_j1] = &premise.Premise{
 				Number:    localint_n,
 				Statement: localstring_l,

@@ -14,12 +14,11 @@ import (
 
 // Set of all premises.
 type Set struct {
-	Premises             []*Premise
-	SymbolTable          *symboltable.SymbolTable
-	NegativePremiseCount int
-	LinkOrder            []int
-	LArray               []int
-	AArray               []int
+	Premises    []*Premise
+	SymbolTable *symboltable.SymbolTable
+	LinkOrder   []int
+	LArray      []int
+	AArray      []int
 }
 
 // Compute a conclusion.
@@ -28,7 +27,7 @@ func (ps *Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
 		return "A is A"
 	}
 
-	if ps.NegativePremiseCount == 0 {
+	if ps.NegativePremiseCount() == 0 {
 		// affirmative conclusion
 		// TODO: can we push more of these conditionals inside the symbol type?
 		if symbol1.DistributionCount > 0 {
@@ -62,7 +61,7 @@ func (ps *Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
 // Dump values of variables in a SymbolTable.
 func (ps *Set) Dump() string {
 	dump := new(bytes.Buffer)
-	fmt.Fprintf(dump, "Highest symbol table loc. used: %d  Negative premises: %d\n", ps.SymbolTable.HighestLocationUsed, ps.NegativePremiseCount)
+	fmt.Fprintf(dump, "Highest symbol table loc. used: %d  Negative premises: %d\n", ps.SymbolTable.HighestLocationUsed, ps.NegativePremiseCount())
 	if ps.SymbolTable.HighestLocationUsed != 0 {
 		w := tabwriter.NewWriter(dump, 0, 0, 2, ' ', 0)
 		fmt.Fprint(w, "Adr.\tart.\tterm\ttype\toccurs\tdist. count")
@@ -120,18 +119,18 @@ func (ps *Set) Link(max int, analyze bool) {
 	}
 }
 
-// // NegativePremiseCount returns the count of negative premises.
-// func (ps *Set) NegativePremiseCount() int {
-// 	var negativePremises int
-// 	// TODO: is there a better way to iterate?
-// 	for i := ps.LArray[0]; i != 0; i = ps.LArray[i] {
-// 		prem := ps.Premises[i]
-// 		if prem.Form.IsNegative() {
-// 			negativePremises++
-// 		}
-// 	}
-// 	return negativePremises
-// }
+// NegativePremiseCount2 returns the count of negative premises.
+func (ps *Set) NegativePremiseCount() int {
+	var negativePremises int
+	// TODO: is there a better way to iterate?
+	for i := ps.LArray[0]; i != 0; i = ps.LArray[i] {
+		prem := ps.Premises[i]
+		if prem.Form.IsNegative() {
+			negativePremises++
+		}
+	}
+	return negativePremises
+}
 
 // NewPremiseSet creates a new premise set with the given size.
 func NewPremiseSet(size int) *Set {
@@ -165,30 +164,28 @@ func (pr *Premise) String() string {
 	return fmt.Sprintf("%d  %s", pr.Number, pr.Statement)
 }
 
-// // Decrement table entries.
-// TODO: this will be perfect if we can note the negative premise count automatically, rather than keeping a variable for it
-// func (pr *Premise) Decrement(st *symboltable.SymbolTable) {
-// 	var (
-// 		pDecrement bool
-// 		qDecrement bool
-// 	)
+// Decrement table entries.
+func (pr *Premise) Decrement() {
+	var (
+		pDecrement bool
+		qDecrement bool
+	)
 
-// 	if pr.Form.IsNegative() {
-// 		st.NegativePremiseCount--
-// 		qDecrement = true
-// 	} else if pr.Predicate.TermType == term.TypeDesignator {
-// 		qDecrement = true
-// 	}
+	if pr.Form.IsNegative() {
+		qDecrement = true
+	} else if pr.Predicate.TermType == term.TypeDesignator {
+		qDecrement = true
+	}
 
-// 	if pr.Form >= 2 {
-// 		pDecrement = true
-// 	}
+	if pr.Form >= 2 {
+		pDecrement = true
+	}
 
-// 	pr.Subject.ReduceDistributionCount(pDecrement)
-// 	pr.Predicate.ReduceDistributionCount(qDecrement)
-// }
+	pr.Subject.ReduceDistributionCount(pDecrement)
+	pr.Predicate.ReduceDistributionCount(qDecrement)
+}
 
-// // Empty determines whether a line is empty.
-// func (pr *Premise) Empty() bool {
-// 	return pr.Statement == ""
-// }
+// Empty determines whether a line is empty.
+func (pr *Premise) Empty() bool {
+	return pr.Statement == ""
+}
