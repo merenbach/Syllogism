@@ -16,7 +16,7 @@ type Symbol struct {
 	DistributionCount int
 }
 
-// ReduceDistributionCount reduces the distribution count of the symbol.
+// ReduceDistributionCount reduces the occurrences and (optionally) distribution count of the symbol.
 // TODO: Golang may present a more idiomatic way to do this
 func (s *Symbol) ReduceDistributionCount(decrement bool) {
 	s.Occurrences--

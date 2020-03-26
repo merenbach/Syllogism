@@ -32,7 +32,7 @@ package main
 * l$(63) => line statements
 * l1     => highest symbol table location used, so premiseSet.SymbolTable.HighestLocationUsed
 * n(63)  => line numbers
-* n1     => negative premise count on symbol table, supplanted by premiseSet.NegativePremiseCount()
+* n1     => negative premise count on premise set, supplanted by premiseSet.NegativePremiseCount()
 * o(63)  => term occurrence count, so anywhere we see o(N) => symbols(N).Occurrences
 * p(63)  => index of subject in symbol table for premise at given index, currently premises(N).Symbol
 * p1     => term type as integer
