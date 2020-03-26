@@ -544,7 +544,6 @@ func basicGosub1840() {
 func basicGosub3400(d1 form.Form, a1 int) {
 	// 3400
 	//---Add W$(1), W$(2) to table T$()---
-	var localint_b1 int
 	var termType term.Type // formerly g
 	if d1.IsNegative() {
 		negativePremiseCount := premiseSet.NegativePremiseCount()
@@ -567,6 +566,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 		localint_i1 = 1
 
 		for ; ; localint_i1++ { // 3500
+			var localint_b1 int
 			localint_i1, localint_b1 = premiseSet.SymbolTable.Search(localint_i1, w)
 
 			sym := premiseSet.SymbolTable.Symbols[localint_i1]
