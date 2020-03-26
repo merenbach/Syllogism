@@ -41,7 +41,7 @@ func (st *SymbolTable) Search(start int, w string) (int, int) {
 	//---Search T$() for W$ from I1 to L1---
 
 	// If found, I1 = L1; else I1 = L1+1. B1 set to 1st empty loc.
-	firstEmptyLocation := 0
+	var firstEmptyLocation int
 
 	st.Iterate(start, func(i int, s *symbol.Symbol) bool {
 		if s.Term == w {
