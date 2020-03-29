@@ -61,6 +61,7 @@ import (
 	"github.com/merenbach/syllogism/internal/article"
 	"github.com/merenbach/syllogism/internal/form"
 	"github.com/merenbach/syllogism/internal/help"
+	"github.com/merenbach/syllogism/internal/premise"
 	"github.com/merenbach/syllogism/internal/premiseset"
 	"github.com/merenbach/syllogism/internal/stringutil"
 	"github.com/merenbach/syllogism/internal/symbol"
@@ -516,7 +517,7 @@ func basicGosub1840() {
 	premiseSet.LArray[0] = 0
 }
 
-func basicGosub3400(d1 form.Form, a1 int) {
+func basicGosub3400(d1 form.Form, prem *premise.Premise) {
 	// 3400
 	//---Add W$(1), W$(2) to table T$()---
 	var termType term.Type // formerly g
@@ -603,7 +604,6 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			fmt.Printf("Warning: %s %q has occurred %d times\n", sym.TermType, w, sym.Occurrences)
 		}
 
-		prem := premiseSet.Premises[a1]
 		if localint_j != 2 {
 			prem.Subject = sym
 
@@ -637,7 +637,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 	localint_j = 2
 	temp(localint_j, stringarray_w[localint_j])
 
-	premiseSet.Premises[a1].Form = d1
+	prem.Form = d1
 }
 
 // type formInfo struct {
@@ -915,7 +915,8 @@ func basicGosub8980() {
 		}
 		localint_s := len(stringarray_s[1]) + 1
 		a1 := premiseSet.Enter(n, localstring_l1[localint_s:])
-		basicGosub3400(d1, a1)
+		prem := premiseSet.Premises[a1]
+		basicGosub3400(d1, prem)
 	}
 
 	if msg {
@@ -1098,7 +1099,8 @@ func syllogize() bool {
 				}
 				localint_s := len(stringarray_s[1]) + 1
 				a1 := premiseSet.Enter(n, localstring_l1[localint_s:])
-				basicGosub3400(d1, a1) // add terms to symbol table
+				prem := premiseSet.Premises[a1]
+				basicGosub3400(d1, prem) // add terms to symbol table
 			}
 		} else {
 			if premiseSet.LArray[0] == 0 {
