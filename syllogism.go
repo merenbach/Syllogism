@@ -669,6 +669,9 @@ func enterLine(s string, n int) int {
 	// 4530
 	//---Enter line into list---
 
+	// Silently delete any existing line matching this line number
+	deleteLine(n, true)
+
 	localint_s = len(stringarray_s[1]) + 1
 	localint_l = len(s)
 	localstring_l = basicMid(s, localint_s+1, localint_l-localint_s)
@@ -683,12 +686,6 @@ func enterLine(s string, n int) int {
 
 		if localint_j1 == 0 {
 			break
-		}
-
-		if n == premiseSet.Premises[localint_j1].Number {
-			premiseSet.Premises[localint_j1].Decrement()
-			premiseSet.Premises[localint_j1] = newPremise
-			return localint_j1
 		}
 
 		if n < premiseSet.Premises[localint_j1].Number {
