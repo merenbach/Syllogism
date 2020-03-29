@@ -61,7 +61,6 @@ import (
 	"github.com/merenbach/syllogism/internal/article"
 	"github.com/merenbach/syllogism/internal/form"
 	"github.com/merenbach/syllogism/internal/help"
-	"github.com/merenbach/syllogism/internal/premise"
 	"github.com/merenbach/syllogism/internal/premiseset"
 	"github.com/merenbach/syllogism/internal/stringutil"
 	"github.com/merenbach/syllogism/internal/symbol"
@@ -641,37 +640,6 @@ func basicGosub3400(d1 form.Form, a1 int) {
 	premiseSet.Premises[a1].Form = d1
 }
 
-// enterLine enters the provided line (string with line number + statement) into the list.
-func enterLine(n int, s string) int {
-	// 4530
-	//---Enter line into list---
-
-	// Silently delete any existing line matching this line number
-	premiseSet.Delete(n, true)
-
-	newPremise := premise.New(n, s)
-
-	for localint_i = 0; ; localint_i = localint_j1 {
-		localint_j1 = premiseSet.LArray[localint_i]
-
-		if localint_j1 == 0 {
-			break
-		}
-
-		if n < premiseSet.Premises[localint_j1].Number {
-			break
-		}
-	}
-
-	a1 := premiseSet.AArray[premiseSet.AArray[0]]
-	premiseSet.Premises[a1] = newPremise
-	premiseSet.LArray[localint_i] = a1
-	premiseSet.LArray[a1] = localint_j1
-	premiseSet.AArray[0]++
-
-	return a1
-}
-
 // type formInfo struct {
 // 	formType   int
 // 	firstWord  string
@@ -946,7 +914,7 @@ func basicGosub8980() {
 			log.Println(err)
 		}
 		localint_s := len(stringarray_s[1]) + 1
-		a1 := enterLine(n, localstring_l1[localint_s:])
+		a1 := premiseSet.Enter(n, localstring_l1[localint_s:])
 		basicGosub3400(d1, a1)
 	}
 
@@ -1129,8 +1097,8 @@ func syllogize() bool {
 					log.Println(err)
 				}
 				localint_s := len(stringarray_s[1]) + 1
-				a1 := enterLine(n, localstring_l1[localint_s:]) // enter line into list
-				basicGosub3400(d1, a1)                          // add terms to symbol table
+				a1 := premiseSet.Enter(n, localstring_l1[localint_s:])
+				basicGosub3400(d1, a1) // add terms to symbol table
 			}
 		} else {
 			if premiseSet.LArray[0] == 0 {

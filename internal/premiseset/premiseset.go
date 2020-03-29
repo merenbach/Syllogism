@@ -21,6 +21,38 @@ type Set struct {
 	AArray      []int
 }
 
+// Enter line into list.
+func (ps *Set) Enter(n int, s string) int {
+	// Silently delete any existing line matching this line number
+	ps.Delete(n, true)
+	newPremise := premise.New(n, s)
+
+	var (
+		localint_i  int
+		localint_j1 int
+	)
+
+	for localint_i = 0; ; localint_i = localint_j1 {
+		localint_j1 = ps.LArray[localint_i]
+
+		if localint_j1 == 0 {
+			break
+		}
+
+		if n < ps.Premises[localint_j1].Number {
+			break
+		}
+	}
+
+	a1 := ps.AArray[ps.AArray[0]]
+	ps.Premises[a1] = newPremise
+	ps.LArray[localint_i] = a1
+	ps.LArray[a1] = localint_j1
+	ps.AArray[0]++
+
+	return a1
+}
+
 // Delete a line.
 func (ps *Set) Delete(n int, silent bool) {
 	for i := 0; ; i = ps.LArray[i] {
