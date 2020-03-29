@@ -7,6 +7,7 @@ package main
 * Refactor into proper Golang project layout
 * Use Golang list type for Line collection?
 * Improve dumping further
+* Remove any spurious whitespace in entries
 *
 * Porting notes on variables:
 *
@@ -676,10 +677,7 @@ func enterLine(s string, n int) int {
 	localint_l = len(s)
 	localstring_l = basicMid(s, localint_s+1, localint_l-localint_s)
 
-	newPremise := &premise.Premise{
-		Number:    n,
-		Statement: localstring_l,
-	}
+	newPremise := premise.New(n, localstring_l)
 
 	for localint_i = 0; ; localint_i = localint_j1 {
 		localint_j1 = premiseSet.LArray[localint_i]

@@ -18,6 +18,14 @@ type Premise struct {
 	Predicate *symbol.Symbol
 }
 
+// New premise.
+func New(n int, s string) *Premise {
+	return &Premise{
+		Number:    n,
+		Statement: s,
+	}
+}
+
 func (pr *Premise) String() string {
 	return fmt.Sprintf("%d  %s", pr.Number, pr.Statement)
 }
