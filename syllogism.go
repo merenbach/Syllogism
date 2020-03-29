@@ -644,7 +644,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 }
 
 // enterLine enters the provided line (string with line number + statement) into the list.
-func enterLine(s string, n int) int {
+func enterLine(n int, s string) int {
 	// 4530
 	//---Enter line into list---
 
@@ -950,7 +950,7 @@ func basicGosub8980() {
 		if err != nil {
 			log.Println(err)
 		}
-		a1 := enterLine(localstring_l1, n)
+		a1 := enterLine(n, localstring_l1)
 		basicGosub3400(d1, a1)
 	}
 
@@ -1132,7 +1132,7 @@ func syllogize() bool {
 				if err != nil {
 					log.Println(err)
 				}
-				a1 := enterLine(localstring_l1, n) // enter line into list
+				a1 := enterLine(n, localstring_l1) // enter line into list
 				basicGosub3400(d1, a1)             // add terms to symbol table
 			}
 		} else {
