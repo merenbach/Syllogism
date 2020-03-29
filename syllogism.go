@@ -348,28 +348,6 @@ Line5750: // 5750
 	premiseSet.Link(localint_l, strings.HasSuffix(localstring_l1, "*"))
 }
 
-func deleteLine(n int, silent bool) {
-	// 4760
-	//---Delete a line---
-
-	for i := 0; ; i = premiseSet.LArray[i] {
-		j1 := premiseSet.LArray[i]
-
-		if j1 == 0 {
-			if !silent {
-				fmt.Printf("Line %d not found\n", n)
-			}
-			break
-		} else if n == premiseSet.Premises[j1].Number {
-			premiseSet.AArray[0]--
-			premiseSet.AArray[premiseSet.AArray[0]] = j1
-			premiseSet.LArray[i] = premiseSet.LArray[j1]
-			premiseSet.Premises[j1].Decrement()
-			break
-		}
-	}
-}
-
 func basicGosub6200() {
 	// 6200
 	//---Compute conclusion---
@@ -671,7 +649,7 @@ func enterLine(s string, n int) int {
 	//---Enter line into list---
 
 	// Silently delete any existing line matching this line number
-	deleteLine(n, true)
+	premiseSet.Delete(n, true)
 
 	localint_s = len(stringarray_s[1]) + 1
 	localstring_l = s[localint_s:]
@@ -1165,7 +1143,7 @@ func syllogize() bool {
 				if err != nil {
 					log.Println(err)
 				}
-				deleteLine(localint_n, false) // delete line
+				premiseSet.Delete(localint_n, false)
 			}
 		}
 		return true

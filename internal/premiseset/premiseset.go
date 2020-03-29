@@ -21,6 +21,26 @@ type Set struct {
 	AArray      []int
 }
 
+// Delete a line.
+func (ps *Set) Delete(n int, silent bool) {
+	for i := 0; ; i = ps.LArray[i] {
+		j1 := ps.LArray[i]
+
+		if j1 == 0 {
+			if !silent {
+				fmt.Printf("Line %d not found\n", n)
+			}
+			break
+		} else if n == ps.Premises[j1].Number {
+			ps.AArray[0]--
+			ps.AArray[ps.AArray[0]] = j1
+			ps.LArray[i] = ps.LArray[j1]
+			ps.Premises[j1].Decrement()
+			break
+		}
+	}
+}
+
 // Compute a conclusion.
 func (ps *Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
 	if ps.LArray[0] == 0 {
