@@ -649,9 +649,7 @@ func enterLine(n int, s string) int {
 	// Silently delete any existing line matching this line number
 	premiseSet.Delete(n, true)
 
-	localint_s := len(stringarray_s[1]) + 1
-
-	newPremise := premise.New(n, s[localint_s:])
+	newPremise := premise.New(n, s)
 
 	for localint_i = 0; ; localint_i = localint_j1 {
 		localint_j1 = premiseSet.LArray[localint_i]
@@ -947,7 +945,8 @@ func basicGosub8980() {
 		if err != nil {
 			log.Println(err)
 		}
-		a1 := enterLine(n, localstring_l1)
+		localint_s := len(stringarray_s[1]) + 1
+		a1 := enterLine(n, localstring_l1[localint_s:])
 		basicGosub3400(d1, a1)
 	}
 
@@ -1129,8 +1128,9 @@ func syllogize() bool {
 				if err != nil {
 					log.Println(err)
 				}
-				a1 := enterLine(n, localstring_l1) // enter line into list
-				basicGosub3400(d1, a1)             // add terms to symbol table
+				localint_s := len(stringarray_s[1]) + 1
+				a1 := enterLine(n, localstring_l1[localint_s:]) // enter line into list
+				basicGosub3400(d1, a1)                          // add terms to symbol table
 			}
 		} else {
 			if premiseSet.LArray[0] == 0 {
