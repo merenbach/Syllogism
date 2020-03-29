@@ -347,7 +347,7 @@ Line5750: // 5750
 	premiseSet.Link(localint_l, strings.HasSuffix(localstring_l1, "*"))
 }
 
-func basicGosub4760(n int) {
+func deleteLine(n int) {
 	// 4760
 	//---Delete a line---
 
@@ -1167,7 +1167,7 @@ func syllogize() bool {
 				if err != nil {
 					log.Println(err)
 				}
-				basicGosub4760(localint_n) // delete line
+				deleteLine(localint_n) // delete line
 			}
 		}
 		return true
