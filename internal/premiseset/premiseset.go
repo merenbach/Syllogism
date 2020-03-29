@@ -15,12 +15,13 @@ import (
 
 // Set of all premises.
 type Set struct {
-	Premises    []*premise.Premise
-	NewPremises []*premise.Premise
-	SymbolTable *symboltable.SymbolTable
-	LinkOrder   []int
-	LArray      []int
-	AArray      []int
+	Premises        []*premise.Premise
+	NewPremises     []*premise.Premise
+	NewPremiseLinks map[*premise.Premise]*premise.Premise
+	SymbolTable     *symboltable.SymbolTable
+	LinkOrder       []int
+	LArray          []int
+	AArray          []int
 }
 
 // Enter line into list.
@@ -219,12 +220,13 @@ func (ps *Set) Empty() bool {
 // New premise set with the given size.
 func New(size int) *Set {
 	ps := &Set{
-		Premises:    make([]*premise.Premise, size),
-		NewPremises: make([]*premise.Premise, 0),
-		SymbolTable: symboltable.New(size + 2),
-		LinkOrder:   make([]int, size),
-		AArray:      make([]int, size),
-		LArray:      make([]int, size),
+		Premises:        make([]*premise.Premise, size),
+		NewPremises:     make([]*premise.Premise, 0),
+		NewPremiseLinks: make(map[*premise.Premise]*premise.Premise),
+		SymbolTable:     symboltable.New(size + 2),
+		LinkOrder:       make([]int, size),
+		AArray:          make([]int, size),
+		LArray:          make([]int, size),
 	}
 
 	for i := range ps.AArray {
