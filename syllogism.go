@@ -674,8 +674,7 @@ func enterLine(s string, n int) int {
 	deleteLine(n, true)
 
 	localint_s = len(stringarray_s[1]) + 1
-	localint_l = len(s)
-	localstring_l = basicMid(s, localint_s+1, localint_l-localint_s)
+	localstring_l = s[localint_s:]
 
 	newPremise := premise.New(n, localstring_l)
 
@@ -985,11 +984,6 @@ func basicGosub8980() {
 // BasicTab prints tabs in the manner of BASIC's TAB(N)
 func basicTabString(n int) string {
 	return strings.Repeat(" ", n)
-}
-
-// BasicMid emulates MID$
-func basicMid(s string, a, b int) string {
-	return string(s[a-1 : a+b-1])
 }
 
 // BasicLeft emulates LEFT$
