@@ -914,8 +914,7 @@ func basicGosub8980() {
 			log.Println(err)
 		}
 		localint_s := len(stringarray_s[1]) + 1
-		a1 := premiseSet.Enter(n, localstring_l1[localint_s:])
-		prem := premiseSet.Premises[a1]
+		prem := premiseSet.Enter(n, localstring_l1[localint_s:])
 		basicGosub3400(d1, prem)
 	}
 
@@ -1098,8 +1097,7 @@ func syllogize() bool {
 					log.Println(err)
 				}
 				localint_s := len(stringarray_s[1]) + 1
-				a1 := premiseSet.Enter(n, localstring_l1[localint_s:])
-				prem := premiseSet.Premises[a1]
+				prem := premiseSet.Enter(n, localstring_l1[localint_s:])
 				basicGosub3400(d1, prem) // add terms to symbol table
 			}
 		} else {

@@ -22,7 +22,7 @@ type Set struct {
 }
 
 // Enter line into list.
-func (ps *Set) Enter(n int, s string) int {
+func (ps *Set) Enter(n int, s string) *premise.Premise {
 	// Silently delete any existing line matching this line number
 	_ = ps.Delete(n)
 	newPremise := premise.New(n, s)
@@ -50,7 +50,7 @@ func (ps *Set) Enter(n int, s string) int {
 	ps.LArray[a1] = localint_j1
 	ps.AArray[0]++
 
-	return a1
+	return newPremise
 }
 
 // Delete a line.
