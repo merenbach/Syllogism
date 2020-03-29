@@ -94,9 +94,7 @@ var (
 	localint_l     int
 	localint_n     int
 	localint_p1    term.Type
-	localint_s     int
 	localint_v1    int
-	localstring_l  string
 	localstring_l1 string
 	localstring_l2 string
 	localstring_s  string
@@ -651,10 +649,9 @@ func enterLine(n int, s string) int {
 	// Silently delete any existing line matching this line number
 	premiseSet.Delete(n, true)
 
-	localint_s = len(stringarray_s[1]) + 1
-	localstring_l = s[localint_s:]
+	localint_s := len(stringarray_s[1]) + 1
 
-	newPremise := premise.New(n, localstring_l)
+	newPremise := premise.New(n, s[localint_s:])
 
 	for localint_i = 0; ; localint_i = localint_j1 {
 		localint_j1 = premiseSet.LArray[localint_i]
