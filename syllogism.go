@@ -672,6 +672,11 @@ func basicGosub4530(s string) int {
 	localint_l = len(s)
 	localstring_l = basicMid(s, localint_s+1, localint_l-localint_s)
 
+	newPremise := &premise.Premise{
+		Number:    localint_n,
+		Statement: localstring_l,
+	}
+
 	for localint_i = 0; ; localint_i = localint_j1 {
 		localint_j1 = premiseSet.LArray[localint_i]
 
@@ -681,10 +686,7 @@ func basicGosub4530(s string) int {
 
 		if localint_n == premiseSet.Premises[localint_j1].Number {
 			premiseSet.Premises[localint_j1].Decrement()
-			premiseSet.Premises[localint_j1] = &premise.Premise{
-				Number:    localint_n,
-				Statement: localstring_l,
-			}
+			premiseSet.Premises[localint_j1] = newPremise
 			return localint_j1
 		}
 
@@ -694,10 +696,7 @@ func basicGosub4530(s string) int {
 	}
 
 	a1 := premiseSet.AArray[premiseSet.AArray[0]]
-	premiseSet.Premises[a1] = &premise.Premise{
-		Number:    localint_n,
-		Statement: localstring_l,
-	}
+	premiseSet.Premises[a1] = newPremise
 	premiseSet.LArray[localint_i] = a1
 	premiseSet.LArray[a1] = localint_j1
 	premiseSet.AArray[0]++
