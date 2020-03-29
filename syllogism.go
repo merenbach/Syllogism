@@ -663,17 +663,16 @@ func basicGosub3400(d1 form.Form, a1 int) {
 }
 
 // basicGosub4530 enters the provided line (string with line number + statement) into the list.
-func basicGosub4530(s string) int {
+func basicGosub4530(s string, n int) int {
 	// 4530
 	//---Enter line into list---
 
-	localint_n, _ = strconv.Atoi(stringarray_s[1])
 	localint_s = len(stringarray_s[1]) + 1
 	localint_l = len(s)
 	localstring_l = basicMid(s, localint_s+1, localint_l-localint_s)
 
 	newPremise := &premise.Premise{
-		Number:    localint_n,
+		Number:    n,
 		Statement: localstring_l,
 	}
 
@@ -684,13 +683,13 @@ func basicGosub4530(s string) int {
 			break
 		}
 
-		if localint_n == premiseSet.Premises[localint_j1].Number {
+		if n == premiseSet.Premises[localint_j1].Number {
 			premiseSet.Premises[localint_j1].Decrement()
 			premiseSet.Premises[localint_j1] = newPremise
 			return localint_j1
 		}
 
-		if localint_n < premiseSet.Premises[localint_j1].Number {
+		if n < premiseSet.Premises[localint_j1].Number {
 			break
 		}
 	}
@@ -972,7 +971,12 @@ func basicGosub8980() {
 				fmt.Println("Enter SYNTAX for help with statements")
 			}
 		}
-		a1 := basicGosub4530(localstring_l1)
+
+		n, err := strconv.Atoi(stringarray_s[1])
+		if err != nil {
+			log.Println(err)
+		}
+		a1 := basicGosub4530(localstring_l1, n)
 		basicGosub3400(d1, a1)
 	}
 
@@ -1155,8 +1159,12 @@ func syllogize() bool {
 				}
 			}
 			if d1 != form.Undefined {
-				a1 := basicGosub4530(localstring_l1) // enter line into list
-				basicGosub3400(d1, a1)               // add terms to symbol table
+				n, err := strconv.Atoi(stringarray_s[1])
+				if err != nil {
+					log.Println(err)
+				}
+				a1 := basicGosub4530(localstring_l1, n) // enter line into list
+				basicGosub3400(d1, a1)                  // add terms to symbol table
 			}
 		} else {
 			if premiseSet.LArray[0] == 0 {
