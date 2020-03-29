@@ -20,7 +20,7 @@ type Set struct {
 	NewPremiseLinks map[*premise.Premise]*premise.Premise
 	SymbolTable     *symboltable.SymbolTable
 	LinkOrder       []int
-	LArray          []int
+	LArray          []int // NOTE: line array, not link array...
 	AArray          []int
 }
 
@@ -64,6 +64,7 @@ func (ps *Set) Enter(n int, s string) *premise.Premise {
 func (ps *Set) Delete(n int) error {
 	for i, p := range ps.NewPremises {
 		if p.Number == n {
+			p.Decrement()
 			ps.NewPremises = append(ps.NewPremises[:i], ps.NewPremises[i+1:]...)
 			// return nil
 			break
@@ -80,7 +81,7 @@ func (ps *Set) Delete(n int) error {
 			ps.AArray[0]--
 			ps.AArray[ps.AArray[0]] = j1
 			ps.LArray[i] = ps.LArray[j1]
-			ps.Premises[j1].Decrement()
+			// ps.Premises[j1].Decrement()
 			break
 		}
 	}
