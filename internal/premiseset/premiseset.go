@@ -126,11 +126,10 @@ func (ps *Set) Dump() string {
 	return dump.String()
 }
 
-// List output for premises, optionally in distribution-analysis format.
+// Print ordered output of premises.
 // TODO: use tabwriter for distribution-analysis format?
-func (ps *Set) List(analyze bool) {
-	for i := ps.LArray[0]; i != 0; i = ps.LArray[i] {
-		prem := ps.Premises[i]
+func (ps *Set) print(premises []*premise.Premise, analyze bool) {
+	for _, prem := range premises {
 		if !analyze {
 			fmt.Printf("%d  %s\n", prem.Number, prem.Statement)
 		} else {
@@ -149,23 +148,14 @@ func (ps *Set) List(analyze bool) {
 	}
 }
 
+// List output for premises, optionally in distribution-analysis format.
+func (ps *Set) List(analyze bool) {
+	ps.print(ps.rawPremises(), analyze)
+}
+
 // Link output for premises, optionally in distribution-analysis format.
-// TODO: use tabwriter for distribution-analysis format?
 func (ps *Set) Link(max int, analyze bool) {
-	for _, prem := range ps.LinkedPremises(max) {
-		if !analyze {
-			fmt.Printf("%d  %s\n", prem.Number, prem.Statement)
-		} else {
-			fmt.Printf("%d  ", prem.Number)
-			if prem.Form < 6 && prem.Predicate.TermType == term.TypeDesignator {
-				prem.Form += 2
-			}
-			if prem.Form < 4 {
-				fmt.Printf("%s  ", prem.Form.Quantifier())
-			}
-			fmt.Printf("%s%s%s  %s%s\n", prem.Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), prem.Predicate.Term, prem.Form.SymbolForTermB())
-		}
-	}
+	ps.print(ps.linkedPremises(max), analyze)
 }
 
 // LinkedPremise returns the linked premise with the given index.
@@ -173,12 +163,21 @@ func (ps *Set) LinkedPremise(i int) *premise.Premise {
 	return ps.Premises[ps.LinkOrder[i]]
 }
 
+// rawPremises returns premises in entry order.
+func (ps *Set) rawPremises() []*premise.Premise {
+	pp := make([]*premise.Premise, 0)
+	for i := ps.LArray[0]; i != 0; i = ps.LArray[i] {
+		pp = append(pp, ps.Premises[i])
+	}
+	return pp
+}
+
 // LinkedPremises returns premises in link order.
-func (ps *Set) LinkedPremises(max int) []*premise.Premise {
-	pp := make([]*premise.Premise, len(ps.NewPremises))
+func (ps *Set) linkedPremises(max int) []*premise.Premise {
+	pp := make([]*premise.Premise, 0)
 	for i := 0; i < max; i++ {
 		idx := ps.LinkOrder[i+1]
-		pp[i] = ps.Premises[idx]
+		pp = append(pp, ps.Premises[idx])
 	}
 	return pp
 }
