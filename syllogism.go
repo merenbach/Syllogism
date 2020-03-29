@@ -566,13 +566,13 @@ func basicGosub3400(d1 form.Form, a1 int) {
 		localint_i1 = 1
 
 		for ; ; localint_i1++ { // 3500
-			var localint_b1 int
-			localint_i1, localint_b1 = premiseSet.SymbolTable.Search(localint_i1, w)
+			var b1 int // NOTE: first empty symbol table location
+			localint_i1, b1 = premiseSet.SymbolTable.Search(localint_i1, w)
 
 			sym := premiseSet.SymbolTable.Symbols[localint_i1]
 			if localint_i1 > premiseSet.SymbolTable.HighestLocationUsed {
-				if localint_b1 > 0 {
-					localint_i1 = localint_b1
+				if b1 > 0 {
+					localint_i1 = b1
 				} else {
 					premiseSet.SymbolTable.HighestLocationUsed++
 				}
