@@ -662,8 +662,8 @@ func basicGosub3400(d1 form.Form, a1 int) {
 	premiseSet.Premises[a1].Form = d1
 }
 
-// basicGosub4530 enters the provided line (string with line number + statement) into the list.
-func basicGosub4530(s string, n int) int {
+// enterLine enters the provided line (string with line number + statement) into the list.
+func enterLine(s string, n int) int {
 	// 4530
 	//---Enter line into list---
 
@@ -976,7 +976,7 @@ func basicGosub8980() {
 		if err != nil {
 			log.Println(err)
 		}
-		a1 := basicGosub4530(localstring_l1, n)
+		a1 := enterLine(localstring_l1, n)
 		basicGosub3400(d1, a1)
 	}
 
@@ -1163,8 +1163,8 @@ func syllogize() bool {
 				if err != nil {
 					log.Println(err)
 				}
-				a1 := basicGosub4530(localstring_l1, n) // enter line into list
-				basicGosub3400(d1, a1)                  // add terms to symbol table
+				a1 := enterLine(localstring_l1, n) // enter line into list
+				basicGosub3400(d1, a1)             // add terms to symbol table
 			}
 		} else {
 			if premiseSet.LArray[0] == 0 {
