@@ -347,11 +347,10 @@ Line5750: // 5750
 	premiseSet.Link(localint_l, strings.HasSuffix(localstring_l1, "*"))
 }
 
-func basicGosub4760() {
+func basicGosub4760(localint_n int) {
 	// 4760
 	//---Delete a line---
 
-	localint_n, _ = strconv.Atoi(stringarray_s[1])
 	localint_i = 0
 
 	for {
@@ -1167,7 +1166,11 @@ func syllogize() bool {
 			if premiseSet.LArray[0] == 0 {
 				fmt.Println(help.NoPremises)
 			} else {
-				basicGosub4760() // delete line
+				localint_n, err := strconv.Atoi(stringarray_s[1])
+				if err != nil {
+					log.Println(err)
+				}
+				basicGosub4760(localint_n) // delete line
 			}
 		}
 		return true
