@@ -61,6 +61,15 @@ func (ps *Set) Enter(n int, s string) *premise.Premise {
 
 // Delete a line.
 func (ps *Set) Delete(n int) error {
+	for i, p := range ps.NewPremises {
+		if p.Number == n {
+			ps.NewPremises = append(ps.NewPremises[:i], ps.NewPremises[i+1:]...)
+			// return nil
+			break
+		}
+	}
+	// return fmt.Errorf("Line %d not found", n)
+
 	for i := 0; ; i = ps.LArray[i] {
 		j1 := ps.LArray[i]
 
@@ -166,7 +175,7 @@ func (ps *Set) print(premises []*premise.Premise, analyze bool) {
 
 // List output for premises, optionally in distribution-analysis format.
 func (ps *Set) List(analyze bool) {
-	ps.print(ps.rawPremises(), analyze)
+	ps.print(ps.NewPremises, analyze)
 }
 
 // Link output for premises, optionally in distribution-analysis format.
@@ -177,15 +186,6 @@ func (ps *Set) Link(max int, analyze bool) {
 // LinkedPremise returns the linked premise with the given index.
 func (ps *Set) LinkedPremise(i int) *premise.Premise {
 	return ps.Premises[ps.LinkOrder[i]]
-}
-
-// rawPremises returns premises in entry order.
-func (ps *Set) rawPremises() []*premise.Premise {
-	pp := make([]*premise.Premise, 0)
-	for i := ps.LArray[0]; i != 0; i = ps.LArray[i] {
-		pp = append(pp, ps.Premises[i])
-	}
-	return pp
 }
 
 // LinkedPremises returns premises in link order.
