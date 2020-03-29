@@ -351,10 +351,8 @@ func basicGosub4760(n int) {
 	// 4760
 	//---Delete a line---
 
-	localint_i = 0
-
-	for {
-		localint_j1 = premiseSet.LArray[localint_i]
+	for i := 0; ; i = premiseSet.LArray[i] {
+		localint_j1 = premiseSet.LArray[i]
 
 		if localint_j1 == 0 {
 			fmt.Printf("Line %d not found\n", n)
@@ -362,11 +360,10 @@ func basicGosub4760(n int) {
 		} else if n == premiseSet.Premises[localint_j1].Number {
 			premiseSet.AArray[0]--
 			premiseSet.AArray[premiseSet.AArray[0]] = localint_j1
-			premiseSet.LArray[localint_i] = premiseSet.LArray[localint_j1]
+			premiseSet.LArray[i] = premiseSet.LArray[localint_j1]
 			premiseSet.Premises[localint_j1].Decrement()
 			break
 		}
-		localint_i = premiseSet.LArray[localint_i]
 	}
 }
 
