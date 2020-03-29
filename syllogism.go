@@ -347,7 +347,7 @@ Line5750: // 5750
 	premiseSet.Link(localint_l, strings.HasSuffix(localstring_l1, "*"))
 }
 
-func basicGosub4760(localint_n int) {
+func basicGosub4760(n int) {
 	// 4760
 	//---Delete a line---
 
@@ -357,9 +357,9 @@ func basicGosub4760(localint_n int) {
 		localint_j1 = premiseSet.LArray[localint_i]
 
 		if localint_j1 == 0 {
-			fmt.Printf("Line %d not found\n", localint_n)
+			fmt.Printf("Line %d not found\n", n)
 			break
-		} else if localint_n == premiseSet.Premises[localint_j1].Number {
+		} else if n == premiseSet.Premises[localint_j1].Number {
 			premiseSet.AArray[0]--
 			premiseSet.AArray[premiseSet.AArray[0]] = localint_j1
 			premiseSet.LArray[localint_i] = premiseSet.LArray[localint_j1]
