@@ -544,7 +544,6 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			var b1 int // NOTE: first empty symbol table location
 			localint_i1, b1 = premiseSet.SymbolTable.Search(localint_i1, w)
 
-			sym := premiseSet.SymbolTable.Symbols[localint_i1]
 			if localint_i1 > premiseSet.SymbolTable.HighestLocationUsed {
 				if b1 > 0 {
 					localint_i1 = b1
@@ -552,11 +551,12 @@ func basicGosub3400(d1 form.Form, a1 int) {
 					premiseSet.SymbolTable.HighestLocationUsed++
 				}
 
-				sym.Term = w
-				sym.TermType = termType
+				premiseSet.SymbolTable.Symbols[localint_i1].Term = w
+				premiseSet.SymbolTable.Symbols[localint_i1].TermType = termType
 				break
 			}
 
+			sym := premiseSet.SymbolTable.Symbols[localint_i1]
 			if termType == term.TypeUndetermined {
 				if sym.TermType != term.TypeUndetermined || msg {
 					fmt.Printf("Note: predicate term %q", w)
