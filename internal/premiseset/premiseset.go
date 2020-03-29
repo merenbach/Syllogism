@@ -3,6 +3,7 @@ package premiseset
 import (
 	"bytes"
 	"fmt"
+	"sort"
 	"text/tabwriter"
 
 	"github.com/merenbach/syllogism/internal/article"
@@ -15,6 +16,7 @@ import (
 // Set of all premises.
 type Set struct {
 	Premises    []*premise.Premise
+	NewPremises []*premise.Premise
 	SymbolTable *symboltable.SymbolTable
 	LinkOrder   []int
 	LArray      []int
@@ -44,6 +46,10 @@ func (ps *Set) Enter(n int, s string) *premise.Premise {
 		}
 	}
 
+	// NOTE: for new experimental refactor
+	ps.NewPremises = append(ps.NewPremises, newPremise)
+	ps.Sort()
+
 	a1 := ps.AArray[ps.AArray[0]]
 	ps.Premises[a1] = newPremise
 	ps.LArray[localint_i] = a1
@@ -71,6 +77,16 @@ func (ps *Set) Delete(n int) error {
 
 	return nil
 }
+
+// Sort premises by line number.
+func (ps *Set) Sort() {
+	sort.Slice(ps.NewPremises, func(i, j int) bool { return ps.NewPremises[i].Number < ps.NewPremises[j].Number })
+}
+
+// // Len returns the length of the premise set.
+// func (ps *Set) Len() int {
+// 	return len(ps.NewPremises)
+// }
 
 // Compute a conclusion.
 func (ps *Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
@@ -204,6 +220,7 @@ func (ps *Set) Empty() bool {
 func New(size int) *Set {
 	ps := &Set{
 		Premises:    make([]*premise.Premise, size),
+		NewPremises: make([]*premise.Premise, 0),
 		SymbolTable: symboltable.New(size + 2),
 		LinkOrder:   make([]int, size),
 		AArray:      make([]int, size),
