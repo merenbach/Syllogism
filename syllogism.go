@@ -283,17 +283,17 @@ Line5460: // 5460
 	localint_k = localint_i
 
 Line5470: // 5470
-	if premiseSet.Premises[premiseSet.LinkOrder[localint_k]].Subject == temp_symbol {
-		temp_symbol = premiseSet.Premises[premiseSet.LinkOrder[localint_k]].Predicate
-	} else if premiseSet.Premises[premiseSet.LinkOrder[localint_k]].Predicate == temp_symbol {
-		temp_symbol = premiseSet.Premises[premiseSet.LinkOrder[localint_k]].Subject
+	if premiseSet.LinkedPremise(localint_k).Subject == temp_symbol {
+		temp_symbol = premiseSet.LinkedPremise(localint_k).Predicate
+	} else if premiseSet.LinkedPremise(localint_k).Predicate == temp_symbol {
+		temp_symbol = premiseSet.LinkedPremise(localint_k).Subject
 	} else {
 		localint_k++
 		if localint_k <= localint_l {
 			goto Line5470
 		}
 
-		temp_symbol = premiseSet.Premises[premiseSet.LinkOrder[localint_i]].Predicate
+		temp_symbol = premiseSet.LinkedPremise(localint_i).Predicate
 
 		if localint_j1 > 0 {
 			fmt.Println(help.ClosedLoopHelp)
@@ -326,7 +326,7 @@ Line5470: // 5470
 	}
 
 Line5710: // 5710
-	fmt.Println(premiseSet.Premises[premiseSet.LinkOrder[localint_i]])
+	fmt.Println(premiseSet.LinkedPremise(localint_i))
 
 Line5730: // 5730
 	localint_i++

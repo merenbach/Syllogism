@@ -119,6 +119,11 @@ func (ps *Set) Link(max int, analyze bool) {
 	}
 }
 
+// LinkedPremise returns the linked premise with the given index.
+func (ps *Set) LinkedPremise(i int) *Premise {
+	return ps.Premises[ps.LinkOrder[i]]
+}
+
 // NegativePremiseCount returns the count of negative premises.
 func (ps *Set) NegativePremiseCount() int {
 	var negativePremises int
