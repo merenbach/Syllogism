@@ -1108,7 +1108,9 @@ func syllogize() bool {
 				if err != nil {
 					log.Println(err)
 				}
-				premiseSet.Delete(localint_n, false)
+				if err := premiseSet.Delete(localint_n); err != nil {
+					fmt.Println(err)
+				}
 			}
 		}
 		return true

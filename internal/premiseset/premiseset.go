@@ -24,7 +24,7 @@ type Set struct {
 // Enter line into list.
 func (ps *Set) Enter(n int, s string) int {
 	// Silently delete any existing line matching this line number
-	ps.Delete(n, true)
+	_ = ps.Delete(n)
 	newPremise := premise.New(n, s)
 
 	var (
@@ -54,15 +54,12 @@ func (ps *Set) Enter(n int, s string) int {
 }
 
 // Delete a line.
-func (ps *Set) Delete(n int, silent bool) {
+func (ps *Set) Delete(n int) error {
 	for i := 0; ; i = ps.LArray[i] {
 		j1 := ps.LArray[i]
 
 		if j1 == 0 {
-			if !silent {
-				fmt.Printf("Line %d not found\n", n)
-			}
-			break
+			return fmt.Errorf("Line %d not found", n)
 		} else if n == ps.Premises[j1].Number {
 			ps.AArray[0]--
 			ps.AArray[ps.AArray[0]] = j1
@@ -71,6 +68,8 @@ func (ps *Set) Delete(n int, silent bool) {
 			break
 		}
 	}
+
+	return nil
 }
 
 // Compute a conclusion.
