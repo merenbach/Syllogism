@@ -61,6 +61,7 @@ import (
 	"github.com/merenbach/syllogism/internal/form"
 	"github.com/merenbach/syllogism/internal/help"
 	"github.com/merenbach/syllogism/internal/premise"
+	"github.com/merenbach/syllogism/internal/premiseset"
 	"github.com/merenbach/syllogism/internal/stringutil"
 	"github.com/merenbach/syllogism/internal/symbol"
 	"github.com/merenbach/syllogism/internal/symboltable"
@@ -74,7 +75,7 @@ var (
 	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
 
-	premiseSet = premise.NewPremiseSet(basicDimMax)
+	premiseSet = premiseset.New(basicDimMax)
 
 	stringarray_s [7]string // appears to hold parsed line tokens
 	stringarray_w [3]string // appears to hold the most recently-input first and second terms for parsing or testing
