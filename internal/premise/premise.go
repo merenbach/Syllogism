@@ -119,7 +119,7 @@ func (ps *Set) Link(max int, analyze bool) {
 	}
 }
 
-// NegativePremiseCount2 returns the count of negative premises.
+// NegativePremiseCount returns the count of negative premises.
 func (ps *Set) NegativePremiseCount() int {
 	var negativePremises int
 	// TODO: is there a better way to iterate?
