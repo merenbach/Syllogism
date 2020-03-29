@@ -152,9 +152,7 @@ func (ps *Set) List(analyze bool) {
 // Link output for premises, optionally in distribution-analysis format.
 // TODO: use tabwriter for distribution-analysis format?
 func (ps *Set) Link(max int, analyze bool) {
-	for i := 1; i <= max; i++ {
-		idx := ps.LinkOrder[i]
-		prem := ps.Premises[idx]
+	for _, prem := range ps.LinkedPremises(max) {
 		if !analyze {
 			fmt.Printf("%d  %s\n", prem.Number, prem.Statement)
 		} else {
@@ -173,6 +171,16 @@ func (ps *Set) Link(max int, analyze bool) {
 // LinkedPremise returns the linked premise with the given index.
 func (ps *Set) LinkedPremise(i int) *premise.Premise {
 	return ps.Premises[ps.LinkOrder[i]]
+}
+
+// LinkedPremises returns premises in link order.
+func (ps *Set) LinkedPremises(max int) []*premise.Premise {
+	pp := make([]*premise.Premise, len(ps.NewPremises))
+	for i := 0; i < max; i++ {
+		idx := ps.LinkOrder[i+1]
+		pp[i] = ps.Premises[idx]
+	}
+	return pp
 }
 
 // NegativePremiseCount returns the count of negative premises.
