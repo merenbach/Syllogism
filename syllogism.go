@@ -544,7 +544,7 @@ func basicGosub3400(d1 form.Form, a1 int) {
 			var b1 int // NOTE: first empty symbol table location
 			localint_i1, b1 = premiseSet.SymbolTable.Search(localint_i1, w)
 
-			sym := premiseSet.SymbolTable.Symbols[localint_i1]
+			// sym := premiseSet.SymbolTable.Symbols[localint_i1]
 			if localint_i1 > premiseSet.SymbolTable.HighestLocationUsed {
 				if b1 > 0 {
 					localint_i1 = b1
@@ -552,29 +552,29 @@ func basicGosub3400(d1 form.Form, a1 int) {
 					premiseSet.SymbolTable.HighestLocationUsed++
 				}
 
-				sym.Term = w
-				sym.TermType = termType
+				premiseSet.SymbolTable.Symbols[localint_i1].Term = w
+				premiseSet.SymbolTable.Symbols[localint_i1].TermType = termType
 				break
 			}
 
 			if termType == term.TypeUndetermined {
-				if sym.TermType != term.TypeUndetermined || msg {
+				if premiseSet.SymbolTable.Symbols[localint_i1].TermType != term.TypeUndetermined || msg {
 					fmt.Printf("Note: predicate term %q", w)
-					fmt.Printf(" taken as the %s used earlier\n", sym.TermType)
+					fmt.Printf(" taken as the %s used earlier\n", premiseSet.SymbolTable.Symbols[localint_i1].TermType)
 				}
 				break
 			}
-			if sym.TermType == term.TypeUndetermined {
+			if premiseSet.SymbolTable.Symbols[localint_i1].TermType == term.TypeUndetermined {
 				if msg {
 					fmt.Printf("Note: earlier use of %q taken as the %s used here\n", w, termType)
 				}
 				if termType == term.TypeDesignator {
-					sym.DistributionCount = sym.Occurrences
+					premiseSet.SymbolTable.Symbols[localint_i1].DistributionCount = premiseSet.SymbolTable.Symbols[localint_i1].Occurrences
 				}
-				sym.TermType = termType
+				premiseSet.SymbolTable.Symbols[localint_i1].TermType = termType
 				break
 			}
-			if termType == sym.TermType {
+			if termType == premiseSet.SymbolTable.Symbols[localint_i1].TermType {
 				break
 			}
 
