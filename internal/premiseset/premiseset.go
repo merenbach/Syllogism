@@ -17,6 +17,7 @@ import (
 type Set struct {
 	Premises        []*premise.Premise
 	NewPremises     []*premise.Premise
+	LinkedPremises  []*premise.Premise
 	NewPremiseLinks map[*premise.Premise]*premise.Premise
 	SymbolTable     *symboltable.SymbolTable
 	LinkOrder       []int
@@ -221,6 +222,7 @@ func New(size int) *Set {
 	ps := &Set{
 		Premises:        make([]*premise.Premise, size),
 		NewPremises:     make([]*premise.Premise, 0),
+		LinkedPremises:  make([]*premise.Premise, size),
 		NewPremiseLinks: make(map[*premise.Premise]*premise.Premise),
 		SymbolTable:     symboltable.New(size + 2),
 		LinkOrder:       make([]int, size),
