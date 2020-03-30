@@ -310,7 +310,7 @@ Line5470: // 5470
 		localint_n := 1
 		intarray_h[1] = premiseSet.LinkOrder[localint_i]
 
-		for m := localint_i; m <= localint_k-1; m++ {
+		for m := localint_i; m < localint_k; m++ {
 			localint_n = 3 - localint_n
 			intarray_h[localint_n] = premiseSet.LinkOrder[m+1]
 			premiseSet.LinkOrder[m+1] = intarray_h[3-localint_n]
