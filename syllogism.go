@@ -259,7 +259,6 @@ func basicGosub5070() {
 
 	for {
 		localint_l++
-		premiseSet.LinkOrder[localint_l] = localint_i
 		premiseSet.LinkedPremises[localint_l] = premiseSet.Premises[localint_i]
 		localint_i = premiseSet.LArray[localint_i]
 
@@ -307,22 +306,17 @@ Line5470: // 5470
 	}
 
 	if localint_k != localint_i {
-		var intarray_h [3]int
 		premises := make([]*premise.Premise, 3)
 
 		localint_n := 1
-		intarray_h[1] = premiseSet.LinkOrder[localint_i]
 		premises[1] = premiseSet.LinkedPremises[localint_i]
 
 		for m := localint_i; m < localint_k; m++ {
 			localint_n = 3 - localint_n
-			intarray_h[localint_n] = premiseSet.LinkOrder[m+1]
 			premises[localint_n] = premiseSet.LinkedPremises[m+1]
-			premiseSet.LinkOrder[m+1] = intarray_h[3-localint_n]
 			premiseSet.LinkedPremises[m+1] = premises[3-localint_n]
 		}
 
-		premiseSet.LinkOrder[localint_i] = intarray_h[localint_n]
 		premiseSet.LinkedPremises[localint_i] = premises[localint_n]
 	}
 

@@ -20,7 +20,6 @@ type Set struct {
 	LinkedPremises  []*premise.Premise
 	NewPremiseLinks map[*premise.Premise]*premise.Premise
 	SymbolTable     *symboltable.SymbolTable
-	LinkOrder       []int
 	LArray          []int // NOTE: line array, not link array...
 	AArray          []int
 }
@@ -188,15 +187,14 @@ func (ps *Set) Link(max int, analyze bool) {
 
 // LinkedPremise returns the linked premise with the given index.
 func (ps *Set) LinkedPremise(i int) *premise.Premise {
-	return ps.Premises[ps.LinkOrder[i]]
+	return ps.LinkedPremises[i]
 }
 
 // LinkedPremises returns premises in link order.
 func (ps *Set) linkedPremises(max int) []*premise.Premise {
 	pp := make([]*premise.Premise, 0)
 	for i := 0; i < max; i++ {
-		idx := ps.LinkOrder[i+1]
-		pp = append(pp, ps.Premises[idx])
+		pp = append(pp, ps.LinkedPremises[i+1])
 	}
 	return pp
 }
@@ -225,7 +223,6 @@ func New(size int) *Set {
 		LinkedPremises:  make([]*premise.Premise, size),
 		NewPremiseLinks: make(map[*premise.Premise]*premise.Premise),
 		SymbolTable:     symboltable.New(size + 2),
-		LinkOrder:       make([]int, size),
 		AArray:          make([]int, size),
 		LArray:          make([]int, size),
 	}
