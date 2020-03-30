@@ -295,7 +295,8 @@ Line5470: // 5470
 			fmt.Println("shares exactly one term with its successor; there is a")
 			fmt.Println(help.ClosedLoopHelp)
 		}
-		goto Line5710
+		fmt.Println(premiseSet.LinkedPremises[localint_i])
+		goto Line5730
 	}
 
 	if localint_k != localint_i {
@@ -314,13 +315,8 @@ Line5470: // 5470
 	}
 
 	if localint_j1 != 0 {
-		goto Line5710
-	} else {
-		goto Line5730
+		fmt.Println(premiseSet.LinkedPremises[localint_i])
 	}
-
-Line5710: // 5710
-	fmt.Println(premiseSet.LinkedPremises[localint_i])
 
 Line5730: // 5730
 	localint_i++
