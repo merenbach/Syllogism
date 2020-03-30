@@ -27,7 +27,7 @@ func New(n int, s string) *Premise {
 }
 
 func (pr *Premise) String() string {
-	return fmt.Sprintf("%d  %s", pr.Number, pr.Statement)
+	return fmt.Sprintf("%d %s", pr.Number, pr.Statement)
 }
 
 // Decrement table entries.
