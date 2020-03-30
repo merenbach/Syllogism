@@ -254,7 +254,7 @@ func basicGosub5070() {
 	}
 
 	premiseSet.LinkedPremises = premiseSet.NewPremises[:]
-	localint_l = len(premiseSet.NewPremises) - 1
+	localint_l = len(premiseSet.NewPremises)
 
 	if localint_l == 1 {
 		goto Line5750
@@ -277,7 +277,7 @@ Line5470: // 5470
 		temp_symbol = premiseSet.LinkedPremises[localint_k].Subject
 	} else {
 		localint_k++
-		if localint_k <= localint_l {
+		if localint_k < localint_l {
 			goto Line5470
 		}
 
@@ -321,7 +321,7 @@ Line5710: // 5710
 Line5730: // 5730
 	localint_i++
 
-	if localint_i <= localint_l {
+	if localint_i < localint_l {
 		goto Line5460
 	}
 
