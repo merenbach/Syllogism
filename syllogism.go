@@ -295,12 +295,12 @@ Line5470: // 5470
 
 		if localint_j1 > 0 {
 			fmt.Println(help.ClosedLoopHelp)
-			goto Line5710
+		} else {
+			localint_j1 = 4
+			fmt.Println("Not a syllogism: no way to order premises so that each premise")
+			fmt.Println("shares exactly one term with its successor; there is a")
+			fmt.Println(help.ClosedLoopHelp)
 		}
-		localint_j1 = 4
-		fmt.Println("Not a syllogism: no way to order premises so that each premise")
-		fmt.Println("shares exactly one term with its successor; there is a")
-		fmt.Println(help.ClosedLoopHelp)
 		goto Line5710
 	}
 
