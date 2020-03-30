@@ -138,21 +138,12 @@ func (ps *Set) List(analyze bool) {
 
 // Link output for premises, optionally in distribution-analysis format.
 func (ps *Set) Link(max int, analyze bool) {
-	ps.print(ps.linkedPremises(max), analyze)
+	ps.print(ps.LinkedPremises[1:], analyze)
 }
 
 // LinkedPremise returns the linked premise with the given index.
 func (ps *Set) LinkedPremise(i int) *premise.Premise {
 	return ps.LinkedPremises[i]
-}
-
-// LinkedPremises returns premises in link order.
-func (ps *Set) linkedPremises(max int) []*premise.Premise {
-	pp := make([]*premise.Premise, 0)
-	for i := 0; i < max; i++ {
-		pp = append(pp, ps.LinkedPremises[i+1])
-	}
-	return pp
 }
 
 // NegativePremiseCount returns the count of negative premises.
