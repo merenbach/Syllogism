@@ -205,7 +205,6 @@ Line6180: // 6180
 func basicGosub5070() {
 	// 5070
 	//---See if syllogism---
-	var intarray_h [3]int
 	var temp_symbol *symbol.Symbol
 
 	localint_j1 = 0
@@ -306,6 +305,8 @@ Line5470: // 5470
 	}
 
 	if localint_k != localint_i {
+		var intarray_h [3]int
+
 		localint_n := 1
 		intarray_h[1] = premiseSet.LinkOrder[localint_i]
 
