@@ -161,7 +161,7 @@ func (ps *Set) Empty() bool {
 func New(size int) *Set {
 	ps := &Set{
 		Premises:       make([]*premise.Premise, 0),
-		LinkedPremises: make([]*premise.Premise, size),
+		LinkedPremises: make([]*premise.Premise, 0),
 		SymbolTable:    symboltable.New(size + 2),
 	}
 
