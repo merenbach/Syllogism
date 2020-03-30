@@ -74,7 +74,7 @@ func (ps *Set) Delete(n int) error {
 
 // Compute a conclusion.
 func (ps *Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
-	if ps.LArray[0] == 0 {
+	if ps.Empty() {
 		return "A is A"
 	}
 
@@ -193,6 +193,11 @@ func (ps *Set) NegativePremiseCount() int {
 		}
 	}
 	return negativePremises
+}
+
+// Empty determines whether the premise set is empty.
+func (ps *Set) Empty() bool {
+	return ps.LArray[0] == 0
 }
 
 // New premise set with the given size.

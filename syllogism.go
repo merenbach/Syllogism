@@ -211,7 +211,7 @@ func basicGosub5070() {
 
 	localint_j1 = 0
 	localint_v1 = 0 // flag for modern validity
-	if premiseSet.LArray[0] == 0 {
+	if premiseSet.Empty() {
 		localint_j1 = 1
 		return
 	}
@@ -503,7 +503,7 @@ func basicGosub1840() {
 	// 1840
 	//---New---
 
-	if premiseSet.LArray[0] == 0 {
+	if premiseSet.Empty() {
 		return
 	}
 
@@ -1050,7 +1050,7 @@ func syllogize() bool {
 		return true
 
 	case "substitute":
-		if premiseSet.LArray[0] == 0 {
+		if premiseSet.Empty() {
 			fmt.Println(help.NoPremises)
 		} else {
 			basicGosub9060()
@@ -1059,7 +1059,7 @@ func syllogize() bool {
 	case "link":
 		fallthrough
 	case "link*":
-		if premiseSet.LArray[0] == 0 {
+		if premiseSet.Empty() {
 			fmt.Println(help.NoPremises)
 		} else {
 			basicGosub5070()
@@ -1068,7 +1068,7 @@ func syllogize() bool {
 	case "list":
 		fallthrough
 	case "list*":
-		if premiseSet.LArray[0] == 0 {
+		if premiseSet.Empty() {
 			fmt.Println(help.NoPremises)
 		} else {
 			premiseSet.List(strings.HasSuffix(localstring_l1, "*"))
@@ -1101,7 +1101,7 @@ func syllogize() bool {
 				basicGosub3400(d1, prem) // add terms to symbol table
 			}
 		} else {
-			if premiseSet.LArray[0] == 0 {
+			if premiseSet.Empty() {
 				fmt.Println(help.NoPremises)
 			} else {
 				localint_n, err := strconv.Atoi(stringarray_s[1])
