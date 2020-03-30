@@ -253,11 +253,8 @@ func basicGosub5070() {
 		return
 	}
 
-	// TODO: remove need for nil at beginning
-	premiseSet.LinkedPremises = make([]*premise.Premise, 1)
-	premiseSet.LinkedPremises = append(premiseSet.LinkedPremises, premiseSet.NewPremises...)
-
-	localint_l = len(premiseSet.NewPremises)
+	premiseSet.LinkedPremises = premiseSet.NewPremises[:]
+	localint_l = len(premiseSet.NewPremises) - 1
 
 	if localint_l == 1 {
 		goto Line5750
@@ -268,7 +265,7 @@ func basicGosub5070() {
 	} else {
 		temp_symbol = premiseSet.SymbolTable.Symbols[premiseSet.SymbolTable.CArray[1]]
 	}
-	localint_i = 1
+	localint_i = 0
 
 Line5460: // 5460
 	localint_k = localint_i

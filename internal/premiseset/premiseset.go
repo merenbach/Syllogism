@@ -138,7 +138,7 @@ func (ps *Set) List(analyze bool) {
 
 // Link output for premises, optionally in distribution-analysis format.
 func (ps *Set) Link(max int, analyze bool) {
-	ps.print(ps.LinkedPremises[1:], analyze)
+	ps.print(ps.LinkedPremises, analyze)
 }
 
 // NegativePremiseCount returns the count of negative premises.
