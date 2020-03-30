@@ -92,7 +92,6 @@ var (
 	localint_j1    int
 	localint_k     int
 	localint_l     int
-	localint_n     int
 	localint_p1    term.Type
 	localint_v1    int
 	localstring_l1 string
@@ -307,7 +306,7 @@ Line5470: // 5470
 	}
 
 	if localint_k != localint_i {
-		localint_n = 1
+		localint_n := 1
 		intarray_h[1] = premiseSet.LinkOrder[localint_i]
 
 		for m := localint_i; m <= localint_k-1; m++ {
