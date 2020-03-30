@@ -15,7 +15,7 @@ import (
 
 // Set of all premises.
 type Set struct {
-	NewPremises    []*premise.Premise
+	Premises       []*premise.Premise
 	LinkedPremises []*premise.Premise
 	SymbolTable    *symboltable.SymbolTable
 }
@@ -27,7 +27,7 @@ func (ps *Set) Enter(n int, s string) *premise.Premise {
 	newPremise := premise.New(n, s)
 
 	// NOTE: for new experimental refactor
-	ps.NewPremises = append(ps.NewPremises, newPremise)
+	ps.Premises = append(ps.Premises, newPremise)
 	ps.Sort()
 
 	return newPremise
@@ -35,10 +35,10 @@ func (ps *Set) Enter(n int, s string) *premise.Premise {
 
 // Delete a line.
 func (ps *Set) Delete(n int) error {
-	for i, p := range ps.NewPremises {
+	for i, p := range ps.Premises {
 		if p.Number == n {
 			p.Decrement()
-			ps.NewPremises = append(ps.NewPremises[:i], ps.NewPremises[i+1:]...)
+			ps.Premises = append(ps.Premises[:i], ps.Premises[i+1:]...)
 			return nil
 		}
 	}
@@ -47,12 +47,12 @@ func (ps *Set) Delete(n int) error {
 
 // Sort premises by line number.
 func (ps *Set) Sort() {
-	sort.Slice(ps.NewPremises, func(i, j int) bool { return ps.NewPremises[i].Number < ps.NewPremises[j].Number })
+	sort.Slice(ps.Premises, func(i, j int) bool { return ps.Premises[i].Number < ps.Premises[j].Number })
 }
 
 // // Len returns the length of the premise set.
 // func (ps *Set) Len() int {
-// 	return len(ps.NewPremises)
+// 	return len(ps.Premises)
 // }
 
 // Compute a conclusion.
@@ -133,7 +133,7 @@ func (ps *Set) print(premises []*premise.Premise, analyze bool) {
 
 // List output for premises, optionally in distribution-analysis format.
 func (ps *Set) List(analyze bool) {
-	ps.print(ps.NewPremises, analyze)
+	ps.print(ps.Premises, analyze)
 }
 
 // Link output for premises, optionally in distribution-analysis format.
@@ -144,7 +144,7 @@ func (ps *Set) Link(max int, analyze bool) {
 // NegativePremiseCount returns the count of negative premises.
 func (ps *Set) NegativePremiseCount() int {
 	var negativePremises int
-	for _, p := range ps.NewPremises {
+	for _, p := range ps.Premises {
 		if p.Form.IsNegative() {
 			negativePremises++
 		}
@@ -154,13 +154,13 @@ func (ps *Set) NegativePremiseCount() int {
 
 // Empty determines whether the premise set is empty.
 func (ps *Set) Empty() bool {
-	return len(ps.NewPremises) == 0
+	return len(ps.Premises) == 0
 }
 
 // New premise set with the given size.
 func New(size int) *Set {
 	ps := &Set{
-		NewPremises:    make([]*premise.Premise, 0),
+		Premises:       make([]*premise.Premise, 0),
 		LinkedPremises: make([]*premise.Premise, size),
 		SymbolTable:    symboltable.New(size + 2),
 	}

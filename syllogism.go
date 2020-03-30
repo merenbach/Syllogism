@@ -256,9 +256,9 @@ func basicGosub5070() {
 		return
 	}
 
-	premiseSet.LinkedPremises = make([]*premise.Premise, len(premiseSet.NewPremises))
-	copy(premiseSet.LinkedPremises, premiseSet.NewPremises)
-	localint_l = len(premiseSet.NewPremises)
+	premiseSet.LinkedPremises = make([]*premise.Premise, len(premiseSet.Premises))
+	copy(premiseSet.LinkedPremises, premiseSet.Premises)
+	localint_l = len(premiseSet.Premises)
 
 	if localint_l == 1 {
 		goto Line5750
