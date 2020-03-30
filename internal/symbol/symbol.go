@@ -16,6 +16,10 @@ type Symbol struct {
 	DistributionCount int
 }
 
+func (s *Symbol) String() string {
+	return fmt.Sprintf("%s %q", s.TermType, s.Term)
+}
+
 // ReduceDistributionCount reduces the occurrences and (optionally) distribution count of the symbol.
 // TODO: Golang may present a more idiomatic way to do this
 func (s *Symbol) ReduceDistributionCount(decrement bool) {
