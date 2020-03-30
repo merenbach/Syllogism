@@ -253,19 +253,11 @@ func basicGosub5070() {
 		return
 	}
 
-	// NOTE: this is the only place in this file that LArray actually appears to matter
-	localint_i = premiseSet.LArray[0]
-	localint_l = 0
+	// TODO: remove need for nil at beginning
+	premiseSet.LinkedPremises = make([]*premise.Premise, 1)
+	premiseSet.LinkedPremises = append(premiseSet.LinkedPremises, premiseSet.NewPremises...)
 
-	for {
-		localint_l++
-		premiseSet.LinkedPremises[localint_l] = premiseSet.Premises[localint_i]
-		localint_i = premiseSet.LArray[localint_i]
-
-		if localint_i == 0 {
-			break
-		}
-	}
+	localint_l = len(premiseSet.NewPremises)
 
 	if localint_l == 1 {
 		goto Line5750
@@ -509,12 +501,6 @@ func basicGosub1840() {
 
 	// TODO: can we just create a new premiseSet here?
 	premiseSet.SymbolTable = symboltable.New(basicDimMax + 2)
-
-	for localint_j = premiseSet.LArray[0]; localint_j > 0; localint_j = premiseSet.LArray[localint_j] {
-		premiseSet.AArray[0]--
-		premiseSet.AArray[premiseSet.AArray[0]] = localint_j
-	}
-	premiseSet.LArray[0] = 0
 }
 
 func basicGosub3400(d1 form.Form, prem *premise.Premise) {

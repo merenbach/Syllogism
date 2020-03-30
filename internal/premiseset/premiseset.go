@@ -15,13 +15,9 @@ import (
 
 // Set of all premises.
 type Set struct {
-	Premises        []*premise.Premise
-	NewPremises     []*premise.Premise
-	LinkedPremises  []*premise.Premise
-	NewPremiseLinks map[*premise.Premise]*premise.Premise
-	SymbolTable     *symboltable.SymbolTable
-	LArray          []int // NOTE: line array, not link array...
-	AArray          []int
+	NewPremises    []*premise.Premise
+	LinkedPremises []*premise.Premise
+	SymbolTable    *symboltable.SymbolTable
 }
 
 // Enter line into list.
@@ -30,32 +26,9 @@ func (ps *Set) Enter(n int, s string) *premise.Premise {
 	_ = ps.Delete(n)
 	newPremise := premise.New(n, s)
 
-	var (
-		localint_i  int
-		localint_j1 int
-	)
-
-	for localint_i = 0; ; localint_i = localint_j1 {
-		localint_j1 = ps.LArray[localint_i]
-
-		if localint_j1 == 0 {
-			break
-		}
-
-		if n < ps.Premises[localint_j1].Number {
-			break
-		}
-	}
-
 	// NOTE: for new experimental refactor
 	ps.NewPremises = append(ps.NewPremises, newPremise)
 	ps.Sort()
-
-	a1 := ps.AArray[ps.AArray[0]]
-	ps.Premises[a1] = newPremise
-	ps.LArray[localint_i] = a1
-	ps.LArray[a1] = localint_j1
-	ps.AArray[0]++
 
 	return newPremise
 }
@@ -66,27 +39,10 @@ func (ps *Set) Delete(n int) error {
 		if p.Number == n {
 			p.Decrement()
 			ps.NewPremises = append(ps.NewPremises[:i], ps.NewPremises[i+1:]...)
-			// return nil
-			break
+			return nil
 		}
 	}
-	// return fmt.Errorf("Line %d not found", n)
-
-	for i := 0; ; i = ps.LArray[i] {
-		j1 := ps.LArray[i]
-
-		if j1 == 0 {
-			return fmt.Errorf("Line %d not found", n)
-		} else if n == ps.Premises[j1].Number {
-			ps.AArray[0]--
-			ps.AArray[ps.AArray[0]] = j1
-			ps.LArray[i] = ps.LArray[j1]
-			// ps.Premises[j1].Decrement()
-			break
-		}
-	}
-
-	return nil
+	return fmt.Errorf("Line %d not found", n)
 }
 
 // Sort premises by line number.
@@ -212,25 +168,16 @@ func (ps *Set) NegativePremiseCount() int {
 
 // Empty determines whether the premise set is empty.
 func (ps *Set) Empty() bool {
-	return ps.LArray[0] == 0
+	return len(ps.NewPremises) == 0
 }
 
 // New premise set with the given size.
 func New(size int) *Set {
 	ps := &Set{
-		Premises:        make([]*premise.Premise, size),
-		NewPremises:     make([]*premise.Premise, 0),
-		LinkedPremises:  make([]*premise.Premise, size),
-		NewPremiseLinks: make(map[*premise.Premise]*premise.Premise),
-		SymbolTable:     symboltable.New(size + 2),
-		AArray:          make([]int, size),
-		LArray:          make([]int, size),
+		NewPremises:    make([]*premise.Premise, 0),
+		LinkedPremises: make([]*premise.Premise, size),
+		SymbolTable:    symboltable.New(size + 2),
 	}
-
-	for i := range ps.AArray {
-		ps.AArray[i] = i
-	}
-	ps.AArray[0] = 1
 
 	return ps
 }
