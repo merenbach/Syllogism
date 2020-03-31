@@ -125,14 +125,14 @@ func basicGosub9060() {
 		}
 		if localint_i1 != -2 {
 			if localint_i1 > 0 {
-				if localint_i1 <= symbolTable.HighestLocationUsed {
+				if localint_i1 <= symbolTable.HighestLocationUsed() {
 					fmt.Printf("Enter new term to replace %s %q\n", symbolTable.Symbols[localint_i1].TermType, symbolTable.Symbols[localint_i1].Term)
 
 					localstring_w = lineInput("? ")
 					symbolTable.Symbols[localint_i1].Term = localstring_w
 					fmt.Printf("Replaced by %q\n", localstring_w)
 				} else {
-					fmt.Printf("Address %d too large.  Symbol table only of length %d.\n", localint_i1, symbolTable.HighestLocationUsed)
+					fmt.Printf("Address %d too large.  Symbol table only of length %d.\n", localint_i1, symbolTable.HighestLocationUsed())
 				}
 			} else {
 				fmt.Println(help.SyllogismHelpForSubstitute)
@@ -526,11 +526,11 @@ func basicGosub3400(d1 form.Form, prem *premise.Premise) {
 			var b1 int // NOTE: first empty symbol table location
 			localint_i1, b1 = symbolTable.Search(localint_i1, w)
 
-			if localint_i1 > symbolTable.HighestLocationUsed {
+			if localint_i1 > symbolTable.HighestLocationUsed() {
 				if b1 > 0 {
 					localint_i1 = b1
 				} else {
-					symbolTable.HighestLocationUsed++
+					symbolTable.IncreaseLocationMax()
 				}
 
 				symbolTable.Symbols[localint_i1].Term = w
@@ -1162,12 +1162,13 @@ func delPremise(n int) error {
 // Dump values of variables in a SymbolTable.
 func Dump() string {
 	dump := new(bytes.Buffer)
-	fmt.Fprintf(dump, "Highest symbol table loc. used: %d  Negative premises: %d\n", symbolTable.HighestLocationUsed, premiseSet.NegativePremiseCount())
-	if symbolTable.HighestLocationUsed != 0 {
+	highestLocationUsed := symbolTable.HighestLocationUsed()
+	fmt.Fprintf(dump, "Highest symbol table loc. used: %d  Negative premises: %d\n", highestLocationUsed, premiseSet.NegativePremiseCount())
+	if highestLocationUsed != 0 {
 		w := tabwriter.NewWriter(dump, 0, 0, 2, ' ', 0)
 		fmt.Fprint(w, "Adr.\tart.\tterm\ttype\toccurs\tdist. count")
 		// for address, symbol := range t.Symbols
-		for address := 1; address <= symbolTable.HighestLocationUsed; address++ {
+		for address := 1; address <= highestLocationUsed; address++ {
 			symbolDump := symbolTable.Symbols[address].Dump()
 			fmt.Fprintf(w, "\n%d\t%s", address, symbolDump)
 		}

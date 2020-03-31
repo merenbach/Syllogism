@@ -7,8 +7,18 @@ import (
 // A SymbolTable contains a list of symbols.
 type SymbolTable struct {
 	Symbols             []*symbol.Symbol
-	HighestLocationUsed int
+	highestLocationUsed int
 	CArray              []int
+}
+
+// HighestLocationUsed returns the highest location used.
+func (st *SymbolTable) HighestLocationUsed() int {
+	return st.highestLocationUsed
+}
+
+// IncreaseLocationMax increases the highest location used.
+func (st *SymbolTable) IncreaseLocationMax() {
+	st.highestLocationUsed++
 }
 
 // New symbol table.
@@ -27,7 +37,7 @@ func New(size int) *SymbolTable {
 // This function should return `false` to continue.
 // This function should return `true` when stopping condition is reached.
 func (st *SymbolTable) Iterate(start int, f func(int, *symbol.Symbol) bool) {
-	for i := start; i <= st.HighestLocationUsed; i++ {
+	for i := start; i <= st.HighestLocationUsed(); i++ {
 		if f(i, st.Symbols[i]) {
 			break
 		}
