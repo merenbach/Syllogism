@@ -303,19 +303,8 @@ Line5470: // 5470
 	}
 
 	if localint_k != localint_i {
-		// NOTE: THIS WHOLE SCOPE SIMPLY SWAPS WHAT'S AT POSITION LOCALINT_I WITH LOCALINT_K
-		premises := make([]*premise.Premise, 3)
-
-		localint_n := 1
-		premises[1] = linkedPremises[localint_i]
-
-		for m := localint_i; m < localint_k; m++ {
-			localint_n = 3 - localint_n
-			premises[localint_n] = linkedPremises[m+1]
-			linkedPremises[m+1] = premises[3-localint_n]
-		}
-
-		linkedPremises[localint_i] = premises[localint_n]
+		// Swap premises at locations k and i
+		linkedPremises[localint_k], linkedPremises[localint_i] = linkedPremises[localint_i], linkedPremises[localint_k]
 	}
 
 	if localint_j1 != 0 {
