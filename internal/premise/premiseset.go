@@ -38,12 +38,12 @@ func (ps *Set) Delete(n int) error {
 }
 
 // Sort premises by line number.
-func (ps *Set) Sort() {
-	sort.Slice(*ps, func(i, j int) bool { return (*ps)[i].Number < (*ps)[j].Number })
+func (ps Set) Sort() {
+	sort.Slice(ps, func(i, j int) bool { return ps[i].Number < ps[j].Number })
 }
 
 // Compute a conclusion.
-func (ps *Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
+func (ps Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
 	if ps.Empty() {
 		return "A is A"
 	}
@@ -82,8 +82,8 @@ func (ps *Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
 // List output for premises, optionally in distribution-analysis format.
 // This may be used for link-order output if the premise set is arranged accordingly.
 // TODO: use tabwriter for distribution-analysis format?
-func (ps *Set) List(analyze bool) {
-	for _, prem := range *ps {
+func (ps Set) List(analyze bool) {
+	for _, prem := range ps {
 		if !analyze {
 			fmt.Printf("%d  %s\n", prem.Number, prem.Statement)
 		} else {
@@ -103,9 +103,9 @@ func (ps *Set) List(analyze bool) {
 }
 
 // NegativePremiseCount returns the count of negative premises.
-func (ps *Set) NegativePremiseCount() int {
+func (ps Set) NegativePremiseCount() int {
 	var negativePremises int
-	for _, p := range *ps {
+	for _, p := range ps {
 		if p.Form.IsNegative() {
 			negativePremises++
 		}
@@ -114,6 +114,6 @@ func (ps *Set) NegativePremiseCount() int {
 }
 
 // Empty determines whether the premise set is empty.
-func (ps *Set) Empty() bool {
-	return len(*ps) == 0
+func (ps Set) Empty() bool {
+	return len(ps) == 0
 }
