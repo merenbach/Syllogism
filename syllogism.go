@@ -300,6 +300,7 @@ Line5470: // 5470
 	}
 
 	if localint_k != localint_i {
+		// NOTE: THIS WHOLE SCOPE SIMPLY SWAPS WHAT'S AT POSITION LOCALINT_I WITH LOCALINT_K
 		premises := make([]*premise.Premise, 3)
 
 		localint_n := 1
