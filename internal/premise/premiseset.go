@@ -80,6 +80,7 @@ func (ps *Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
 }
 
 // List output for premises, optionally in distribution-analysis format.
+// This may be used for link-order output if the premise set is arranged accordingly.
 // TODO: use tabwriter for distribution-analysis format?
 func (ps *Set) List(analyze bool) {
 	for _, prem := range *ps {
