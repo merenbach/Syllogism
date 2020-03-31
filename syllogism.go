@@ -1140,7 +1140,15 @@ func delPremise(n int) error {
 	for i, p := range premiseSet {
 		if p.Number == n {
 			p.Decrement()
-			premiseSet = append(premiseSet[:i], premiseSet[i+1:]...)
+
+			// Delete without leaving uncollected pointers
+			// https://github.com/golang/go/wiki/SliceTricks
+			if i < len(premiseSet)-1 {
+				copy(premiseSet[i:], premiseSet[i+1:])
+			}
+			premiseSet[len(premiseSet)-1] = nil
+			premiseSet = premiseSet[:len(premiseSet)-1]
+
 			return nil
 		}
 	}
