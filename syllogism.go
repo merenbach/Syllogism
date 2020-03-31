@@ -81,7 +81,7 @@ var (
 	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
 
-	premiseSet  = premiseset.New(basicDimMax)
+	premiseSet  = make(premiseset.Set, 0)
 	symbolTable = symboltable.New(basicDimMax + 2)
 
 	stringarray_s [7]string // appears to hold parsed line tokens
@@ -259,9 +259,9 @@ func basicGosub5070() {
 		return
 	}
 
-	premiseSet.LinkedPremises = make([]*premise.Premise, len(premiseSet.Premises))
-	copy(premiseSet.LinkedPremises, premiseSet.Premises)
-	localint_l = len(premiseSet.Premises)
+	linkedPremises := make(premiseset.Set, len(premiseSet))
+	copy(linkedPremises, premiseSet)
+	localint_l = len(premiseSet)
 
 	if localint_l == 1 {
 		goto Line5750
@@ -278,17 +278,17 @@ Line5460: // 5460
 	localint_k = localint_i
 
 Line5470: // 5470
-	if premiseSet.LinkedPremises[localint_k].Subject == temp_symbol {
-		temp_symbol = premiseSet.LinkedPremises[localint_k].Predicate
-	} else if premiseSet.LinkedPremises[localint_k].Predicate == temp_symbol {
-		temp_symbol = premiseSet.LinkedPremises[localint_k].Subject
+	if linkedPremises[localint_k].Subject == temp_symbol {
+		temp_symbol = linkedPremises[localint_k].Predicate
+	} else if linkedPremises[localint_k].Predicate == temp_symbol {
+		temp_symbol = linkedPremises[localint_k].Subject
 	} else {
 		localint_k++
 		if localint_k < localint_l {
 			goto Line5470
 		}
 
-		temp_symbol = premiseSet.LinkedPremises[localint_i].Predicate
+		temp_symbol = linkedPremises[localint_i].Predicate
 
 		if localint_j1 > 0 {
 			fmt.Println(help.ClosedLoopHelp)
@@ -298,7 +298,7 @@ Line5470: // 5470
 			fmt.Println("shares exactly one term with its successor; there is a")
 			fmt.Println(help.ClosedLoopHelp)
 		}
-		fmt.Println(premiseSet.LinkedPremises[localint_i])
+		fmt.Println(linkedPremises[localint_i])
 		goto Line5730
 	}
 
@@ -307,19 +307,19 @@ Line5470: // 5470
 		premises := make([]*premise.Premise, 3)
 
 		localint_n := 1
-		premises[1] = premiseSet.LinkedPremises[localint_i]
+		premises[1] = linkedPremises[localint_i]
 
 		for m := localint_i; m < localint_k; m++ {
 			localint_n = 3 - localint_n
-			premises[localint_n] = premiseSet.LinkedPremises[m+1]
-			premiseSet.LinkedPremises[m+1] = premises[3-localint_n]
+			premises[localint_n] = linkedPremises[m+1]
+			linkedPremises[m+1] = premises[3-localint_n]
 		}
 
-		premiseSet.LinkedPremises[localint_i] = premises[localint_n]
+		linkedPremises[localint_i] = premises[localint_n]
 	}
 
 	if localint_j1 != 0 {
-		fmt.Println(premiseSet.LinkedPremises[localint_i])
+		fmt.Println(linkedPremises[localint_i])
 	}
 
 Line5730: // 5730
@@ -335,7 +335,8 @@ Line5750: // 5750
 	}
 	if localstring_l1 == "link" || localstring_l1 == "link*" {
 		fmt.Println("Premises of syllogism in order of term links:")
-		premiseSet.Link(localint_l, strings.HasSuffix(localstring_l1, "*"))
+		// TODO: did we need anything with localint_l (passed in as `max` before)?
+		linkedPremises.List(strings.HasSuffix(localstring_l1, "*"))
 	}
 }
 

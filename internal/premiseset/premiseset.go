@@ -11,10 +11,7 @@ import (
 )
 
 // Set of all premises.
-type Set struct {
-	Premises       []*premise.Premise
-	LinkedPremises []*premise.Premise
-}
+type Set []*premise.Premise
 
 // Enter line into list.
 func (ps *Set) Enter(n int, s string) *premise.Premise {
@@ -23,7 +20,7 @@ func (ps *Set) Enter(n int, s string) *premise.Premise {
 	newPremise := premise.New(n, s)
 
 	// NOTE: for new experimental refactor
-	ps.Premises = append(ps.Premises, newPremise)
+	*ps = append(*ps, newPremise)
 	ps.Sort()
 
 	return newPremise
@@ -31,10 +28,10 @@ func (ps *Set) Enter(n int, s string) *premise.Premise {
 
 // Delete a line.
 func (ps *Set) Delete(n int) error {
-	for i, p := range ps.Premises {
+	for i, p := range *ps {
 		if p.Number == n {
 			p.Decrement()
-			ps.Premises = append(ps.Premises[:i], ps.Premises[i+1:]...)
+			*ps = append((*ps)[:i], (*ps)[i+1:]...)
 			return nil
 		}
 	}
@@ -43,13 +40,8 @@ func (ps *Set) Delete(n int) error {
 
 // Sort premises by line number.
 func (ps *Set) Sort() {
-	sort.Slice(ps.Premises, func(i, j int) bool { return ps.Premises[i].Number < ps.Premises[j].Number })
+	sort.Slice(*ps, func(i, j int) bool { return (*ps)[i].Number < (*ps)[j].Number })
 }
-
-// // Len returns the length of the premise set.
-// func (ps *Set) Len() int {
-// 	return len(ps.Premises)
-// }
 
 // Compute a conclusion.
 func (ps *Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
@@ -88,10 +80,10 @@ func (ps *Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
 	}
 }
 
-// Print ordered output of premises.
+// List output for premises, optionally in distribution-analysis format.
 // TODO: use tabwriter for distribution-analysis format?
-func (ps *Set) print(premises []*premise.Premise, analyze bool) {
-	for _, prem := range premises {
+func (ps *Set) List(analyze bool) {
+	for _, prem := range *ps {
 		if !analyze {
 			fmt.Printf("%d  %s\n", prem.Number, prem.Statement)
 		} else {
@@ -110,20 +102,10 @@ func (ps *Set) print(premises []*premise.Premise, analyze bool) {
 	}
 }
 
-// List output for premises, optionally in distribution-analysis format.
-func (ps *Set) List(analyze bool) {
-	ps.print(ps.Premises, analyze)
-}
-
-// Link output for premises, optionally in distribution-analysis format.
-func (ps *Set) Link(max int, analyze bool) {
-	ps.print(ps.LinkedPremises, analyze)
-}
-
 // NegativePremiseCount returns the count of negative premises.
 func (ps *Set) NegativePremiseCount() int {
 	var negativePremises int
-	for _, p := range ps.Premises {
+	for _, p := range *ps {
 		if p.Form.IsNegative() {
 			negativePremises++
 		}
@@ -133,15 +115,5 @@ func (ps *Set) NegativePremiseCount() int {
 
 // Empty determines whether the premise set is empty.
 func (ps *Set) Empty() bool {
-	return len(ps.Premises) == 0
-}
-
-// New premise set with the given size.
-func New(size int) *Set {
-	ps := &Set{
-		Premises:       make([]*premise.Premise, 0),
-		LinkedPremises: make([]*premise.Premise, 0),
-	}
-
-	return ps
+	return len(*ps) == 0
 }
