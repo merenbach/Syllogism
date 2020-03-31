@@ -19,6 +19,7 @@ type Premise struct {
 }
 
 // New premise.
+// TODO: accept string here and tokenize afterward
 func New(n int, s string) *Premise {
 	return &Premise{
 		Number:    n,
