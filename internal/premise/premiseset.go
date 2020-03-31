@@ -2,7 +2,6 @@ package premise
 
 import (
 	"fmt"
-	"sort"
 
 	"github.com/merenbach/syllogism/internal/article"
 	"github.com/merenbach/syllogism/internal/symbol"
@@ -12,35 +11,16 @@ import (
 // Set of all premises.
 type Set []*Premise
 
-// Enter line into list.
-func (ps *Set) Enter(n int, s string) *Premise {
-	// Silently delete any existing line matching this line number
-	_ = ps.Delete(n)
-	newPremise := New(n, s)
-
-	// NOTE: for new experimental refactor
-	*ps = append(*ps, newPremise)
-	ps.Sort()
-
-	return newPremise
-}
-
-// Delete a line.
-func (ps *Set) Delete(n int) error {
-	for i, p := range *ps {
-		if p.Number == n {
-			p.Decrement()
-			*ps = append((*ps)[:i], (*ps)[i+1:]...)
-			return nil
-		}
-	}
-	return fmt.Errorf("Line %d not found", n)
-}
-
-// Sort premises by line number.
-func (ps Set) Sort() {
-	sort.Slice(ps, func(i, j int) bool { return ps[i].Number < ps[j].Number })
-}
+// // Find the index of a premise with a given line number.
+// // Find will return (-1) if no matching premises are found.
+// func (ps Set) Find(n int) int {
+// 	for i, p := range ps {
+// 		if p.Number == n {
+// 			return i
+// 		}
+// 	}
+// 	return (-1)
+// }
 
 // Compute a conclusion.
 func (ps Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {

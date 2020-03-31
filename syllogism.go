@@ -59,6 +59,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"text/tabwriter"
@@ -901,7 +902,7 @@ func basicGosub8980() {
 			log.Println(err)
 		}
 		localint_s := len(stringarray_s[1]) + 1
-		prem := premiseSet.Enter(n, localstring_l1[localint_s:])
+		prem := addPremise(n, localstring_l1[localint_s:])
 		basicGosub3400(d1, prem)
 	}
 
@@ -1084,18 +1085,18 @@ func syllogize() bool {
 					log.Println(err)
 				}
 				localint_s := len(stringarray_s[1]) + 1
-				prem := premiseSet.Enter(n, localstring_l1[localint_s:])
+				prem := addPremise(n, localstring_l1[localint_s:])
 				basicGosub3400(d1, prem) // add terms to symbol table
 			}
 		} else {
 			if premiseSet.Empty() {
 				fmt.Println(help.NoPremises)
 			} else {
-				localint_n, err := strconv.Atoi(stringarray_s[1])
+				n, err := strconv.Atoi(stringarray_s[1])
 				if err != nil {
 					log.Println(err)
 				}
-				if err := premiseSet.Delete(localint_n); err != nil {
+				if err := delPremise(n); err != nil {
 					fmt.Println(err)
 				}
 			}
@@ -1129,6 +1130,32 @@ func syllogize() bool {
 	}
 
 	return true
+}
+
+func addPremise(n int, s string) *premise.Premise {
+	// Delete existing entry instead of replacing in-place
+	_ = delPremise(n)
+
+	prem := premise.New(n, s)
+
+	// Append the new premise and sort by line number
+	premiseSet = append(premiseSet, prem)
+	sort.Slice(premiseSet, func(i, j int) bool {
+		return premiseSet[i].Number < premiseSet[j].Number
+	})
+
+	return prem
+}
+
+func delPremise(n int) error {
+	for i, p := range premiseSet {
+		if p.Number == n {
+			p.Decrement()
+			premiseSet = append(premiseSet[:i], premiseSet[i+1:]...)
+			return nil
+		}
+	}
+	return fmt.Errorf("Line %d not found", n)
 }
 
 // Dump values of variables in a SymbolTable.
