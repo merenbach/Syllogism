@@ -67,7 +67,6 @@ import (
 	"github.com/merenbach/syllogism/internal/form"
 	"github.com/merenbach/syllogism/internal/help"
 	"github.com/merenbach/syllogism/internal/premise"
-	"github.com/merenbach/syllogism/internal/premiseset"
 	"github.com/merenbach/syllogism/internal/stringutil"
 	"github.com/merenbach/syllogism/internal/symbol"
 	"github.com/merenbach/syllogism/internal/symboltable"
@@ -81,7 +80,7 @@ var (
 	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
 
-	premiseSet  = make(premiseset.Set, 0)
+	premiseSet  = make(premise.Set, 0)
 	symbolTable = symboltable.New(basicDimMax + 2)
 
 	stringarray_s [7]string // appears to hold parsed line tokens
@@ -259,7 +258,7 @@ func basicGosub5070() {
 		return
 	}
 
-	linkedPremises := make(premiseset.Set, len(premiseSet))
+	linkedPremises := make(premise.Set, len(premiseSet))
 	copy(linkedPremises, premiseSet)
 	localint_l = len(premiseSet)
 
@@ -501,7 +500,7 @@ func basicGosub1840() {
 		return
 	}
 
-	// TODO: can we just create a new premiseSet here?
+	premiseSet = make(premise.Set, 0)
 	symbolTable = symboltable.New(basicDimMax + 2)
 }
 
