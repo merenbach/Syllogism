@@ -54,12 +54,14 @@ package main
 */
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"fmt"
 	"log"
 	"os"
 	"strconv"
 	"strings"
+	"text/tabwriter"
 
 	"github.com/merenbach/syllogism/internal/article"
 	"github.com/merenbach/syllogism/internal/form"
@@ -136,7 +138,7 @@ func basicGosub9060() {
 			}
 			fmt.Println()
 		} else {
-			fmt.Println(premiseSet.Dump())
+			fmt.Println(Dump())
 		}
 	}
 
@@ -1020,7 +1022,7 @@ func syllogize() bool {
 		help.ShowGeneralHelp()
 		return true
 	case "dump":
-		fmt.Println(premiseSet.Dump())
+		fmt.Println(Dump())
 		return true
 	case "msg":
 		msg = !msg
@@ -1126,6 +1128,23 @@ func syllogize() bool {
 	}
 
 	return true
+}
+
+// Dump values of variables in a SymbolTable.
+func Dump() string {
+	dump := new(bytes.Buffer)
+	fmt.Fprintf(dump, "Highest symbol table loc. used: %d  Negative premises: %d\n", premiseSet.SymbolTable.HighestLocationUsed, premiseSet.NegativePremiseCount())
+	if premiseSet.SymbolTable.HighestLocationUsed != 0 {
+		w := tabwriter.NewWriter(dump, 0, 0, 2, ' ', 0)
+		fmt.Fprint(w, "Adr.\tart.\tterm\ttype\toccurs\tdist. count")
+		// for address, symbol := range t.Symbols
+		for address := 1; address <= premiseSet.SymbolTable.HighestLocationUsed; address++ {
+			symbolDump := premiseSet.SymbolTable.Symbols[address].Dump()
+			fmt.Fprintf(w, "\n%d\t%s", address, symbolDump)
+		}
+		w.Flush()
+	}
+	return dump.String()
 }
 
 func main() {

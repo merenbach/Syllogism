@@ -1,10 +1,8 @@
 package premiseset
 
 import (
-	"bytes"
 	"fmt"
 	"sort"
-	"text/tabwriter"
 
 	"github.com/merenbach/syllogism/internal/article"
 	"github.com/merenbach/syllogism/internal/premise"
@@ -90,23 +88,6 @@ func (ps *Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
 			return fmt.Sprintf("No %s is %s%s", symbol1.Term, symbol2.ArticleType, symbol2.Term)
 		}
 	}
-}
-
-// Dump values of variables in a SymbolTable.
-func (ps *Set) Dump() string {
-	dump := new(bytes.Buffer)
-	fmt.Fprintf(dump, "Highest symbol table loc. used: %d  Negative premises: %d\n", ps.SymbolTable.HighestLocationUsed, ps.NegativePremiseCount())
-	if ps.SymbolTable.HighestLocationUsed != 0 {
-		w := tabwriter.NewWriter(dump, 0, 0, 2, ' ', 0)
-		fmt.Fprint(w, "Adr.\tart.\tterm\ttype\toccurs\tdist. count")
-		// for address, symbol := range t.Symbols
-		for address := 1; address <= ps.SymbolTable.HighestLocationUsed; address++ {
-			symbolDump := ps.SymbolTable.Symbols[address].Dump()
-			fmt.Fprintf(w, "\n%d\t%s", address, symbolDump)
-		}
-		w.Flush()
-	}
-	return dump.String()
 }
 
 // Print ordered output of premises.
