@@ -7,7 +7,6 @@ import (
 	"github.com/merenbach/syllogism/internal/article"
 	"github.com/merenbach/syllogism/internal/premise"
 	"github.com/merenbach/syllogism/internal/symbol"
-	"github.com/merenbach/syllogism/internal/symboltable"
 	"github.com/merenbach/syllogism/internal/term"
 )
 
@@ -15,7 +14,6 @@ import (
 type Set struct {
 	Premises       []*premise.Premise
 	LinkedPremises []*premise.Premise
-	SymbolTable    *symboltable.SymbolTable
 }
 
 // Enter line into list.
@@ -143,7 +141,6 @@ func New(size int) *Set {
 	ps := &Set{
 		Premises:       make([]*premise.Premise, 0),
 		LinkedPremises: make([]*premise.Premise, 0),
-		SymbolTable:    symboltable.New(size + 2),
 	}
 
 	return ps
