@@ -339,11 +339,10 @@ Line5750: // 5750
 	if localint_j1 > 0 {
 		return
 	}
-	if localstring_l1 != "link" && localstring_l1 != "link*" {
-		return
+	if localstring_l1 == "link" || localstring_l1 == "link*" {
+		fmt.Println("Premises of syllogism in order of term links:")
+		premiseSet.Link(localint_l, strings.HasSuffix(localstring_l1, "*"))
 	}
-	fmt.Println("Premises of syllogism in order of term links:")
-	premiseSet.Link(localint_l, strings.HasSuffix(localstring_l1, "*"))
 }
 
 func basicGosub6200() {
