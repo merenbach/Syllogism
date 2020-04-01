@@ -530,7 +530,7 @@ func basicGosub3400(d1 form.Form, prem *premise.Premise) {
 				if b1 > 0 {
 					localint_i1 = b1
 				} else {
-					symbolTable.IncreaseLocationMax()
+					symbolTable.Symbols = append(symbolTable.Symbols, &symbol.Symbol{})
 				}
 
 				symbolTable.Symbols[localint_i1].Term = w
