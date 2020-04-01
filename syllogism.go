@@ -408,10 +408,9 @@ func basicGosub6630() {
 				goto Line7120
 			}
 			fmt.Printf("** Subject is a %s, predicate is a %s -- but\n", term.TypeDesignator, term.TypeGeneralTerm)
-		} else {
-			fmt.Println("** Conclusion from no premises must have same subject and predicate.")
-			return
 		}
+		fmt.Println("** Conclusion from no premises must have same subject and predicate.")
+		return
 	}
 
 	if localint_j > 0 {
