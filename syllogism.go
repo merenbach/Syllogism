@@ -223,18 +223,22 @@ func basicGosub5070() {
 	localint_c = 0
 
 	symbolTable.Iterate(1, func(i int, s *symbol.Symbol) bool {
-		if s.Occurrences != 0 && s.Occurrences != 2 {
-			if s.Occurrences != 1 {
-				if localint_j1 != 2 {
-					fmt.Println("Not a syllogism:")
-					localint_j1 = 2
-				}
+		if s.Occurrences == 0 || s.Occurrences == 2 {
+			return false
+		}
 
-				fmt.Printf("   %s %q occurs %d times in premises.\n", s.TermType, s.Term, s.Occurrences)
-			}
+		if s.Occurrences == 1 {
 			localint_c++
 			symbolTable.CArray[localint_c] = i
+			return false
 		}
+
+		if localint_j1 != 2 {
+			fmt.Println("Not a syllogism:")
+			localint_j1 = 2
+		}
+
+		fmt.Printf("   %s %q occurs %d times in premises.\n", s.TermType, s.Term, s.Occurrences)
 		return false
 	})
 
