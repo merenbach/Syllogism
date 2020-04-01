@@ -45,7 +45,7 @@ package main
 * s$     => parsed line tokens
 * t(7)   => token type in parsing
 * t$(65) => term array: words like man, socrates, etc., so anywhere we see t$(N) => symbols(N).Term
-* v1     => flag for modern validity
+* v1     => flag for modern validity (index in symbol table of term involved)
 * w$     => most recently entered premise, either for entry into l$ or for evaluation with /
 * x$(7)  => quantifiers for each form
 * y$(7)  => term A types for each form, followed by copulas for each form
