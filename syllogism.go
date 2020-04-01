@@ -205,7 +205,7 @@ func basicGosub5880() {
 	localint_j1 = 7
 
 Line6180: // 6180
-	fmt.Println("No possible conclusion.")
+	fmt.Println(help.NoPossibleConclusion)
 }
 
 func basicGosub5070() {

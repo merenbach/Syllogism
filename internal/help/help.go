@@ -164,3 +164,6 @@ const MissingSubject = "** Subject term bad or missing"
 
 // NoPremises indicates an empty premise set.
 const NoPremises = "No premises"
+
+// NoPossibleConclusion indicates that no conclusion is possible.
+const NoPossibleConclusion = "No possible conclusion."
