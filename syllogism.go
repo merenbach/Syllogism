@@ -183,7 +183,8 @@ func basicGosub5880() {
 	}
 
 	if localint_j1 > 0 {
-		goto Line6180
+		fmt.Println(help.NoPossibleConclusion)
+		return
 	}
 
 	if negativePremiseCount == 0 {
@@ -204,7 +205,6 @@ func basicGosub5880() {
 	fmt.Println("not distributed in the premises.")
 	localint_j1 = 7
 
-Line6180: // 6180
 	fmt.Println(help.NoPossibleConclusion)
 }
 
