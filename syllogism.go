@@ -171,7 +171,7 @@ func basicGosub5880() {
 		}
 
 		if s.DistributionCount != 1 && s.TermType != term.TypeDesignator {
-			localint_v1 = localint_i
+			localint_v1 = i
 		}
 		return false
 	})
