@@ -32,6 +32,7 @@ package main
 * k(63)  => linking order??? (TODO: figure this out), currently premises.LinkOrder
 * i1     => local iterator index that is passed through different functions
             appears independent in substitution routine, but spans gosubs 3400 and 3950.
+* j1     => unknown
 * l(63) => occupied line slots (???) in premise list; currently l(N) => premiseset.LArray(N)
 * l$(63) => line statements
 * l1     => highest symbol table location used, so symbolTable.HighestLocationUsed
