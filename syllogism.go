@@ -112,7 +112,7 @@ var (
 
 // Substitute terms
 func substitute() error {
-	if premiseSet.Empty() {
+	if len(premiseSet) == 0 {
 		return fmt.Errorf(help.NoPremises)
 	}
 
