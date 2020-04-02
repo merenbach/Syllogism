@@ -1053,12 +1053,12 @@ func syllogize() bool {
 		return true
 	case "list":
 		if err := premiseSet.List(false); err != nil {
-			fmt.Println(help.NoPremises)
+			fmt.Println(err)
 		}
 		return true
 	case "list*":
 		if err := premiseSet.List(true); err != nil {
-			fmt.Println(help.NoPremises)
+			fmt.Println(err)
 		}
 		return true
 	}
