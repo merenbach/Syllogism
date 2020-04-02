@@ -110,9 +110,13 @@ var (
 	msg bool
 )
 
-func basicGosub9060() {
+func basicGosub9060() error {
 	// 9060
 	//---Substitute terms---
+	if premiseSet.Empty() {
+		return fmt.Errorf(help.NoPremises)
+	}
+
 	for {
 		fmt.Println("Enter address of old term; or 0 for help, -1 to exit, -2 for dump")
 
@@ -145,6 +149,7 @@ func basicGosub9060() {
 	}
 
 	fmt.Println("Exit from substitution routine")
+	return nil
 }
 
 func basicGosub5880() {
@@ -1031,12 +1036,11 @@ func syllogize() bool {
 		return true
 
 	case "substitute":
-		if premiseSet.Empty() {
-			fmt.Println(help.NoPremises)
-		} else {
-			basicGosub9060()
+		if err := basicGosub9060(); err != nil {
+			fmt.Println(err)
 		}
 		return true
+
 	case "link":
 		fallthrough
 	case "link*":
