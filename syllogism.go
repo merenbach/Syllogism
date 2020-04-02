@@ -88,23 +88,22 @@ var (
 	stringarray_s [7]string // appears to hold parsed line tokens
 	stringarray_w [3]string // appears to hold the most recently-input first and second terms for parsing or testing
 
-	localint_t1    int
-	localint_t2    int
-	localint_c     int
-	localint_c1    int
-	localint_c2    int
-	localint_i     int
-	localint_i1    int
-	localint_j     int
-	localint_j1    int
-	localint_k     int
-	localint_l     int
-	localint_p1    term.Type
-	localint_v1    int
-	localstring_l1 string
-	localstring_s  string
-	localstring_t  string
-	localstring_w  string
+	localint_t1   int
+	localint_t2   int
+	localint_c    int
+	localint_c1   int
+	localint_c2   int
+	localint_i    int
+	localint_i1   int
+	localint_j    int
+	localint_j1   int
+	localint_k    int
+	localint_l    int
+	localint_p1   term.Type
+	localint_v1   int
+	localstring_s string
+	localstring_t string
+	localstring_w string
 
 	msg bool
 )
@@ -212,7 +211,7 @@ func basicGosub5880() {
 	fmt.Println(help.NoPossibleConclusion)
 }
 
-func basicGosub5070() {
+func basicGosub5070(localstring_l1 string) {
 	// 5070
 	//---See if syllogism---
 	var temp_symbol *symbol.Symbol
@@ -715,7 +714,7 @@ func basicGosub2890() (form.Form, error) {
 	return form.AllAIsB, nil // all A is B
 }
 
-func tokenize() ([7]string, [8]token.Type, [3]article.Type, error) {
+func tokenize(localstring_l1 string) ([7]string, [8]token.Type, [3]article.Type, error) {
 	// 2020
 	//---L1$ into array S$()---
 
@@ -879,9 +878,9 @@ func basicGosub8980() {
 
 	// TODO: factor into more local scope for conditionals
 	var err error
-	for _, localstring_l1 = range strings.Split(help.SampleData, "\n") {
+	for _, localstring_l1 := range strings.Split(help.SampleData, "\n") {
 		fmt.Println(localstring_l1)
-		stringarray_s, intarray_t, intarray_e, err = tokenize()
+		stringarray_s, intarray_t, intarray_e, err = tokenize(localstring_l1)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -943,10 +942,13 @@ func lineInput(prompt string) string {
 func syllogize() bool {
 	// TODO: factor into more local scope for conditionals
 	var err error
+	var (
+		localstring_l1 string
+		localstring_l2 string
+	)
 
 	//---Input line---
 	localstring_l1 = lineInput("> ")
-	var localstring_l2 string
 	localint_l = len(localstring_l1)
 
 	if localint_l == 0 {
@@ -1046,7 +1048,7 @@ func syllogize() bool {
 		if premiseSet.Empty() {
 			fmt.Println(help.NoPremises)
 		} else {
-			basicGosub5070()
+			basicGosub5070(localstring_l1)
 		}
 		return true
 	case "list":
@@ -1060,7 +1062,7 @@ func syllogize() bool {
 
 	//--scan line L1$ into array S$()
 
-	stringarray_s, intarray_t, intarray_e, err = tokenize()
+	stringarray_s, intarray_t, intarray_e, err = tokenize(localstring_l1)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -1105,7 +1107,7 @@ func syllogize() bool {
 
 	// draw/test conclusion
 
-	basicGosub5070() // is it a syl?
+	basicGosub5070(localstring_l1) // is it a syl?
 	if localint_j1 > 1 {
 		return true
 	}
