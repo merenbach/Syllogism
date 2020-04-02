@@ -92,8 +92,6 @@ var (
 	recentWord2   string    // most recently-input second word (predicate?)
 
 	localint_c  int
-	localint_c1 int
-	localint_c2 int
 	localint_i  int
 	localint_i1 int
 	localint_j  int
@@ -152,11 +150,8 @@ func basicGosub5880() {
 	// 5880
 	//---See if conclusion possible---
 
-	localint_c1 = symbolTable.CArray[1]
-	localint_c2 = symbolTable.CArray[2]
-
-	symbol1 := symbolTable.Symbols[localint_c1]
-	symbol2 := symbolTable.Symbols[localint_c2]
+	symbol1 := symbolTable.CSymbols[1]
+	symbol2 := symbolTable.CSymbols[2]
 
 	symbolTable.Iterate(1, func(i int, s *symbol.Symbol) bool {
 		if s.Occurrences < 2 {
@@ -230,7 +225,7 @@ func basicGosub5070() premise.Set {
 
 		if s.Occurrences == 1 {
 			localint_c++
-			symbolTable.CArray[localint_c] = i
+			symbolTable.CSymbols[localint_c] = symbolTable.Symbols[i]
 			return false
 		}
 
@@ -252,7 +247,7 @@ func basicGosub5070() premise.Set {
 
 			for i := 1; i <= localint_c; i++ {
 				// TODO: use tabwriter here?
-				sym := symbolTable.Symbols[symbolTable.CArray[i]]
+				sym := symbolTable.CSymbols[i]
 				fmt.Printf("%s%s -- %s\n", basicTabString(6), sym.Term, sym.TermType)
 			}
 		} else {
@@ -272,10 +267,10 @@ func basicGosub5070() premise.Set {
 		goto Line5750
 	}
 
-	if symbolTable.Symbols[symbolTable.CArray[1]].DistributionCount == 0 && symbolTable.Symbols[symbolTable.CArray[2]].DistributionCount == 1 {
-		temp_symbol = symbolTable.Symbols[symbolTable.CArray[2]]
+	if symbolTable.CSymbols[1].DistributionCount == 0 && symbolTable.CSymbols[2].DistributionCount == 1 {
+		temp_symbol = symbolTable.CSymbols[2]
 	} else {
-		temp_symbol = symbolTable.Symbols[symbolTable.CArray[1]]
+		temp_symbol = symbolTable.CSymbols[1]
 	}
 	localint_i = 0
 
@@ -332,7 +327,7 @@ Line5750: // 5750
 func basicGosub6200() {
 	// 6200
 	//---Compute conclusion---
-	z := premiseSet.Compute(negativePremiseCount, symbolTable.Symbols[localint_c1], symbolTable.Symbols[localint_c2])
+	z := premiseSet.Compute(negativePremiseCount, symbolTable.CSymbols[1], symbolTable.CSymbols[2])
 
 	// PRINT  conclusion
 	fmt.Printf("  / %s\n", z)
@@ -346,9 +341,9 @@ func basicGosub6630(p1 term.Type) {
 	// 6630
 	//---test offered conclusion---
 	var (
-		localstring_w string
-		localint_t1   int
-		localint_t2   int
+		localstring_w  string
+		localsymbol_t1 *symbol.Symbol
+		localsymbol_t2 *symbol.Symbol
 	)
 	var termType1 term.Type = term.TypeGeneralTerm // formerly g1
 	var termType2 term.Type = term.TypeGeneralTerm // formerly g2
@@ -379,7 +374,7 @@ func basicGosub6630(p1 term.Type) {
 		recentWord1 = localstring_w
 	} else {
 		symbolIsUndeterminedTerm := func(j int) bool {
-			sym := symbolTable.Symbols[symbolTable.CArray[j]]
+			sym := symbolTable.CSymbols[j]
 			if localstring_w == sym.Term {
 				switch sym.TermType {
 				case term.TypeUndetermined:
@@ -415,17 +410,17 @@ func basicGosub6630(p1 term.Type) {
 	}
 
 	if localint_j > 0 {
-		localint_t1 = symbolTable.CArray[localint_j]
-		localint_t2 = symbolTable.CArray[3-localint_j]
-		if localstring_w != symbolTable.Symbols[localint_t2].Term {
+		localsymbol_t1 = symbolTable.CSymbols[localint_j]
+		localsymbol_t2 = symbolTable.CSymbols[3-localint_j]
+		if localstring_w != localsymbol_t2.Term {
 			goto Line7060
 		}
-		if symbolTable.Symbols[localint_t2].TermType != term.TypeUndetermined {
-			if termType2 != term.TypeUndetermined && termType2 != symbolTable.Symbols[localint_t2].TermType {
+		if localsymbol_t2.TermType != term.TypeUndetermined {
+			if termType2 != term.TypeUndetermined && termType2 != localsymbol_t2.TermType {
 				goto Line7060
 			}
 		} else if termType2 != term.TypeUndetermined {
-			fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[localint_t2].Term, termType2)
+			fmt.Printf("Note: %q used in premises taken to be %s\n", localsymbol_t2.Term, termType2)
 		}
 		if negativePremiseCount > 0 && !d1.IsNegative() {
 			fmt.Println("** Negative conclusion required.")
@@ -433,10 +428,10 @@ func basicGosub6630(p1 term.Type) {
 		}
 		goto Line7120
 	}
-	if localstring_w == symbolTable.Symbols[symbolTable.CArray[1]].Term {
-		localint_t2 = symbolTable.CArray[2]
+	if localstring_w == symbolTable.CSymbols[1].Term {
+		localsymbol_t2 = symbolTable.CSymbols[2]
 	} else {
-		localint_t2 = symbolTable.CArray[1]
+		localsymbol_t2 = symbolTable.CSymbols[1]
 	}
 	goto Line7070
 
@@ -444,7 +439,7 @@ Line7060: // 7060
 	fmt.Printf("** Conclusion may not contain %s %q;\n", termType2, localstring_w)
 
 Line7070: // 7070
-	fmt.Printf("** Conclusion must contain %s %q.\n", symbolTable.Symbols[localint_t2].TermType, symbolTable.Symbols[localint_t2].Term)
+	fmt.Printf("** Conclusion must contain %s %q.\n", localsymbol_t2.TermType, localsymbol_t2.Term)
 	return
 
 Line7120: // 7120
@@ -454,11 +449,11 @@ Line7120: // 7120
 	}
 
 	if localint_j1 != 1 {
-		if symbolTable.Symbols[localint_t1].DistributionCount == 0 && d1 > 1 && d1 < 4 {
-			help.ShowTermDistributionError(symbolTable.Symbols[localint_t1].Term)
+		if localsymbol_t1.DistributionCount == 0 && d1 > 1 && d1 < 4 {
+			help.ShowTermDistributionError(localsymbol_t1.Term)
 			return
-		} else if symbolTable.Symbols[localint_t2].DistributionCount == 0 && (d1.IsNegative() || d1 == 6) {
-			help.ShowTermDistributionError(symbolTable.Symbols[localint_t2].Term)
+		} else if localsymbol_t2.DistributionCount == 0 && (d1.IsNegative() || d1 == 6) {
+			help.ShowTermDistributionError(localsymbol_t2.Term)
 			return
 		}
 	}
@@ -472,11 +467,11 @@ Line7120: // 7120
 		localsymbol_v1 = &symbol.Symbol{
 			Term: localstring_w,
 		}
-	} else if symbolTable.Symbols[localint_t1].DistributionCount > 0 && d1 < 2 {
-		localsymbol_v1 = symbolTable.Symbols[localint_t1]
+	} else if localsymbol_t1.DistributionCount > 0 && d1 < 2 {
+		localsymbol_v1 = localsymbol_t1
 	} else {
-		if symbolTable.Symbols[localint_t2].DistributionCount > 0 && !d1.IsNegative() && d1 != form.AIsT && d1 != 6 {
-			localsymbol_v1 = symbolTable.Symbols[localint_t2]
+		if localsymbol_t2.DistributionCount > 0 && !d1.IsNegative() && d1 != form.AIsT && d1 != 6 {
+			localsymbol_v1 = localsymbol_t2
 		}
 
 		if localsymbol_v1 == nil {

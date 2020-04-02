@@ -8,7 +8,7 @@ import (
 type SymbolTable struct {
 	Symbols             []*symbol.Symbol
 	highestLocationUsed int
-	CArray              []int
+	CSymbols            []*symbol.Symbol
 }
 
 // HighestLocationUsed returns the highest location used.
@@ -24,8 +24,8 @@ func (st *SymbolTable) IncreaseLocationMax() {
 // New symbol table.
 func New(size int) *SymbolTable {
 	t := SymbolTable{
-		Symbols: make([]*symbol.Symbol, size),
-		CArray:  make([]int, size),
+		Symbols:  make([]*symbol.Symbol, size),
+		CSymbols: make([]*symbol.Symbol, size),
 	}
 	for i := range t.Symbols {
 		t.Symbols[i] = &symbol.Symbol{}
