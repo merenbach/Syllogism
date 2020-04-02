@@ -17,7 +17,7 @@ type Symbol struct {
 }
 
 func (s *Symbol) String() string {
-	return fmt.Sprintf("%s %q", s.TermType, s.Term)
+	return fmt.Sprintf("<%s %q>", s.TermType, s.Term)
 }
 
 // ReduceDistributionCount reduces the occurrences and (optionally) distribution count of the symbol.
