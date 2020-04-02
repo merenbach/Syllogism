@@ -102,7 +102,6 @@ var (
 	localint_p1    term.Type
 	localint_v1    int
 	localstring_l1 string
-	localstring_l2 string
 	localstring_s  string
 	localstring_t  string
 	localstring_w  string
@@ -947,6 +946,7 @@ func syllogize() bool {
 
 	//---Input line---
 	localstring_l1 = lineInput("> ")
+	var localstring_l2 string
 	localint_l = len(localstring_l1)
 
 	if localint_l == 0 {
