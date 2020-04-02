@@ -89,8 +89,6 @@ var (
 	stringarray_s [7]string // appears to hold parsed line tokens
 	stringarray_w [3]string // appears to hold the most recently-input first and second terms for parsing or testing
 
-	localint_t1 int
-	localint_t2 int
 	localint_c  int
 	localint_c1 int
 	localint_c2 int
@@ -346,7 +344,11 @@ func basicGosub6200() {
 func basicGosub6630() {
 	// 6630
 	//---test offered conclusion---
-	var localstring_w string
+	var (
+		localstring_w string
+		localint_t1   int
+		localint_t2   int
+	)
 	var termType1 term.Type = term.TypeGeneralTerm // formerly g1
 	var termType2 term.Type = term.TypeGeneralTerm // formerly g2
 
