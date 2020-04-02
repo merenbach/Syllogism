@@ -939,7 +939,7 @@ func lineInput(prompt string) string {
 	return strings.TrimSpace(input)
 }
 
-func syllogize() bool {
+func runloop() bool {
 	// TODO: factor into more local scope for conditionals
 	var err error
 	var (
@@ -1225,7 +1225,7 @@ func main() {
 		fmt.Println("Enter HELP for list of commands")
 	}
 
-	for syllogize() {
-		// Keep running till syllogize() returns false
+	for runloop() {
+		// Keep running till runloop() returns false
 	}
 }
