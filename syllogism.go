@@ -1118,13 +1118,13 @@ func runloop() bool {
 
 	// draw/test conclusion
 
-	// NOTE: mods j1
+	// NOTE: mods j1, checks and mods carray
 	_ = basicGosub5070() // is it a syl?
 	if localint_j1 > 1 {
 		return true
 	}
 	if localint_j1 == 0 {
-		// NOTE: checks and mods j1
+		// NOTE: checks and mods j1, checks carray
 		basicGosub5880() // poss. conclusion?
 	}
 
@@ -1133,7 +1133,7 @@ func runloop() bool {
 	}
 
 	if intarray_t[2] != token.TypeReserved {
-		// NOTE: checks j1
+		// NOTE: checks j1, checks carray
 		basicGosub6630(localint_p1)
 	} else {
 		basicGosub6200() // test/draw conclusion
