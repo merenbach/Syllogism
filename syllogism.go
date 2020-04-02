@@ -211,7 +211,7 @@ func basicGosub5880() {
 	fmt.Println(help.NoPossibleConclusion)
 }
 
-func basicGosub5070(localstring_l1 string) {
+func basicGosub5070() premise.Set {
 	// 5070
 	//---See if syllogism---
 	var temp_symbol *symbol.Symbol
@@ -220,7 +220,7 @@ func basicGosub5070(localstring_l1 string) {
 	localint_v1 = 0 // flag for modern validity
 	if premiseSet.Empty() {
 		localint_j1 = 1
-		return
+		return nil
 	}
 
 	localint_c = 0
@@ -263,7 +263,7 @@ func basicGosub5070(localstring_l1 string) {
 	}
 
 	if localint_j1 != 0 {
-		return
+		return nil
 	}
 
 	linkedPremises := make(premise.Set, len(premiseSet))
@@ -327,13 +327,10 @@ Line5730: // 5730
 
 Line5750: // 5750
 	if localint_j1 > 0 {
-		return
+		return nil
 	}
-	if localstring_l1 == "link" || localstring_l1 == "link*" {
-		fmt.Println("Premises of syllogism in order of term links:")
-		// TODO: did we need anything with localint_l (passed in as `max` before)?
-		_ = linkedPremises.List(strings.HasSuffix(localstring_l1, "*"))
-	}
+
+	return linkedPremises
 }
 
 func basicGosub6200() {
@@ -1048,7 +1045,13 @@ func runloop() bool {
 		if premiseSet.Empty() {
 			fmt.Println(help.NoPremises)
 		} else {
-			basicGosub5070(localstring_l1)
+			linkedPremises := basicGosub5070()
+			if linkedPremises != nil {
+				fmt.Println("Premises of syllogism in order of term links:")
+				// TODO: did we need anything with localint_l (passed in as `max` before)?
+				analyze := strings.HasSuffix(localstring_l1, "*")
+				_ = linkedPremises.List(analyze)
+			}
 		}
 		return true
 	case "list":
@@ -1110,7 +1113,7 @@ func runloop() bool {
 
 	// draw/test conclusion
 
-	basicGosub5070(localstring_l1) // is it a syl?
+	_ = basicGosub5070() // is it a syl?
 	if localint_j1 > 1 {
 		return true
 	}
