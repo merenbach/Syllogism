@@ -110,9 +110,8 @@ var (
 	msg bool
 )
 
-func basicGosub9060() error {
-	// 9060
-	//---Substitute terms---
+// Substitute terms
+func substitute() error {
 	if premiseSet.Empty() {
 		return fmt.Errorf(help.NoPremises)
 	}
@@ -1036,7 +1035,7 @@ func syllogize() bool {
 		return true
 
 	case "substitute":
-		if err := basicGosub9060(); err != nil {
+		if err := substitute(); err != nil {
 			fmt.Println(err)
 		}
 		return true
