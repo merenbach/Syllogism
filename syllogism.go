@@ -31,7 +31,8 @@ package main
 * g2     => term type as integer (termType2)
 * k(63)  => linking order??? (TODO: figure this out), currently premises.LinkOrder
 * i1     => local iterator index that is passed through different functions
-            appears independent in substitution routine, but spans gosubs 3400 and 3950.
+			appears independent in substitution routine, but spans gosubs 3400 and 3950.
+* j(4)   => appears to have held subject and predicate indices in symbol table for decrementing
 * j1     => appears to be error code/status for syllogism (???)
 * l(63) => occupied line slots (???) in premise list; currently l(N) => premiseset.LArray(N)
 * l$(63) => line statements
@@ -1117,11 +1118,13 @@ func runloop() bool {
 
 	// draw/test conclusion
 
+	// NOTE: mods j1
 	_ = basicGosub5070() // is it a syl?
 	if localint_j1 > 1 {
 		return true
 	}
 	if localint_j1 == 0 {
+		// NOTE: checks and mods j1
 		basicGosub5880() // poss. conclusion?
 	}
 
@@ -1130,6 +1133,7 @@ func runloop() bool {
 	}
 
 	if intarray_t[2] != token.TypeReserved {
+		// NOTE: checks j1
 		basicGosub6630(localint_p1)
 	} else {
 		basicGosub6200() // test/draw conclusion
