@@ -87,7 +87,8 @@ var (
 	negativePremiseCount = 0 // kludge because we aren't able to tally dynamically yet (chicken-and-egg)
 
 	stringarray_s [7]string // appears to hold parsed line tokens
-	stringarray_w [3]string // appears to hold the most recently-input first and second terms for parsing or testing
+	recentWord1   string    // most recently-input first word (subject?)
+	recentWord2   string    // most recently-input second word (predicate?)
 
 	localint_c  int
 	localint_c1 int
@@ -373,9 +374,9 @@ func basicGosub6630() {
 		d1 += 2
 	}
 
-	localstring_w = stringutil.Singularize(stringarray_w[1])
+	localstring_w = stringutil.Singularize(recentWord1)
 	if localint_j1 != 0 {
-		stringarray_w[1] = localstring_w
+		recentWord1 = localstring_w
 	} else {
 		symbolIsUndeterminedTerm := func(j int) bool {
 			sym := symbolTable.Symbols[symbolTable.CArray[j]]
@@ -401,9 +402,9 @@ func basicGosub6630() {
 		}
 	}
 
-	localstring_w = stringutil.Singularize(stringarray_w[2])
+	localstring_w = stringutil.Singularize(recentWord2)
 	if localint_j1 != 0 {
-		if localstring_w == stringarray_w[1] {
+		if localstring_w == recentWord1 {
 			if d1 != 4 || termType2 == term.TypeUndetermined {
 				goto Line7120
 			}
@@ -614,9 +615,9 @@ func basicGosub3400(d1 form.Form, prem *premise.Premise) {
 	}
 
 	localint_j = 1
-	temp(localint_j, stringarray_w[localint_j])
+	temp(localint_j, recentWord1)
 	localint_j = 2
-	temp(localint_j, stringarray_w[localint_j])
+	temp(localint_j, recentWord2)
 
 	prem.Form = d1
 }
@@ -646,16 +647,16 @@ func basicGosub2890() (form.Form, error) {
 						return form.Undefined, errors.New(help.MissingPredicate)
 					}
 
-					stringarray_w[1] = stringarray_s[2]
-					stringarray_w[2] = stringarray_s[5]
+					recentWord1 = stringarray_s[2]
+					recentWord2 = stringarray_s[5]
 					return form.AIsNotT, nil // a is not T
 				} else {
 					if intarray_t[4] != token.TypeTerm {
 						return form.Undefined, errors.New(help.MissingPredicate)
 					}
 
-					stringarray_w[1] = stringarray_s[2]
-					stringarray_w[2] = stringarray_s[4]
+					recentWord1 = stringarray_s[2]
+					recentWord2 = stringarray_s[4]
 					return form.AIsT, nil // a is T
 				}
 			}
@@ -672,8 +673,8 @@ func basicGosub2890() (form.Form, error) {
 				return form.Undefined, errors.New(help.MissingPredicate)
 			}
 
-			stringarray_w[1] = stringarray_s[3]
-			stringarray_w[2] = stringarray_s[5]
+			recentWord1 = stringarray_s[3]
+			recentWord2 = stringarray_s[5]
 
 			return form.NoAIsB, nil // no A is B
 		}
@@ -687,15 +688,15 @@ func basicGosub2890() (form.Form, error) {
 			if intarray_t[6] != token.TypeTerm {
 				return form.Undefined, errors.New(help.MissingPredicate)
 			}
-			stringarray_w[1] = stringarray_s[3]
-			stringarray_w[2] = stringarray_s[6]
+			recentWord1 = stringarray_s[3]
+			recentWord2 = stringarray_s[6]
 			return form.SomeAIsNotB, nil // some A is not B
 		}
 		if intarray_t[5] != token.TypeTerm {
 			return form.Undefined, errors.New(help.MissingPredicate)
 		}
-		stringarray_w[1] = stringarray_s[3]
-		stringarray_w[2] = stringarray_s[5]
+		recentWord1 = stringarray_s[3]
+		recentWord2 = stringarray_s[5]
 		return form.SomeAIsB, nil // Some A is B
 	}
 	if intarray_t[3] != token.TypeTerm {
@@ -707,8 +708,8 @@ func basicGosub2890() (form.Form, error) {
 	if intarray_t[5] != token.TypeTerm {
 		return form.Undefined, errors.New(help.MissingPredicate)
 	}
-	stringarray_w[1] = stringarray_s[3]
-	stringarray_w[2] = stringarray_s[5]
+	recentWord1 = stringarray_s[3]
+	recentWord2 = stringarray_s[5]
 	return form.AllAIsB, nil // all A is B
 }
 
