@@ -89,22 +89,19 @@ var (
 	stringarray_s [7]string // appears to hold parsed line tokens
 	stringarray_w [3]string // appears to hold the most recently-input first and second terms for parsing or testing
 
-	localint_t1   int
-	localint_t2   int
-	localint_c    int
-	localint_c1   int
-	localint_c2   int
-	localint_i    int
-	localint_i1   int
-	localint_j    int
-	localint_j1   int
-	localint_k    int
-	localint_l    int
-	localint_p1   term.Type
-	localint_v1   int
-	localstring_s string
-	localstring_t string
-	localstring_w string
+	localint_t1 int
+	localint_t2 int
+	localint_c  int
+	localint_c1 int
+	localint_c2 int
+	localint_i  int
+	localint_i1 int
+	localint_j  int
+	localint_j1 int
+	localint_k  int
+	localint_l  int
+	localint_p1 term.Type
+	localint_v1 int
 
 	msg bool
 )
@@ -131,9 +128,9 @@ func substitute() error {
 				if localint_i1 <= symbolTable.HighestLocationUsed() {
 					fmt.Printf("Enter new term to replace %s %q\n", symbolTable.Symbols[localint_i1].TermType, symbolTable.Symbols[localint_i1].Term)
 
-					localstring_w = lineInput("? ")
-					symbolTable.Symbols[localint_i1].Term = localstring_w
-					fmt.Printf("Replaced by %q\n", localstring_w)
+					w := lineInput("? ")
+					symbolTable.Symbols[localint_i1].Term = w
+					fmt.Printf("Replaced by %q\n", w)
 				} else {
 					fmt.Printf("Address %d too large.  Symbol table only of length %d.\n", localint_i1, symbolTable.HighestLocationUsed())
 				}
@@ -349,6 +346,7 @@ func basicGosub6200() {
 func basicGosub6630() {
 	// 6630
 	//---test offered conclusion---
+	var localstring_w string
 	var termType1 term.Type = term.TypeGeneralTerm // formerly g1
 	var termType2 term.Type = term.TypeGeneralTerm // formerly g2
 
@@ -723,6 +721,7 @@ func tokenize(localstring_l1 string) ([7]string, [8]token.Type, [3]article.Type,
 	// TODO: try to return when we need to return
 	var returnErr error
 
+	var localstring_s string
 	var shadowstringarray_s [7]string
 	var shadowintarray_t [8]token.Type
 	var shadowintarray_e [3]article.Type
