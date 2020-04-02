@@ -37,7 +37,7 @@ package main
 * l$(63) => line statements
 * l1     => highest symbol table location used, so symbolTable.HighestLocationUsed
 * n(63)  => line numbers
-* n1     => negative premise count on premise set, supplanted by premiseSet.NegativePremiseCount()
+* n1     => negative premise count on premise set, supplanted by negativePremiseCount
 * o(63)  => term occurrence count, so anywhere we see o(N) => symbols(N).Occurrences
 * p(63)  => index of subject in symbol table for premise at given index, currently premises(N).Symbol
 * p1     => term type as integer
@@ -82,8 +82,9 @@ var (
 	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
 
-	premiseSet  = make(premise.Set, 0)
-	symbolTable = symboltable.New(basicDimMax + 2)
+	premiseSet           = make(premise.Set, 0)
+	symbolTable          = symboltable.New(basicDimMax + 2)
+	negativePremiseCount = 0 // kludge because we aren't able to tally dynamically yet (chicken-and-egg)
 
 	stringarray_s [7]string // appears to hold parsed line tokens
 	stringarray_w [3]string // appears to hold the most recently-input first and second terms for parsing or testing
@@ -179,7 +180,6 @@ func basicGosub5880() {
 		return false
 	})
 
-	negativePremiseCount := premiseSet.NegativePremiseCount()
 	if negativePremiseCount > 1 {
 		localint_j1 = 6
 		fmt.Println("More than one negative premise:")
@@ -336,7 +336,7 @@ Line5750: // 5750
 func basicGosub6200() {
 	// 6200
 	//---Compute conclusion---
-	z := premiseSet.Compute(symbolTable.Symbols[localint_c1], symbolTable.Symbols[localint_c2])
+	z := premiseSet.Compute(negativePremiseCount, symbolTable.Symbols[localint_c1], symbolTable.Symbols[localint_c2])
 
 	// PRINT  conclusion
 	fmt.Printf("  / %s\n", z)
@@ -426,7 +426,7 @@ func basicGosub6630() {
 		} else if termType2 != term.TypeUndetermined {
 			fmt.Printf("Note: %q used in premises taken to be %s\n", symbolTable.Symbols[localint_t2].Term, termType2)
 		}
-		if premiseSet.NegativePremiseCount() > 0 && !d1.IsNegative() {
+		if negativePremiseCount > 0 && !d1.IsNegative() {
 			fmt.Println("** Negative conclusion required.")
 			return
 		}
@@ -447,7 +447,7 @@ Line7070: // 7070
 	return
 
 Line7120: // 7120
-	if premiseSet.NegativePremiseCount() == 0 && d1.IsNegative() {
+	if negativePremiseCount == 0 && d1.IsNegative() {
 		fmt.Println("** Affirmative conclusion required.")
 		return
 	}
@@ -495,6 +495,7 @@ func basicGosub1840() {
 
 	premiseSet = make(premise.Set, 0)
 	symbolTable = symboltable.New(basicDimMax + 2)
+	negativePremiseCount = 0
 }
 
 func basicGosub3400(d1 form.Form, prem *premise.Premise) {
@@ -502,7 +503,7 @@ func basicGosub3400(d1 form.Form, prem *premise.Premise) {
 	//---Add W$(1), W$(2) to table T$()---
 	var termType term.Type // formerly g
 	if d1.IsNegative() {
-		negativePremiseCount := premiseSet.NegativePremiseCount()
+		negativePremiseCount++
 		if negativePremiseCount > 1 && msg {
 			fmt.Printf("Warning: %d negative premises\n", negativePremiseCount)
 		}
@@ -1152,6 +1153,9 @@ func addPremise(n int, s string) *premise.Premise {
 func delPremise(n int) error {
 	for i, p := range premiseSet {
 		if p.Number == n {
+			if p.Form.IsNegative() {
+				negativePremiseCount--
+			}
 			p.Decrement()
 
 			// Delete without leaving uncollected pointers
@@ -1172,7 +1176,7 @@ func delPremise(n int) error {
 func Dump() string {
 	dump := new(bytes.Buffer)
 	highestLocationUsed := symbolTable.HighestLocationUsed()
-	fmt.Fprintf(dump, "Highest symbol table loc. used: %d  Negative premises: %d\n", highestLocationUsed, premiseSet.NegativePremiseCount())
+	fmt.Fprintf(dump, "Highest symbol table loc. used: %d  Negative premises: %d\n", highestLocationUsed, negativePremiseCount)
 	if highestLocationUsed != 0 {
 		w := tabwriter.NewWriter(dump, 0, 0, 2, ' ', 0)
 		fmt.Fprint(w, "Adr.\tart.\tterm\ttype\toccurs\tdist. count")

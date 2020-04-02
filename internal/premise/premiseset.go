@@ -24,12 +24,13 @@ type Set []*Premise
 // }
 
 // Compute a conclusion.
-func (ps Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
+func (ps Set) Compute(negativePremiseCount int, symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
 	if ps.Empty() {
 		return "A is A"
 	}
 
-	if ps.NegativePremiseCount() == 0 {
+	// if ps.NegativePremiseCount() == 0 {
+	if negativePremiseCount == 0 {
 		// affirmative conclusion
 		// TODO: can we push more of these conditionals inside the symbol type?
 		if symbol1.DistributionCount > 0 {
@@ -88,16 +89,17 @@ func (ps Set) List(analyze bool) error {
 	return nil
 }
 
-// NegativePremiseCount returns the count of negative premises.
-func (ps Set) NegativePremiseCount() int {
-	var negativePremises int
-	for _, p := range ps {
-		if p.Form.IsNegative() {
-			negativePremises++
-		}
-	}
-	return negativePremises
-}
+// // NegativePremiseCount returns the count of negative premises.
+// TODO: this should probably actually return the slice of negative premises, and then we can do len() on that
+// func (ps Set) NegativePremiseCount() int {
+// 	var negativePremises int
+// 	for _, p := range ps {
+// 		if p.Form.IsNegative() {
+// 			negativePremises++
+// 		}
+// 	}
+// 	return negativePremises
+// }
 
 // Empty determines whether the premise set is empty.
 func (ps Set) Empty() bool {
