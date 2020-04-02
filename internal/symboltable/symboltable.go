@@ -58,7 +58,7 @@ func (st *SymbolTable) Search(start int, w string) (int, int) {
 			return true
 		}
 
-		if s.Empty() && firstEmptyLocation == 0 {
+		if s.Occurrences == 0 && firstEmptyLocation == 0 {
 			firstEmptyLocation = i
 		}
 

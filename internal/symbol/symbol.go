@@ -24,7 +24,7 @@ func (s *Symbol) String() string {
 // TODO: Golang may present a more idiomatic way to do this
 func (s *Symbol) ReduceDistributionCount(decrement bool) {
 	s.Occurrences--
-	if s.Empty() {
+	if s.Occurrences == 0 {
 		s.Term = ""
 		s.ArticleType = article.TypeNone
 		s.TermType = term.TypeUndetermined
@@ -33,11 +33,6 @@ func (s *Symbol) ReduceDistributionCount(decrement bool) {
 	if decrement {
 		s.DistributionCount--
 	}
-}
-
-// Empty determines whether a symbol is empty.
-func (s *Symbol) Empty() bool {
-	return s.Occurrences == 0
 }
 
 // Dump values of variables in a Symbol.
