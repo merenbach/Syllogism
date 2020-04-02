@@ -100,7 +100,8 @@ var (
 	localint_k  int
 	localint_l  int
 	localint_p1 term.Type
-	localint_v1 int
+
+	localsymbol_v1 *symbol.Symbol
 
 	msg bool
 )
@@ -171,7 +172,7 @@ func basicGosub5880() {
 		}
 
 		if s.DistributionCount != 1 && s.TermType != term.TypeDesignator {
-			localint_v1 = i
+			localsymbol_v1 = symbolTable.Symbols[i]
 		}
 		return false
 	})
@@ -213,7 +214,7 @@ func basicGosub5070() premise.Set {
 	var temp_symbol *symbol.Symbol
 
 	localint_j1 = 0
-	localint_v1 = 0 // flag for modern validity
+	localsymbol_v1 = nil // flag for modern validity
 	if premiseSet.Empty() {
 		localint_j1 = 1
 		return nil
@@ -336,9 +337,9 @@ func basicGosub6200() {
 
 	// PRINT  conclusion
 	fmt.Printf("  / %s\n", z)
-	if localint_v1 != 0 {
+	if localsymbol_v1 != nil {
 		fmt.Print("  * Aristotle-valid only, i.e. on requirement that term ")
-		fmt.Printf("%q denotes.\n", symbolTable.Symbols[localint_v1].Term)
+		fmt.Printf("%q denotes.\n", localsymbol_v1.Term)
 	}
 }
 
@@ -469,23 +470,23 @@ Line7120: // 7120
 		if d1 > 0 {
 			return
 		}
-		// NOTE: the only point to this is probably for printing down below, if localint_v1 == 0
-		//       localint_v1, then, is an index of a symbol, and could likely be refactored _into_ a symbol type
-		symbolTable.Symbols[0].Term = localstring_w
+		localsymbol_v1 = &symbol.Symbol{
+			Term: localstring_w,
+		}
 	} else if symbolTable.Symbols[localint_t1].DistributionCount > 0 && d1 < 2 {
-		localint_v1 = localint_t1
+		localsymbol_v1 = symbolTable.Symbols[localint_t1]
 	} else {
 		if symbolTable.Symbols[localint_t2].DistributionCount > 0 && !d1.IsNegative() && d1 != form.AIsT && d1 != 6 {
-			localint_v1 = localint_t2
+			localsymbol_v1 = symbolTable.Symbols[localint_t2]
 		}
 
-		if localint_v1 == 0 {
+		if localsymbol_v1 == nil {
 			return
 		}
 	}
 
 	fmt.Println("    but on Aristotelian interpretation only, i.e. on requirement")
-	fmt.Printf("    that term %q denotes.\n", symbolTable.Symbols[localint_v1].Term)
+	fmt.Printf("    that term %q denotes.\n", localsymbol_v1.Term)
 }
 
 func basicGosub1840() {
