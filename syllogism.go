@@ -294,14 +294,12 @@ Line5470: // 5470
 
 		temp_symbol = linkedPremises[localint_i].Predicate
 
-		if localint_j1 > 0 {
-			fmt.Println(help.ClosedLoopHelp)
-		} else {
+		if localint_j1 == 0 {
 			localint_j1 = 4
 			fmt.Println("Not a syllogism: no way to order premises so that each premise")
 			fmt.Println("shares exactly one term with its successor; there is a")
-			fmt.Println(help.ClosedLoopHelp)
 		}
+		fmt.Println(help.ClosedLoopHelp)
 		fmt.Println(linkedPremises[localint_i])
 		goto Line5730
 	}
