@@ -342,7 +342,7 @@ func basicGosub6200() {
 	}
 }
 
-func basicGosub6630() {
+func basicGosub6630(p1 term.Type) {
 	// 6630
 	//---test offered conclusion---
 	var (
@@ -368,7 +368,7 @@ func basicGosub6630() {
 
 	if d1 >= 4 {
 		termType1 = term.TypeDesignator
-		termType2 = localint_p1
+		termType2 = p1
 	}
 	if termType2 == term.TypeDesignator && d1 < 6 && d1 > 3 {
 		d1 += 2
@@ -499,7 +499,7 @@ func basicGosub1840() {
 	negativePremiseCount = 0
 }
 
-func basicGosub3400(d1 form.Form, prem *premise.Premise) {
+func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 	// 3400
 	//---Add W$(1), W$(2) to table T$()---
 	var termType term.Type // formerly g
@@ -517,7 +517,7 @@ func basicGosub3400(d1 form.Form, prem *premise.Premise) {
 		} else if localint_j == 1 {
 			termType = term.TypeDesignator
 		} else {
-			termType = localint_p1
+			termType = p1
 		}
 
 		w := stringutil.Singularize(raw_string)
@@ -898,7 +898,7 @@ func basicGosub8980() {
 		}
 		localint_s := len(stringarray_s[1]) + 1
 		prem := addPremise(n, localstring_l1[localint_s:])
-		basicGosub3400(d1, prem)
+		basicGosub3400(d1, localint_p1, prem)
 	}
 
 	if msg {
@@ -1091,7 +1091,7 @@ func runloop() bool {
 				}
 				localint_s := len(stringarray_s[1]) + 1
 				prem := addPremise(n, localstring_l1[localint_s:])
-				basicGosub3400(d1, prem) // add terms to symbol table
+				basicGosub3400(d1, localint_p1, prem) // add terms to symbol table
 			}
 		} else {
 			if premiseSet.Empty() {
@@ -1129,7 +1129,7 @@ func runloop() bool {
 	}
 
 	if intarray_t[2] != token.TypeReserved {
-		basicGosub6630()
+		basicGosub6630(localint_p1)
 	} else {
 		basicGosub6200() // test/draw conclusion
 	}
