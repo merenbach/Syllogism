@@ -469,6 +469,8 @@ Line7120: // 7120
 		if d1 > 0 {
 			return
 		}
+		// NOTE: the only point to this is probably for printing down below, if localint_v1 == 0
+		//       localint_v1, then, is an index of a symbol, and could likely be refactored _into_ a symbol type
 		symbolTable.Symbols[0].Term = localstring_w
 	} else if symbolTable.Symbols[localint_t1].DistributionCount > 0 && d1 < 2 {
 		localint_v1 = localint_t1
