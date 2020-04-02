@@ -38,9 +38,7 @@ func (pr *Premise) Decrement() {
 		qDecrement bool
 	)
 
-	if pr.Form.IsNegative() {
-		qDecrement = true
-	} else if pr.Predicate.TermType == term.TypeDesignator {
+	if pr.Form.IsNegative() || pr.Predicate.TermType == term.TypeDesignator {
 		qDecrement = true
 	}
 
