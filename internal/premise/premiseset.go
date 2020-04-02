@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/merenbach/syllogism/internal/article"
+	"github.com/merenbach/syllogism/internal/help"
 	"github.com/merenbach/syllogism/internal/symbol"
 	"github.com/merenbach/syllogism/internal/term"
 )
@@ -62,7 +63,11 @@ func (ps Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
 // List output for premises, optionally in distribution-analysis format.
 // This may be used for link-order output if the premise set is arranged accordingly.
 // TODO: use tabwriter for distribution-analysis format?
-func (ps Set) List(analyze bool) {
+func (ps Set) List(analyze bool) error {
+	if len(ps) == 0 {
+		return fmt.Errorf(help.NoPremises)
+	}
+
 	for _, prem := range ps {
 		if !analyze {
 			fmt.Printf("%d  %s\n", prem.Number, prem.Statement)
@@ -80,6 +85,7 @@ func (ps Set) List(analyze bool) {
 			fmt.Printf("%s%s%s  %s%s\n", prem.Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), prem.Predicate.Term, prem.Form.SymbolForTermB())
 		}
 	}
+	return nil
 }
 
 // NegativePremiseCount returns the count of negative premises.

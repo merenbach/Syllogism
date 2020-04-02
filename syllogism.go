@@ -334,7 +334,7 @@ Line5750: // 5750
 	if localstring_l1 == "link" || localstring_l1 == "link*" {
 		fmt.Println("Premises of syllogism in order of term links:")
 		// TODO: did we need anything with localint_l (passed in as `max` before)?
-		linkedPremises.List(strings.HasSuffix(localstring_l1, "*"))
+		_ = linkedPremises.List(strings.HasSuffix(localstring_l1, "*"))
 	}
 }
 
@@ -1052,10 +1052,8 @@ func syllogize() bool {
 	case "list":
 		fallthrough
 	case "list*":
-		if premiseSet.Empty() {
+		if err := premiseSet.List(strings.HasSuffix(localstring_l1, "*")); err != nil {
 			fmt.Println(help.NoPremises)
-		} else {
-			premiseSet.List(strings.HasSuffix(localstring_l1, "*"))
 		}
 		return true
 	}
