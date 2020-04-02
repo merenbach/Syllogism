@@ -1052,9 +1052,12 @@ func syllogize() bool {
 		}
 		return true
 	case "list":
-		fallthrough
+		if err := premiseSet.List(false); err != nil {
+			fmt.Println(help.NoPremises)
+		}
+		return true
 	case "list*":
-		if err := premiseSet.List(strings.HasSuffix(localstring_l1, "*")); err != nil {
+		if err := premiseSet.List(true); err != nil {
 			fmt.Println(help.NoPremises)
 		}
 		return true
