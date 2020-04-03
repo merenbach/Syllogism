@@ -158,9 +158,9 @@ func basicGosub5880() {
 	symbol1 := symbolTable.ConclusionTerms[1]
 	symbol2 := symbolTable.ConclusionTerms[2]
 
-	symbolTable.Iterate(1, func(i int, s *symbol.Symbol) bool {
+	for i, s := range symbolTable.Symbols {
 		if s.Occurrences < 2 {
-			return false
+			continue
 		}
 
 		if s.DistributionCount == 0 {
@@ -175,8 +175,7 @@ func basicGosub5880() {
 		if s.DistributionCount != 1 && s.TermType != term.TypeDesignator {
 			localsymbol_v1 = symbolTable.Symbols[i]
 		}
-		return false
-	})
+	}
 
 	if negativePremiseCount > 1 {
 		localint_j1 = 6
@@ -223,15 +222,15 @@ func basicGosub5070() premise.Set {
 
 	var localint_c int
 
-	symbolTable.Iterate(1, func(i int, s *symbol.Symbol) bool {
+	for i, s := range symbolTable.Symbols {
 		if s.Occurrences == 0 || s.Occurrences == 2 {
-			return false
+			continue
 		}
 
 		if s.Occurrences == 1 {
 			localint_c++
 			symbolTable.ConclusionTerms[localint_c] = symbolTable.Symbols[i]
-			return false
+			continue
 		}
 
 		if localint_j1 != 2 {
@@ -240,8 +239,7 @@ func basicGosub5070() premise.Set {
 		}
 
 		fmt.Printf("   %s %q occurs %d times in premises.\n", s.TermType, s.Term, s.Occurrences)
-		return false
-	})
+	}
 
 	if localint_c != 2 {
 		fmt.Println("Not a syllogism:")
@@ -523,7 +521,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 		}
 
 		w := stringutil.Singularize(raw_string)
-		localint_i1 = 1
+		localint_i1 = 0
 
 		for ; ; localint_i1++ { // 3500
 			var b1 int // NOTE: first empty symbol table location

@@ -24,24 +24,13 @@ func (st *SymbolTable) IncreaseLocationMax() {
 // New symbol table.
 func New(size int) *SymbolTable {
 	t := SymbolTable{
-		Symbols:         make([]*symbol.Symbol, 1),
+		Symbols:         make([]*symbol.Symbol, 0),
 		ConclusionTerms: make([]*symbol.Symbol, size),
 	}
 	for i := range t.Symbols {
 		t.Symbols[i] = &symbol.Symbol{}
 	}
 	return &t
-}
-
-// Iterate over a symbol table with a given function.
-// This function should return `false` to continue.
-// This function should return `true` when stopping condition is reached.
-func (st *SymbolTable) Iterate(start int, f func(int, *symbol.Symbol) bool) {
-	for i := start; i <= st.HighestLocationUsed(); i++ {
-		if f(i, st.Symbols[i]) {
-			break
-		}
-	}
 }
 
 // // Prune orphaned terms with no occurrences.
@@ -82,9 +71,9 @@ func (st *SymbolTable) Search(start int, w string) (int, int) {
 	// If found, I1 = L1; else I1 = L1+1. B1 set to 1st empty loc.
 	var firstEmptyLocation int
 
-	st.Iterate(start, func(i int, s *symbol.Symbol) bool {
+	for i, s := range st.Symbols {
 		if s.Term == w {
-			return true
+			break
 		}
 
 		if s.Occurrences == 0 && firstEmptyLocation == 0 {
@@ -92,8 +81,7 @@ func (st *SymbolTable) Search(start int, w string) (int, int) {
 		}
 
 		start = i + 1
-		return false
-	})
+	}
 
 	return start, firstEmptyLocation
 }
