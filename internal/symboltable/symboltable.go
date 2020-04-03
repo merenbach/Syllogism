@@ -13,14 +13,10 @@ type SymbolTable struct {
 
 // New symbol table.
 func New(size int) *SymbolTable {
-	t := SymbolTable{
+	return &SymbolTable{
 		Symbols:         make([]*symbol.Symbol, 0),
 		ConclusionTerms: make([]*symbol.Symbol, size),
 	}
-	for i := range t.Symbols {
-		t.Symbols[i] = &symbol.Symbol{}
-	}
-	return &t
 }
 
 // Prune orphaned terms with no occurrences.
