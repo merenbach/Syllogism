@@ -20,7 +20,7 @@ package main
 * b(63)  => term article type (index in a$ of proper article), so anywhere we see b(N) => symbols(N).ArticleType
 * b1     => first unused location in symbol table after a particular starting point
 			(first slot with symbols(N).Occurrences == 0)
-* c(63)  => unknown, but for symbols; currently c(N) => symbolTable.CArray(N)
+* c(63)  => term indices of non-middle terms (that is, major and minor terms); currently symbols [ c(N) ] => symbolTable.ConclusionTerms(N)
 * d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
 * d1     => form of most recently entered premise, either for entry into l$ or for evaluation with /
 * e(2)   => article type (index in a$ of article type)
@@ -150,8 +150,8 @@ func basicGosub5880() {
 	// 5880
 	//---See if conclusion possible---
 
-	symbol1 := symbolTable.CSymbols[1]
-	symbol2 := symbolTable.CSymbols[2]
+	symbol1 := symbolTable.ConclusionTerms[1]
+	symbol2 := symbolTable.ConclusionTerms[2]
 
 	symbolTable.Iterate(1, func(i int, s *symbol.Symbol) bool {
 		if s.Occurrences < 2 {
@@ -225,7 +225,7 @@ func basicGosub5070() premise.Set {
 
 		if s.Occurrences == 1 {
 			localint_c++
-			symbolTable.CSymbols[localint_c] = symbolTable.Symbols[i]
+			symbolTable.ConclusionTerms[localint_c] = symbolTable.Symbols[i]
 			return false
 		}
 
@@ -247,7 +247,7 @@ func basicGosub5070() premise.Set {
 
 			for i := 1; i <= localint_c; i++ {
 				// TODO: use tabwriter here?
-				sym := symbolTable.CSymbols[i]
+				sym := symbolTable.ConclusionTerms[i]
 				fmt.Printf("%s%s -- %s\n", basicTabString(6), sym.Term, sym.TermType)
 			}
 		} else {
@@ -267,10 +267,10 @@ func basicGosub5070() premise.Set {
 		goto Line5750
 	}
 
-	if symbolTable.CSymbols[1].DistributionCount == 0 && symbolTable.CSymbols[2].DistributionCount == 1 {
-		temp_symbol = symbolTable.CSymbols[2]
+	if symbolTable.ConclusionTerms[1].DistributionCount == 0 && symbolTable.ConclusionTerms[2].DistributionCount == 1 {
+		temp_symbol = symbolTable.ConclusionTerms[2]
 	} else {
-		temp_symbol = symbolTable.CSymbols[1]
+		temp_symbol = symbolTable.ConclusionTerms[1]
 	}
 	localint_i = 0
 
@@ -327,7 +327,7 @@ Line5750: // 5750
 func basicGosub6200() {
 	// 6200
 	//---Compute conclusion---
-	z := premiseSet.Compute(negativePremiseCount, symbolTable.CSymbols[1], symbolTable.CSymbols[2])
+	z := premiseSet.Compute(negativePremiseCount, symbolTable.ConclusionTerms[1], symbolTable.ConclusionTerms[2])
 
 	// PRINT  conclusion
 	fmt.Printf("  / %s\n", z)
@@ -374,7 +374,7 @@ func basicGosub6630(p1 term.Type) {
 		recentWord1 = localstring_w
 	} else {
 		symbolIsUndeterminedTerm := func(j int) bool {
-			sym := symbolTable.CSymbols[j]
+			sym := symbolTable.ConclusionTerms[j]
 			if localstring_w == sym.Term {
 				switch sym.TermType {
 				case term.TypeUndetermined:
@@ -410,8 +410,8 @@ func basicGosub6630(p1 term.Type) {
 	}
 
 	if localint_j > 0 {
-		localsymbol_t1 = symbolTable.CSymbols[localint_j]
-		localsymbol_t2 = symbolTable.CSymbols[3-localint_j]
+		localsymbol_t1 = symbolTable.ConclusionTerms[localint_j]
+		localsymbol_t2 = symbolTable.ConclusionTerms[3-localint_j]
 		if localstring_w != localsymbol_t2.Term {
 			goto Line7060
 		}
@@ -428,10 +428,10 @@ func basicGosub6630(p1 term.Type) {
 		}
 		goto Line7120
 	}
-	if localstring_w == symbolTable.CSymbols[1].Term {
-		localsymbol_t2 = symbolTable.CSymbols[2]
+	if localstring_w == symbolTable.ConclusionTerms[1].Term {
+		localsymbol_t2 = symbolTable.ConclusionTerms[2]
 	} else {
-		localsymbol_t2 = symbolTable.CSymbols[1]
+		localsymbol_t2 = symbolTable.ConclusionTerms[1]
 	}
 	goto Line7070
 
