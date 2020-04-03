@@ -1185,10 +1185,8 @@ func Dump() string {
 	if highestLocationUsed != 0 {
 		w := tabwriter.NewWriter(dump, 0, 0, 2, ' ', 0)
 		fmt.Fprint(w, "Adr.\tart.\tterm\ttype\toccurs\tdist. count")
-		// for address, symbol := range t.Symbols
-		for address := 1; address <= highestLocationUsed; address++ {
-			symbolDump := symbolTable.Symbols[address].Dump()
-			fmt.Fprintf(w, "\n%d\t%s", address, symbolDump)
+		for i, s := range symbolTable.Symbols {
+			fmt.Fprintf(w, "\n%d\t%s", i+1, s.Dump())
 		}
 		w.Flush()
 	}

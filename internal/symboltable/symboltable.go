@@ -33,18 +33,17 @@ func New(size int) *SymbolTable {
 	return &t
 }
 
-// // Prune orphaned terms with no occurrences.
-// func (st *SymbolTable) Prune() {
-// 	var ss []*symbol.Symbol
-// 	for i := 1; i <= st.HighestLocationUsed(); i++ {
-// 		s := st.Symbols[i]
-// 		if s.Occurrences > 0 {
-// 			ss = append(ss, s)
-// 		}
-// 	}
+// Prune orphaned terms with no occurrences.
+func (st *SymbolTable) Prune() {
+	var ss []*symbol.Symbol
+	for _, s := range st.Symbols {
+		if s.Occurrences > 0 {
+			ss = append(ss, s)
+		}
+	}
 
-// 	st.Symbols = ss
-// }
+	st.Symbols = ss
+}
 
 // // Delete a term from the table.
 // func (st *SymbolTable) Delete(sym *symbol.Symbol) {
@@ -71,6 +70,7 @@ func (st *SymbolTable) Search(start int, w string) (int, int) {
 	// If found, I1 = L1; else I1 = L1+1. B1 set to 1st empty loc.
 	var firstEmptyLocation int
 
+	st.Prune()
 	for i, s := range st.Symbols {
 		if s.Term == w {
 			break
