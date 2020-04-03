@@ -8,13 +8,14 @@ type Form int
 //       since we won't be relying on integer values anymore
 const (
 	Undefined   Form = (-1)
-	SomeAIsB         = 0 // Type I
-	SomeAIsNotB      = 1 // Type O
-	AllAIsB          = 2 // Type A
-	NoAIsB           = 3 // Type E
+	SomeAIsB         = 0 // Type I (particular affirmative)
+	SomeAIsNotB      = 1 // Type O (particular negative)
+	AllAIsB          = 2 // Type A (universal affirmative)
+	NoAIsB           = 3 // Type E (universal negative)
 	AIsT             = 4
 	AIsNotT          = 5
 	// = 6???
+	// = 7???
 )
 
 const (
@@ -97,11 +98,11 @@ func (t Form) Quantifier() string {
 	}
 }
 
-// SymbolForTermA returns a symbol for term A associated with this form.
+// Subject returns a symbol for term A associated with this form.
 // * => general term
 // + => designator
 // TODO: add some tests!
-func (t Form) SymbolForTermA() string {
+func (t Form) Subject() string {
 	switch t {
 	case SomeAIsB:
 		return ""
@@ -124,12 +125,12 @@ func (t Form) SymbolForTermA() string {
 	}
 }
 
-// SymbolForTermB returns a symbol for term B associated with this form.
+// Predicate symbol associated with this form.
 // * => general term?
 // + => designator?
 // TODO: figure this out
 // TODO: add some tests
-func (t Form) SymbolForTermB() string {
+func (t Form) Predicate() string {
 	switch t {
 	case SomeAIsB:
 		return ""

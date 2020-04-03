@@ -83,7 +83,7 @@ func (ps Set) List(analyze bool) error {
 				fmt.Printf("%s  ", prem.Form.Quantifier())
 			}
 
-			fmt.Printf("%s%s%s  %s%s\n", prem.Subject.Term, prem.Form.SymbolForTermA(), prem.Form.Copula(), prem.Predicate.Term, prem.Form.SymbolForTermB())
+			fmt.Printf("%s%s%s  %s%s\n", prem.Subject.Term, prem.Form.Subject(), prem.Form.Copula(), prem.Predicate.Term, prem.Form.Predicate())
 		}
 	}
 	return nil
