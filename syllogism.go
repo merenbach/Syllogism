@@ -527,7 +527,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 		for ; ; localint_i1++ { // 3500
 			localint_i1 = symbolTable.Search(localint_i1, w)
 
-			if localint_i1 > symbolTable.HighestLocationUsed() {
+			if localint_i1 == len(symbolTable.Symbols) {
 				symbolTable.Symbols = append(symbolTable.Symbols, &symbol.Symbol{
 					Term:     w,
 					TermType: termType,
