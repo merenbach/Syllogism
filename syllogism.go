@@ -20,6 +20,7 @@ package main
 * b(63)  => term article type (index in a$ of proper article), so anywhere we see b(N) => symbols(N).ArticleType
 * b1     => first unused location in symbol table after a particular starting point
 			(first slot with symbols(N).Occurrences == 0)
+* c      => count of conclusion terms (those that appear only once), used in determination of whether premises form a (poly)syllogism
 * c(63)  => term indices of non-middle terms (that is, major and minor terms); currently symbols [ c(N) ] => symbolTable.ConclusionTerms(N)
 * d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
 * d1     => form of most recently entered premise, either for entry into l$ or for evaluation with /
@@ -91,7 +92,6 @@ var (
 	recentWord1   string    // most recently-input first word (subject?)
 	recentWord2   string    // most recently-input second word (predicate?)
 
-	localint_c  int
 	localint_i  int
 	localint_i1 int
 	localint_j  int
@@ -216,7 +216,7 @@ func basicGosub5070() premise.Set {
 		return nil
 	}
 
-	localint_c = 0
+	var localint_c int
 
 	symbolTable.Iterate(1, func(i int, s *symbol.Symbol) bool {
 		if s.Occurrences == 0 || s.Occurrences == 2 {
