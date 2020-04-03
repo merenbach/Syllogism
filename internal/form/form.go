@@ -8,10 +8,10 @@ type Form int
 //       since we won't be relying on integer values anymore
 const (
 	Undefined   Form = (-1)
-	SomeAIsB         = 0
-	SomeAIsNotB      = 1
-	AllAIsB          = 2
-	NoAIsB           = 3
+	SomeAIsB         = 0 // Type I
+	SomeAIsNotB      = 1 // Type O
+	AllAIsB          = 2 // Type A
+	NoAIsB           = 3 // Type E
 	AIsT             = 4
 	AIsNotT          = 5
 	// = 6???
