@@ -37,6 +37,8 @@ package main
 * j1     => appears to be error code/status for syllogism (???)
 * l(63) => occupied line slots (???) in premise list; currently l(N) => premiseset.LArray(N)
 * l$(63) => line statements
+* l1$    => TBD
+* l2$    => TBD
 * l1     => highest symbol table location used, so symbolTable.HighestLocationUsed
 * n(63)  => line numbers
 * n1     => negative premise count on premise set, supplanted by negativePremiseCount
@@ -45,7 +47,8 @@ package main
 * p1     => term type as integer
 * q(63)  => index of predicate in symbol table for premise at given index, currently premises(N).Symbol
 * r(63)  => forms for each premise, currently premises(N).Form
-* s$     => parsed line tokens
+* s$     => TBD
+* s$(6)  => parsed line tokens
 * t(7)   => token type in parsing
 * t1     => major (or minor??) premise in conclusion
 * t2     => minor (or major??) premise in conclusion
