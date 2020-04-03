@@ -16,11 +16,6 @@ func (st *SymbolTable) HighestLocationUsed() int {
 	return len(st.Symbols) - 1
 }
 
-// IncreaseLocationMax increases the highest location used.
-func (st *SymbolTable) IncreaseLocationMax() {
-	st.Symbols = append(st.Symbols, &symbol.Symbol{})
-}
-
 // New symbol table.
 func New(size int) *SymbolTable {
 	t := SymbolTable{

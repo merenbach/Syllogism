@@ -527,10 +527,10 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 			localint_i1 = symbolTable.Search(localint_i1, w)
 
 			if localint_i1 > symbolTable.HighestLocationUsed() {
-				symbolTable.IncreaseLocationMax()
-
-				symbolTable.Symbols[localint_i1].Term = w
-				symbolTable.Symbols[localint_i1].TermType = termType
+				symbolTable.Symbols = append(symbolTable.Symbols, &symbol.Symbol{
+					Term:     w,
+					TermType: termType,
+				})
 				break
 			}
 
