@@ -6,26 +6,25 @@ import (
 
 // A SymbolTable contains a list of symbols.
 type SymbolTable struct {
-	Symbols             []*symbol.Symbol
-	highestLocationUsed int
+	Symbols []*symbol.Symbol
 	// ConclusionTerms are major and minor (i.e., all the non-middle) terms
 	ConclusionTerms []*symbol.Symbol
 }
 
 // HighestLocationUsed returns the highest location used.
 func (st *SymbolTable) HighestLocationUsed() int {
-	return st.highestLocationUsed
+	return len(st.Symbols) - 1
 }
 
 // IncreaseLocationMax increases the highest location used.
 func (st *SymbolTable) IncreaseLocationMax() {
-	st.highestLocationUsed++
+	st.Symbols = append(st.Symbols, &symbol.Symbol{})
 }
 
 // New symbol table.
 func New(size int) *SymbolTable {
 	t := SymbolTable{
-		Symbols:         make([]*symbol.Symbol, size),
+		Symbols:         make([]*symbol.Symbol, 1),
 		ConclusionTerms: make([]*symbol.Symbol, size),
 	}
 	for i := range t.Symbols {
