@@ -25,7 +25,7 @@ type Set []*Premise
 
 // Compute a conclusion.
 func (ps Set) Compute(negativePremiseCount int, symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
-	if ps.Empty() {
+	if len(ps) == 0 {
 		return "A is A"
 	}
 
@@ -100,8 +100,3 @@ func (ps Set) List(analyze bool) error {
 // 	}
 // 	return negativePremises
 // }
-
-// Empty determines whether the premise set is empty.
-func (ps Set) Empty() bool {
-	return len(ps) == 0
-}

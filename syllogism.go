@@ -216,7 +216,7 @@ func basicGosub5070() premise.Set {
 
 	localint_j1 = 0
 	localsymbol_v1 = nil // flag for modern validity
-	if premiseSet.Empty() {
+	if len(premiseSet) == 0 {
 		localint_j1 = 1
 		return nil
 	}
@@ -492,7 +492,7 @@ func basicGosub1840() {
 	// 1840
 	//---New---
 
-	if premiseSet.Empty() {
+	if len(premiseSet) == 0 {
 		return
 	}
 
@@ -1047,7 +1047,7 @@ func runloop() bool {
 	case "link":
 		fallthrough
 	case "link*":
-		if premiseSet.Empty() {
+		if len(premiseSet) == 0 {
 			fmt.Println(help.NoPremises)
 		} else {
 			linkedPremises := basicGosub5070()
@@ -1096,7 +1096,7 @@ func runloop() bool {
 				basicGosub3400(d1, localint_p1, prem) // add terms to symbol table
 			}
 		} else {
-			if premiseSet.Empty() {
+			if len(premiseSet) == 0 {
 				fmt.Println(help.NoPremises)
 			} else {
 				n, err := strconv.Atoi(stringarray_s[1])
