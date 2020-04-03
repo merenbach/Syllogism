@@ -129,14 +129,14 @@ func substitute() error {
 		}
 		if localint_i1 != -2 {
 			if localint_i1 > 0 {
-				if localint_i1 <= symbolTable.HighestLocationUsed() {
-					fmt.Printf("Enter new term to replace %s %q\n", symbolTable.Symbols[localint_i1].TermType, symbolTable.Symbols[localint_i1].Term)
+				if localint_i1 <= len(symbolTable.Symbols) {
+					fmt.Printf("Enter new term to replace %s %q\n", symbolTable.Symbols[localint_i1-1].TermType, symbolTable.Symbols[localint_i1-1].Term)
 
 					w := lineInput("? ")
-					symbolTable.Symbols[localint_i1].Term = w
+					symbolTable.Symbols[localint_i1-1].Term = w
 					fmt.Printf("Replaced by %q\n", w)
 				} else {
-					fmt.Printf("Address %d too large.  Symbol table only of length %d.\n", localint_i1, symbolTable.HighestLocationUsed())
+					fmt.Printf("Address %d too large.  Symbol table only of length %d.\n", localint_i1, len(symbolTable.Symbols))
 				}
 			} else {
 				fmt.Println(help.SyllogismHelpForSubstitute)
