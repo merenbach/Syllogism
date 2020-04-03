@@ -542,8 +542,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 					fmt.Printf(" taken as the %s used earlier\n", sym.TermType)
 				}
 				break
-			}
-			if sym.TermType == term.TypeUndetermined {
+			} else if sym.TermType == term.TypeUndetermined {
 				if msg {
 					fmt.Printf("Note: earlier use of %q taken as the %s used here\n", w, termType)
 				}
@@ -552,12 +551,9 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 				}
 				sym.TermType = termType
 				break
-			}
-			if termType == sym.TermType {
+			} else if termType == sym.TermType {
 				break
-			}
-
-			if msg {
+			} else if msg {
 				fmt.Printf("Warning: %s %q has also occurred as a %s\n", termType, w, termType.Other())
 			}
 		}
