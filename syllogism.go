@@ -1172,9 +1172,8 @@ func delPremise(n int) error {
 // Dump values of variables in a SymbolTable.
 func Dump() string {
 	dump := new(bytes.Buffer)
-	highestLocationUsed := symbolTable.HighestLocationUsed()
-	fmt.Fprintf(dump, "Highest symbol table loc. used: %d  Negative premises: %d\n", highestLocationUsed, negativePremiseCount)
-	if highestLocationUsed != 0 {
+	fmt.Fprintf(dump, "Highest symbol table loc. used: %d  Negative premises: %d\n", len(symbolTable.Symbols), negativePremiseCount)
+	if len(symbolTable.Symbols) > 0 {
 		w := tabwriter.NewWriter(dump, 0, 0, 2, ' ', 0)
 		fmt.Fprint(w, "Adr.\tart.\tterm\ttype\toccurs\tdist. count")
 		for i, s := range symbolTable.Symbols {
