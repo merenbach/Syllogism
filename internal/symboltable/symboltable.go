@@ -11,11 +11,6 @@ type SymbolTable struct {
 	ConclusionTerms []*symbol.Symbol
 }
 
-// HighestLocationUsed returns the highest location used.
-func (st *SymbolTable) HighestLocationUsed() int {
-	return len(st.Symbols) - 1
-}
-
 // New symbol table.
 func New(size int) *SymbolTable {
 	t := SymbolTable{
