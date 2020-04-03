@@ -47,6 +47,8 @@ package main
 * r(63)  => forms for each premise, currently premises(N).Form
 * s$     => parsed line tokens
 * t(7)   => token type in parsing
+* t1     => major (or minor??) premise in conclusion
+* t2     => minor (or major??) premise in conclusion
 * t$(65) => term array: words like man, socrates, etc., so anywhere we see t$(N) => symbols(N).Term
 * v1     => flag for modern validity (index in symbol table of term involved)
 * w$     => most recently entered premise, either for entry into l$ or for evaluation with /
