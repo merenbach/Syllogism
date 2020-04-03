@@ -63,25 +63,19 @@ func (st *SymbolTable) Prune() {
 
 // Search a symbol table for a term matching a given string.
 // Porting notes: All variable use is encapsulated, so if porting needs to be re-done in future, re-porting this function can be avoided by invoking the equivalent of `i1, b1 = search(start, w$)`.
-func (st *SymbolTable) Search(start int, w string) (int, int) {
+func (st *SymbolTable) Search(start int, w string) int {
 	// 3950
 	//---Search T$() for W$ from I1 to L1---
 
 	// If found, I1 = L1; else I1 = L1+1. B1 set to 1st empty loc.
-	var firstEmptyLocation int
-
 	st.Prune()
 	for i, s := range st.Symbols {
 		if s.Term == w {
 			break
 		}
 
-		if s.Occurrences == 0 && firstEmptyLocation == 0 {
-			firstEmptyLocation = i
-		}
-
 		start = i + 1
 	}
 
-	return start, firstEmptyLocation
+	return start
 }
