@@ -63,7 +63,6 @@ func (st *SymbolTable) Search(start int, w string) int {
 	//---Search T$() for W$ from I1 to L1---
 
 	// If found, I1 = L1; else I1 = L1+1. B1 set to 1st empty loc.
-	st.Prune()
 	for i, s := range st.Symbols {
 		if s.Term == w {
 			break

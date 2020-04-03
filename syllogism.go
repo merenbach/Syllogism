@@ -523,6 +523,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 		w := stringutil.Singularize(raw_string)
 		localint_i1 = 0
 
+		symbolTable.Prune()
 		for ; ; localint_i1++ { // 3500
 			localint_i1 = symbolTable.Search(localint_i1, w)
 
