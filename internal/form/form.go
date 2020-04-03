@@ -117,7 +117,7 @@ func (t Form) SymbolForTermA() string {
 		return "+"
 	case 6: // TODO: identity
 		return "+"
-	case 7: // TODO: not equal identity (meant to be slash equals)
+	case 7: // TODO: not equal identity
 		return "+"
 	default:
 		return ""
