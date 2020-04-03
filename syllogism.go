@@ -98,7 +98,6 @@ var (
 	recentWord2   string    // most recently-input second word (predicate?)
 
 	localint_i  int
-	localint_i1 int
 	localint_j  int
 	localint_j1 int
 	localint_k  int
@@ -521,44 +520,35 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 		}
 
 		w := stringutil.Singularize(raw_string)
-		localint_i1 = 0
 
 		symbolTable.Prune()
-		for ; ; localint_i1++ { // 3500
-			localint_i1 = symbolTable.Search(localint_i1, w)
+		sym := symbolTable.Search(w)
 
-			if localint_i1 > symbolTable.HighestLocationUsed() {
-				symbolTable.Symbols = append(symbolTable.Symbols, &symbol.Symbol{
-					Term:     w,
-					TermType: termType,
-				})
-				break
+		if sym == nil {
+			sym = &symbol.Symbol{
+				Term:     w,
+				TermType: termType,
 			}
-
-			sym := symbolTable.Symbols[localint_i1]
-			if termType == term.TypeUndetermined {
-				if sym.TermType != term.TypeUndetermined || msg {
-					fmt.Printf("Note: predicate term %q", w)
-					fmt.Printf(" taken as the %s used earlier\n", sym.TermType)
-				}
-				break
-			} else if sym.TermType == term.TypeUndetermined {
-				if msg {
-					fmt.Printf("Note: earlier use of %q taken as the %s used here\n", w, termType)
-				}
-				if termType == term.TypeDesignator {
-					sym.DistributionCount = sym.Occurrences
-				}
-				sym.TermType = termType
-				break
-			} else if termType == sym.TermType {
-				break
-			} else if msg {
+			symbolTable.Symbols = append(symbolTable.Symbols, sym)
+		} else if termType == term.TypeUndetermined {
+			if sym.TermType != term.TypeUndetermined || msg {
+				fmt.Printf("Note: predicate term %q", w)
+				fmt.Printf(" taken as the %s used earlier\n", sym.TermType)
+			}
+		} else if sym.TermType == term.TypeUndetermined {
+			if msg {
+				fmt.Printf("Note: earlier use of %q taken as the %s used here\n", w, termType)
+			}
+			if termType == term.TypeDesignator {
+				sym.DistributionCount = sym.Occurrences
+			}
+			sym.TermType = termType
+		} else if termType != sym.TermType {
+			if msg {
 				fmt.Printf("Warning: %s %q has also occurred as a %s\n", termType, w, termType.Other())
 			}
 		}
 
-		sym := symbolTable.Symbols[localint_i1]
 		if intarray_e[localint_j] != article.TypeNone {
 			sym.ArticleType = intarray_e[localint_j]
 		} else if sym.ArticleType == article.TypeNone && w != raw_string {
