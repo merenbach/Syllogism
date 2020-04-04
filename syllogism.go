@@ -98,7 +98,6 @@ var (
 	recentWord2   string    // most recently-input second word (predicate?)
 
 	localint_i  int
-	localint_i1 int
 	localint_j  int
 	localint_j1 int
 	localint_k  int
@@ -521,7 +520,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 		}
 
 		w := stringutil.Singularize(raw_string)
-		localint_i1 = 0
+		var localint_i1 int
 
 		symbolTable.Prune()
 		for ; ; localint_i1++ { // 3500
