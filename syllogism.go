@@ -375,9 +375,9 @@ func basicGosub6630(p1 term.Type) {
 	if localint_j1 != 0 {
 		recentWord1 = localstring_w
 	} else {
-		symbolIsUndeterminedTerm := func(j int) bool {
+		symbolIsUndeterminedTerm := func(j int, w string) bool {
 			sym := symbolTable.ConclusionTerms[j]
-			if localstring_w == sym.Term {
+			if w == sym.Term {
 				switch sym.TermType {
 				case term.TypeUndetermined:
 					fmt.Printf("Note: %q used in premises taken to be %s\n", sym.Term, termType1)
@@ -390,9 +390,9 @@ func basicGosub6630(p1 term.Type) {
 		}
 
 		localint_j = 1
-		if !symbolIsUndeterminedTerm(localint_j) {
+		if !symbolIsUndeterminedTerm(localint_j, localstring_w) {
 			localint_j = 2
-			if !symbolIsUndeterminedTerm(localint_j) {
+			if !symbolIsUndeterminedTerm(localint_j, localstring_w) {
 				fmt.Printf("** Conclusion may not contain %s %q.\n", termType1, localstring_w)
 				localint_j = 0
 			}
