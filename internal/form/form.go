@@ -7,15 +7,15 @@ type Form int
 // TODO: should be able to swap ordering of any of these and retain same functionality once refactor is complete
 //       since we won't be relying on integer values anymore
 const (
-	Undefined   Form = (-1)
-	SomeAIsB         = 0 // Type I (particular affirmative)
-	SomeAIsNotB      = 1 // Type O (particular negative)
-	AllAIsB          = 2 // Type A (universal affirmative)
-	NoAIsB           = 3 // Type E (universal negative)
-	AIsT             = 4
-	AIsNotT          = 5
-	// = 6???
-	// = 7???
+	Undefined      Form = (-1)
+	SomeAIsB            = 0 // Type I (particular affirmative)
+	SomeAIsNotB         = 1 // Type O (particular negative)
+	AllAIsB             = 2 // Type A (universal affirmative)
+	NoAIsB              = 3 // Type E (universal negative)
+	AIsT                = 4
+	AIsNotT             = 5
+	AEqualsT            = 6
+	ADoesNotEqualT      = 7
 )
 
 const (
@@ -64,9 +64,9 @@ func (t Form) Copula() string {
 		return "  is"
 	case AIsNotT:
 		return "  is not"
-	case 6: // TODO: identity
+	case AEqualsT:
 		return "  = "
-	case 7: // TODO: not equal identity (meant to be slash equals)
+	case ADoesNotEqualT:
 		return "   = / = "
 	default:
 		return ""
@@ -89,9 +89,9 @@ func (t Form) Quantifier() string {
 		return ""
 	case AIsNotT:
 		return ""
-	case 6:
+	case AEqualsT:
 		return ""
-	case 7:
+	case ADoesNotEqualT:
 		return ""
 	default:
 		return ""
@@ -116,9 +116,9 @@ func (t Form) Subject() string {
 		return "+"
 	case AIsNotT:
 		return "+"
-	case 6: // TODO: identity
+	case AEqualsT:
 		return "+"
-	case 7: // TODO: not equal identity
+	case ADoesNotEqualT:
 		return "+"
 	default:
 		return ""
@@ -144,9 +144,9 @@ func (t Form) Predicate() string {
 		return ""
 	case AIsNotT:
 		return "*"
-	case 6:
+	case AEqualsT:
 		return "+"
-	case 7:
+	case ADoesNotEqualT:
 		return "*"
 	default:
 		return ""
