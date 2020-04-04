@@ -367,7 +367,7 @@ func basicGosub6630(p1 term.Type) {
 		termType1 = term.TypeDesignator
 		termType2 = p1
 	}
-	if termType2 == term.TypeDesignator && d1 < 6 && d1 > 3 {
+	if termType2 == term.TypeDesignator && (d1 == form.AIsT || d1 == form.AIsNotT) {
 		d1 += 2
 	}
 
@@ -402,7 +402,7 @@ func basicGosub6630(p1 term.Type) {
 	localstring_w = stringutil.Singularize(recentWord2)
 	if localint_j1 != 0 {
 		if localstring_w == recentWord1 {
-			if d1 != 4 || termType2 == term.TypeUndetermined {
+			if d1 != form.AIsT || termType2 == term.TypeUndetermined {
 				goto Line7120
 			}
 			fmt.Printf("** Subject is a %s, predicate is a %s -- but\n", term.TypeDesignator, term.TypeGeneralTerm)
@@ -451,10 +451,10 @@ Line7120: // 7120
 	}
 
 	if localint_j1 != 1 {
-		if localsymbol_t1.DistributionCount == 0 && d1 > 1 && d1 < 4 {
+		if localsymbol_t1.DistributionCount == 0 && (d1 == form.AllAIsB || d1 == form.NoAIsB) {
 			help.ShowTermDistributionError(localsymbol_t1.Term)
 			return
-		} else if localsymbol_t2.DistributionCount == 0 && (d1.IsNegative() || d1 == 6) {
+		} else if localsymbol_t2.DistributionCount == 0 && (d1.IsNegative() || d1 == form.AEqualsT) {
 			help.ShowTermDistributionError(localsymbol_t2.Term)
 			return
 		}
@@ -469,10 +469,10 @@ Line7120: // 7120
 		localsymbol_v1 = &symbol.Symbol{
 			Term: localstring_w,
 		}
-	} else if localsymbol_t1.DistributionCount > 0 && d1 < 2 {
+	} else if localsymbol_t1.DistributionCount > 0 && (d1 == form.SomeAIsB || d1 == form.SomeAIsNotB) {
 		localsymbol_v1 = localsymbol_t1
 	} else {
-		if localsymbol_t2.DistributionCount > 0 && !d1.IsNegative() && d1 != form.AIsT && d1 != 6 {
+		if localsymbol_t2.DistributionCount > 0 && !d1.IsNegative() && d1 != form.AIsT && d1 != form.AEqualsT {
 			localsymbol_v1 = localsymbol_t2
 		}
 
