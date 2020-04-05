@@ -494,6 +494,7 @@ func basicGosub1840() {
 func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 	// 3400
 	//---Add W$(1), W$(2) to table T$()---
+	// d1 is guaranteed not to be form.Undefined unless `sample` method isn't working (TODO: funnel sample through same logic as user input)
 	var termType term.Type // formerly g
 	if d1.IsNegative() {
 		negativePremiseCount++
@@ -577,7 +578,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 		if localint_j != 2 {
 			prem.Subject = sym
 
-			if d1 >= 2 {
+			if d1 != form.SomeAIsB && d1 != form.SomeAIsNotB {
 				sym.DistributionCount++
 			}
 
