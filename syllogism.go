@@ -587,7 +587,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 				d1 += 2
 			}
 
-			if d1 == 6 || d1.IsNegative() {
+			if d1 == form.AEqualsT || d1.IsNegative() {
 				sym.DistributionCount++
 			}
 		}
