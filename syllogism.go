@@ -505,7 +505,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 
 	intarray_e[1] = article.TypeNone
 	temp := func(localint_j int, raw_string string) {
-		if d1 < 4 {
+		if d1 == form.SomeAIsB || d1 == form.SomeAIsNotB || d1 == form.AllAIsB || d1 == form.NoAIsB {
 			termType = term.TypeGeneralTerm
 		} else if localint_j == 1 {
 			termType = term.TypeDesignator
