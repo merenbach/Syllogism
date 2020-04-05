@@ -925,13 +925,9 @@ func lineInput(prompt string) string {
 func runloop() bool {
 	// TODO: factor into more local scope for conditionals
 	var err error
-	var (
-		localstring_l1 string
-		localstring_l2 string
-	)
 
 	//---Input line---
-	localstring_l1 = lineInput("> ")
+	localstring_l1 := lineInput("> ")
 	localint_l = len(localstring_l1)
 
 	if localint_l == 0 {
@@ -942,7 +938,7 @@ func runloop() bool {
 	}
 
 	for {
-		localstring_l2 = basicRight(localstring_l1, 1)
+		localstring_l2 := basicRight(localstring_l1, 1)
 		if localstring_l2 != " " {
 
 			if localstring_l2 != "." && localstring_l2 != "?" && localstring_l2 != "!" {
