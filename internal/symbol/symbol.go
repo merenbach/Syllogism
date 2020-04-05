@@ -20,6 +20,20 @@ func (s *Symbol) String() string {
 	return fmt.Sprintf("<%s %q>", s.TermType, s.Term)
 }
 
+// Undetermined determines if this is an undetermined term type
+func (s *Symbol) Undetermined(w string, tt term.Type) bool {
+	if w == s.Term {
+		switch s.TermType {
+		case term.TypeUndetermined:
+			fmt.Printf("Note: %q used in premises taken to be %s\n", s.Term, tt)
+			return true
+		case tt:
+			return true
+		}
+	}
+	return false
+}
+
 // ReduceDistributionCount reduces the occurrences and (optionally) distribution count of the symbol.
 // TODO: Golang may present a more idiomatic way to do this
 func (s *Symbol) ReduceDistributionCount(decrement bool) {
