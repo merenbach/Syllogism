@@ -167,3 +167,6 @@ const NoPremises = "No premises"
 
 // NoPossibleConclusion indicates that no conclusion is possible.
 const NoPossibleConclusion = "No possible conclusion."
+
+// ConclusionFromNoPremises indicates a conclusion from no premises.
+const ConclusionFromNoPremises = "** Conclusion from no premises must have same subject and predicate."
