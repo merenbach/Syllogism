@@ -363,7 +363,7 @@ func basicGosub6630(p1 term.Type) {
 		return
 	}
 
-	if d1 >= 4 {
+	if d1 == form.AIsT || d1 == form.AIsNotT || d1 == form.AEqualsT || d1 == form.ADoesNotEqualT {
 		termType1 = term.TypeDesignator
 		termType2 = p1
 	}
