@@ -367,8 +367,13 @@ func basicGosub6630(p1 term.Type) {
 		termType1 = term.TypeDesignator
 		termType2 = p1
 	}
-	if termType2 == term.TypeDesignator && (d1 == form.AIsT || d1 == form.AIsNotT) {
-		d1 += 2
+	if termType2 == term.TypeDesignator {
+		switch d1 {
+		case form.AIsT:
+			d1 = form.AEqualsT
+		case form.AIsNotT:
+			d1 = form.ADoesNotEqualT
+		}
 	}
 
 	localstring_w = stringutil.Singularize(recentWord1)
