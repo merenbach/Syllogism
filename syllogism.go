@@ -390,8 +390,9 @@ func basicGosub6630(p1 term.Type) {
 		if localstring_w == recentWord1 {
 			if d1 != form.AIsT || termType2 == term.TypeUndetermined {
 				goto Line7120
+			} else {
+				fmt.Printf("** Subject is a %s, predicate is a %s -- but\n", term.TypeDesignator, term.TypeGeneralTerm)
 			}
-			fmt.Printf("** Subject is a %s, predicate is a %s -- but\n", term.TypeDesignator, term.TypeGeneralTerm)
 		}
 		fmt.Println("** Conclusion from no premises must have same subject and predicate.")
 		return
