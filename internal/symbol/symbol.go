@@ -20,8 +20,8 @@ func (s *Symbol) String() string {
 	return fmt.Sprintf("<%s %q>", s.TermType, s.Term)
 }
 
-// Undetermined determines if this is an undetermined term type
-func (s *Symbol) Undetermined(w string, tt term.Type) bool {
+// MatchesWordAndTermType determines if this symbol has a given term type (or is undetermined).
+func (s *Symbol) MatchesWordAndTermType(w string, tt term.Type) bool {
 	if w == s.Term {
 		switch s.TermType {
 		case term.TypeUndetermined:
