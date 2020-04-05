@@ -456,7 +456,7 @@ Line7120: // 7120
 	fmt.Println("-->  VALID!")
 
 	if localint_j1 != 0 {
-		if d1 > 0 {
+		if d1 != form.SomeAIsB {
 			return
 		}
 		localsymbol_v1 = &symbol.Symbol{
