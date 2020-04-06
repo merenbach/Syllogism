@@ -272,8 +272,26 @@ func basicGosub5070() premise.Set {
 		for {
 			if linkedPremises[localint_k].Subject == temp_symbol {
 				temp_symbol = linkedPremises[localint_k].Predicate
+
+				if localint_k != localint_i {
+					linkedPremises.Swap(localint_k, localint_i)
+				}
+
+				if localint_j1 != 0 {
+					fmt.Println(linkedPremises[localint_i])
+				}
+
 			} else if linkedPremises[localint_k].Predicate == temp_symbol {
 				temp_symbol = linkedPremises[localint_k].Subject
+
+				if localint_k != localint_i {
+					linkedPremises.Swap(localint_k, localint_i)
+				}
+
+				if localint_j1 != 0 {
+					fmt.Println(linkedPremises[localint_i])
+				}
+
 			} else {
 				localint_k++
 				if localint_k < len(premiseSet) {
@@ -289,18 +307,8 @@ func basicGosub5070() premise.Set {
 				}
 				fmt.Println(help.ClosedLoopHelp)
 				fmt.Println(linkedPremises[localint_i])
-				goto Line5730
 			}
 
-			if localint_k != localint_i {
-				linkedPremises.Swap(localint_k, localint_i)
-			}
-
-			if localint_j1 != 0 {
-				fmt.Println(linkedPremises[localint_i])
-			}
-
-		Line5730: // 5730
 			localint_i++
 
 			if localint_i == len(premiseSet) {
