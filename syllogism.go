@@ -298,8 +298,7 @@ Line5470: // 5470
 	}
 
 	if localint_k != localint_i {
-		// Swap premises at locations k and i
-		linkedPremises[localint_k], linkedPremises[localint_i] = linkedPremises[localint_i], linkedPremises[localint_k]
+		linkedPremises.Swap(localint_k, localint_i)
 	}
 
 	if localint_j1 != 0 {

@@ -12,6 +12,11 @@ import (
 // Set of all premises.
 type Set []*Premise
 
+// Swap items at the given positions.
+func (ps Set) Swap(i, j int) {
+	ps[i], ps[j] = ps[j], ps[i]
+}
+
 // // Find the index of a premise with a given line number.
 // // Find will return (-1) if no matching premises are found.
 // func (ps Set) Find(n int) int {
