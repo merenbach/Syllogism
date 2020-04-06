@@ -101,7 +101,6 @@ var (
 	localint_i  int
 	localint_j  int
 	localint_j1 int
-	localint_k  int
 	localint_l  int
 	localint_p1 term.Type
 
@@ -212,6 +211,7 @@ func basicGosub5070() premise.Set {
 	// 5070
 	//---See if syllogism---
 	var temp_symbol *symbol.Symbol
+	var localint_k int
 
 	localint_j1 = 0
 	localsymbol_v1 = nil // flag for modern validity
@@ -758,7 +758,7 @@ Iterate:
 
 		// find beginning of next word, skipping any spaces
 		localstring_s = word
-		localint_k = len(localstring_s)
+		localint_k := len(localstring_s)
 
 		if localint_j > 1 {
 			goto Line2520
