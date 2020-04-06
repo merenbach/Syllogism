@@ -25,8 +25,15 @@ func (ps Set) Copy() Set {
 }
 
 // Find the index of the first premise that contains the given symbol, or return (-1).
-func (ps Set) Find(s *symbol.Symbol) int {
+func (ps Set) Find(s *symbol.Symbol, start int) int {
+	if start >= len(ps) {
+		return (-1)
+	}
+
 	for i, p := range ps {
+		if i < start {
+			continue
+		}
 		if p.Subject == s || p.Predicate == s {
 			return i
 		}
