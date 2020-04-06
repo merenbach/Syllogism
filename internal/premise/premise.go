@@ -18,6 +18,17 @@ type Premise struct {
 	Predicate *symbol.Symbol
 }
 
+// ContrastingTerm returns the opposite term in a premise.
+func (pr *Premise) ContrastingTerm(s *symbol.Symbol) *symbol.Symbol {
+	if pr.Subject == s {
+		return pr.Predicate
+	} else if pr.Predicate == s {
+		return pr.Subject
+	}
+
+	return nil
+}
+
 // New premise.
 // TODO: accept string here and tokenize afterward
 func New(n int, s string) *Premise {

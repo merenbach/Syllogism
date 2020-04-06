@@ -278,11 +278,12 @@ func basicGosub5070() premise.Set {
 			} else {
 				prem := linkedPremises[localint_k]
 				linkedPremises.Swap(localint_k, localint_i)
-				if prem.Subject == temp_symbol {
-					temp_symbol = prem.Predicate
-				} else if prem.Predicate == temp_symbol {
-					temp_symbol = prem.Subject
+				ts := prem.ContrastingTerm(temp_symbol)
+				if ts == nil {
+					// We should never get here provided that prem contains temp_symbol
+					log.Printf("Could not find symbol %+v in premise %+v\n", temp_symbol, prem)
 				}
+				temp_symbol = ts
 			}
 
 			if localint_j1 != 0 {
