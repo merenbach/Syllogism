@@ -265,7 +265,7 @@ func basicGosub5070() premise.Set {
 		} else {
 			temp_symbol = symbolConclusionTerms[1]
 		}
-		localint_i = 0
+		var localint_i int
 
 	Line5460: // 5460
 		localint_k = localint_i
