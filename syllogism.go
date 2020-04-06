@@ -263,11 +263,8 @@ func basicGosub5070() premise.Set {
 		} else {
 			temp_symbol = symbolConclusionTerms[1]
 		}
-		var (
-			localint_i int
-		)
 
-		for {
+		for localint_i := 0; localint_i < len(linkedPremises); localint_i++ {
 			localint_k := linkedPremises.Find(temp_symbol, localint_i)
 			if localint_k == (-1) {
 				// Not found
@@ -292,12 +289,6 @@ func basicGosub5070() premise.Set {
 
 			if localint_j1 != 0 {
 				fmt.Println(linkedPremises[localint_i])
-			}
-
-			localint_i++
-
-			if localint_i == len(premiseSet) {
-				break
 			}
 		}
 	}
