@@ -16,18 +16,6 @@ func New(size int) *SymbolTable {
 	}
 }
 
-// Prune orphaned terms with no occurrences.
-func (st *SymbolTable) Prune() {
-	var ss []*symbol.Symbol
-	for _, s := range st.Symbols {
-		if s.Occurrences > 0 {
-			ss = append(ss, s)
-		}
-	}
-
-	st.Symbols = ss
-}
-
 // // Delete a term from the table.
 // func (st *SymbolTable) Delete(sym *symbol.Symbol) {
 // 	for i, s := range st.Symbols {

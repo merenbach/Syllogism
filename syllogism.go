@@ -521,7 +521,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 		sym := func() *symbol.Symbol {
 			var localint_i1 int
 
-			symbolTable.Prune()
+			Prune(symbolTable)
 			for ; ; localint_i1++ { // 3500
 				localint_i1 = symbolTable.Search(localint_i1, w)
 
@@ -1178,6 +1178,18 @@ func Dump() string {
 		w.Flush()
 	}
 	return dump.String()
+}
+
+// Prune orphaned terms with no occurrences.
+func Prune(st *symboltable.SymbolTable) {
+	var ss []*symbol.Symbol
+	for _, s := range st.Symbols {
+		if s.Occurrences > 0 {
+			ss = append(ss, s)
+		}
+	}
+
+	st.Symbols = ss
 }
 
 func main() {
