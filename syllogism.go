@@ -340,7 +340,7 @@ func basicGosub6200() {
 	}
 }
 
-func basicGosub6630(p1 term.Type) {
+func basicGosub6630(p1 term.Type, intarray_t []token.Type) {
 	// 6630
 	//---test offered conclusion---
 	var (
@@ -352,7 +352,7 @@ func basicGosub6630(p1 term.Type) {
 	var termType2 term.Type = term.TypeGeneralTerm // formerly g2
 
 	//--conc. poss, line in s$()
-	d1, err := basicGosub2890()
+	d1, err := basicGosub2890(intarray_t)
 	if err != nil {
 		fmt.Println(err)
 		if msg {
@@ -493,7 +493,7 @@ func basicGosub1840() {
 	negativePremiseCount = 0
 }
 
-func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
+func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_e []article.Type) {
 	// 3400
 	//---Add W$(1), W$(2) to table T$()---
 	// d1 is guaranteed not to be form.Undefined unless `sample` method isn't working (TODO: funnel sample through same logic as user input)
@@ -619,7 +619,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 // 	secondWord string
 // }
 
-func basicGosub2890() (form.Form, error) {
+func basicGosub2890(intarray_t []token.Type) (form.Form, error) {
 	// 2890
 	//---Parse line in S$()---
 	if stringarray_s[2] != form.WordAll {
@@ -875,7 +875,7 @@ func basicGosub8980() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		d1, err := basicGosub2890()
+		d1, err := basicGosub2890(intarray_t[:])
 		if err != nil {
 			fmt.Println(err)
 			if msg {
@@ -889,7 +889,7 @@ func basicGosub8980() {
 		}
 		localint_s := len(stringarray_s[1]) + 1
 		prem := addPremise(n, localstring_l1[localint_s:])
-		basicGosub3400(d1, localint_p1, prem)
+		basicGosub3400(d1, localint_p1, prem, intarray_e[:])
 	}
 
 	if msg {
@@ -1064,7 +1064,7 @@ func runloop() bool {
 	}
 	if intarray_t[1] == token.TypeLineNumber {
 		if intarray_t[2] != token.TypeReserved {
-			d1, err := basicGosub2890() // parse the line in S$()
+			d1, err := basicGosub2890(intarray_t[:]) // parse the line in S$()
 			if err != nil {
 				fmt.Println(err)
 				if msg {
@@ -1078,7 +1078,7 @@ func runloop() bool {
 				}
 				localint_s := len(stringarray_s[1]) + 1
 				prem := addPremise(n, localstring_l1[localint_s:])
-				basicGosub3400(d1, localint_p1, prem) // add terms to symbol table
+				basicGosub3400(d1, localint_p1, prem, intarray_e[:]) // add terms to symbol table
 			}
 		} else {
 			if len(premiseSet) == 0 {
@@ -1119,7 +1119,7 @@ func runloop() bool {
 
 	if intarray_t[2] != token.TypeReserved {
 		// NOTE: checks j1, checks premiseSet.ConclusionTerms
-		basicGosub6630(localint_p1)
+		basicGosub6630(localint_p1, intarray_t[:])
 	} else {
 		basicGosub6200() // test/draw conclusion
 	}
