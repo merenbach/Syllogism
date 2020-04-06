@@ -258,9 +258,8 @@ func basicGosub5070() premise.Set {
 
 	linkedPremises := make(premise.Set, len(premiseSet))
 	copy(linkedPremises, premiseSet)
-	localint_l := len(premiseSet)
 
-	if localint_l > 1 {
+	if len(premiseSet) > 1 {
 		if symbolConclusionTerms[1].DistributionCount == 0 && symbolConclusionTerms[2].DistributionCount == 1 {
 			temp_symbol = symbolConclusionTerms[2]
 		} else {
@@ -278,7 +277,7 @@ func basicGosub5070() premise.Set {
 			temp_symbol = linkedPremises[localint_k].Subject
 		} else {
 			localint_k++
-			if localint_k < localint_l {
+			if localint_k < len(premiseSet) {
 				goto Line5470
 			}
 
@@ -305,7 +304,7 @@ func basicGosub5070() premise.Set {
 	Line5730: // 5730
 		localint_i++
 
-		if localint_i < localint_l {
+		if localint_i < len(premiseSet) {
 			goto Line5460
 		}
 	}
