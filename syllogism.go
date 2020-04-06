@@ -85,18 +85,14 @@ import (
 const basicDimMax = 64
 
 var (
-	intarray_t [8]token.Type
-	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
-
 	premiseSet  = make(premise.Set, 0)
 	symbolTable = make(symbol.Table, 0)
 	// SymbolConclusionTerms are major and minor (i.e., all the non-middle) terms
 	symbolConclusionTerms = make([]*symbol.Symbol, basicDimMax)
 	negativePremiseCount  = 0 // kludge because we aren't able to tally dynamically yet (chicken-and-egg)
 
-	stringarray_s [7]string // appears to hold parsed line tokens
-	recentWord1   string    // most recently-input first word (subject?)
-	recentWord2   string    // most recently-input second word (predicate?)
+	recentWord1 string // most recently-input first word (subject?)
+	recentWord2 string // most recently-input second word (predicate?)
 
 	localint_i  int
 	localint_j  int
@@ -867,11 +863,9 @@ func basicGosub8980() {
 	// 8980
 	//--sample--
 
-	// TODO: factor into more local scope for conditionals
-	var err error
 	for _, localstring_l1 := range strings.Split(help.SampleData, "\n") {
 		fmt.Println(localstring_l1)
-		stringarray_s, intarray_t, intarray_e, err = tokenize(localstring_l1)
+		stringarray_s, intarray_t, intarray_e, err := tokenize(localstring_l1)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -931,9 +925,6 @@ func lineInput(prompt string) string {
 }
 
 func runloop() bool {
-	// TODO: factor into more local scope for conditionals
-	var err error
-
 	//---Input line---
 	localstring_l1 := lineInput("> ")
 	localint_l = len(localstring_l1)
@@ -1058,7 +1049,7 @@ func runloop() bool {
 
 	//--scan line L1$ into array S$()
 
-	stringarray_s, intarray_t, intarray_e, err = tokenize(localstring_l1)
+	stringarray_s, intarray_t, intarray_e, err := tokenize(localstring_l1)
 	if err != nil {
 		fmt.Println(err)
 	}
