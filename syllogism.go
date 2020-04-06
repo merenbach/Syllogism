@@ -255,8 +255,7 @@ func basicGosub5070() premise.Set {
 		return nil
 	}
 
-	linkedPremises := make(premise.Set, len(premiseSet))
-	copy(linkedPremises, premiseSet)
+	linkedPremises := premiseSet.Copy()
 
 	if len(premiseSet) > 1 {
 		if symbolConclusionTerms[1].DistributionCount == 0 && symbolConclusionTerms[2].DistributionCount == 1 {

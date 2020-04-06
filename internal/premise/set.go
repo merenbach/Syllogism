@@ -17,6 +17,13 @@ func (ps Set) Swap(i, j int) {
 	ps[i], ps[j] = ps[j], ps[i]
 }
 
+// Copy shallowly into a new premise set.
+func (ps Set) Copy() Set {
+	c := make(Set, len(ps))
+	copy(c, ps)
+	return c
+}
+
 // // Find the index of a premise with a given line number.
 // // Find will return (-1) if no matching premises are found.
 // func (ps Set) Find(n int) int {
