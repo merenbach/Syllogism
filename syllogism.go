@@ -97,7 +97,6 @@ var (
 	localint_i  int
 	localint_j  int
 	localint_j1 int
-	localint_l  int
 	localint_p1 term.Type
 
 	localsymbol_v1 *symbol.Symbol
@@ -260,7 +259,7 @@ func basicGosub5070() premise.Set {
 
 	linkedPremises := make(premise.Set, len(premiseSet))
 	copy(linkedPremises, premiseSet)
-	localint_l = len(premiseSet)
+	localint_l := len(premiseSet)
 
 	if localint_l == 1 {
 		goto Line5750
@@ -720,7 +719,7 @@ func tokenize(localstring_l1 string) ([7]string, [8]token.Type, [3]article.Type,
 	shadowintarray_e[2] = article.TypeNone
 	localint_j = 1
 
-	localint_l = len(localstring_l1)
+	localint_l := len(localstring_l1)
 
 	nextToken := func() {
 		localint_j++
@@ -927,7 +926,7 @@ func lineInput(prompt string) string {
 func runloop() bool {
 	//---Input line---
 	localstring_l1 := lineInput("> ")
-	localint_l = len(localstring_l1)
+	localint_l := len(localstring_l1)
 
 	if localint_l == 0 {
 		if msg {
