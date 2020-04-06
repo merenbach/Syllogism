@@ -78,7 +78,6 @@ import (
 	"github.com/merenbach/syllogism/internal/premise"
 	"github.com/merenbach/syllogism/internal/stringutil"
 	"github.com/merenbach/syllogism/internal/symbol"
-	"github.com/merenbach/syllogism/internal/symboltable"
 	"github.com/merenbach/syllogism/internal/term"
 	"github.com/merenbach/syllogism/internal/token"
 )
@@ -90,7 +89,7 @@ var (
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
 
 	premiseSet  = make(premise.Set, 0)
-	symbolTable = make(symboltable.SymbolTable, 0)
+	symbolTable = make(symbol.SymbolTable, 0)
 	// SymbolConclusionTerms are major and minor (i.e., all the non-middle) terms
 	symbolConclusionTerms = make([]*symbol.Symbol, basicDimMax)
 	negativePremiseCount  = 0 // kludge because we aren't able to tally dynamically yet (chicken-and-egg)
@@ -490,7 +489,7 @@ func basicGosub1840() {
 
 	symbolConclusionTerms = make([]*symbol.Symbol, basicDimMax)
 	premiseSet = make(premise.Set, 0)
-	symbolTable = make(symboltable.SymbolTable, 0)
+	symbolTable = make(symbol.SymbolTable, 0)
 	negativePremiseCount = 0
 }
 
@@ -1197,8 +1196,8 @@ func Dump() string {
 // }
 
 // Prune orphaned terms with no occurrences.
-func Prune(st symboltable.SymbolTable) symboltable.SymbolTable {
-	var ss symboltable.SymbolTable
+func Prune(st symbol.SymbolTable) symbol.SymbolTable {
+	var ss symbol.SymbolTable
 	for _, s := range st {
 		if s.Occurrences > 0 {
 			ss = append(ss, s)

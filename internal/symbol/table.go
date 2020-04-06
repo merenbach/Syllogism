@@ -1,11 +1,7 @@
-package symboltable
-
-import (
-	"github.com/merenbach/syllogism/internal/symbol"
-)
+package symbol
 
 // A SymbolTable contains a collection of symbols.
-type SymbolTable []*symbol.Symbol
+type SymbolTable []*Symbol
 
 // Search a symbol table for a term matching a given string.
 // Porting notes: All variable use is encapsulated, so if porting needs to be re-done in future, re-porting this function can be avoided by invoking the equivalent of `i1, b1 = search(start, w$)`.
