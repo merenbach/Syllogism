@@ -205,7 +205,6 @@ func basicGosub5070() premise.Set {
 	// 5070
 	//---See if syllogism---
 	var temp_symbol *symbol.Symbol
-	var localint_k int
 
 	localint_j1 = 0
 	localsymbol_v1 = nil // flag for modern validity
@@ -265,9 +264,10 @@ func basicGosub5070() premise.Set {
 		} else {
 			temp_symbol = symbolConclusionTerms[1]
 		}
-		var localint_i int
-
-		localint_k = localint_i
+		var (
+			localint_i int
+			localint_k int
+		)
 
 		for {
 			prem := linkedPremises[localint_k]
