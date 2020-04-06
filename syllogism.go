@@ -256,7 +256,7 @@ func basicGosub5070() premise.Set {
 
 	linkedPremises := premiseSet.Copy()
 
-	if len(premiseSet) > 1 {
+	if len(linkedPremises) > 1 {
 		if symbolConclusionTerms[1].DistributionCount == 0 && symbolConclusionTerms[2].DistributionCount == 1 {
 			temp_symbol = symbolConclusionTerms[2]
 		} else {
