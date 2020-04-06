@@ -260,59 +260,56 @@ func basicGosub5070() premise.Set {
 	copy(linkedPremises, premiseSet)
 	localint_l := len(premiseSet)
 
-	if localint_l == 1 {
-		goto Line5750
-	}
+	if localint_l > 1 {
+		if symbolConclusionTerms[1].DistributionCount == 0 && symbolConclusionTerms[2].DistributionCount == 1 {
+			temp_symbol = symbolConclusionTerms[2]
+		} else {
+			temp_symbol = symbolConclusionTerms[1]
+		}
+		localint_i = 0
 
-	if symbolConclusionTerms[1].DistributionCount == 0 && symbolConclusionTerms[2].DistributionCount == 1 {
-		temp_symbol = symbolConclusionTerms[2]
-	} else {
-		temp_symbol = symbolConclusionTerms[1]
-	}
-	localint_i = 0
+	Line5460: // 5460
+		localint_k = localint_i
 
-Line5460: // 5460
-	localint_k = localint_i
+	Line5470: // 5470
+		if linkedPremises[localint_k].Subject == temp_symbol {
+			temp_symbol = linkedPremises[localint_k].Predicate
+		} else if linkedPremises[localint_k].Predicate == temp_symbol {
+			temp_symbol = linkedPremises[localint_k].Subject
+		} else {
+			localint_k++
+			if localint_k < localint_l {
+				goto Line5470
+			}
 
-Line5470: // 5470
-	if linkedPremises[localint_k].Subject == temp_symbol {
-		temp_symbol = linkedPremises[localint_k].Predicate
-	} else if linkedPremises[localint_k].Predicate == temp_symbol {
-		temp_symbol = linkedPremises[localint_k].Subject
-	} else {
-		localint_k++
-		if localint_k < localint_l {
-			goto Line5470
+			temp_symbol = linkedPremises[localint_i].Predicate
+
+			if localint_j1 == 0 {
+				localint_j1 = 4
+				fmt.Println("Not a syllogism: no way to order premises so that each premise")
+				fmt.Println("shares exactly one term with its successor; there is a")
+			}
+			fmt.Println(help.ClosedLoopHelp)
+			fmt.Println(linkedPremises[localint_i])
+			goto Line5730
 		}
 
-		temp_symbol = linkedPremises[localint_i].Predicate
-
-		if localint_j1 == 0 {
-			localint_j1 = 4
-			fmt.Println("Not a syllogism: no way to order premises so that each premise")
-			fmt.Println("shares exactly one term with its successor; there is a")
+		if localint_k != localint_i {
+			linkedPremises.Swap(localint_k, localint_i)
 		}
-		fmt.Println(help.ClosedLoopHelp)
-		fmt.Println(linkedPremises[localint_i])
-		goto Line5730
+
+		if localint_j1 != 0 {
+			fmt.Println(linkedPremises[localint_i])
+		}
+
+	Line5730: // 5730
+		localint_i++
+
+		if localint_i < localint_l {
+			goto Line5460
+		}
 	}
 
-	if localint_k != localint_i {
-		linkedPremises.Swap(localint_k, localint_i)
-	}
-
-	if localint_j1 != 0 {
-		fmt.Println(linkedPremises[localint_i])
-	}
-
-Line5730: // 5730
-	localint_i++
-
-	if localint_i < localint_l {
-		goto Line5460
-	}
-
-Line5750: // 5750
 	if localint_j1 > 0 {
 		return nil
 	}
