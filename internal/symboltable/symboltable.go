@@ -7,15 +7,12 @@ import (
 // A SymbolTable contains a list of symbols.
 type SymbolTable struct {
 	Symbols []*symbol.Symbol
-	// ConclusionTerms are major and minor (i.e., all the non-middle) terms
-	ConclusionTerms []*symbol.Symbol
 }
 
 // New symbol table.
 func New(size int) *SymbolTable {
 	return &SymbolTable{
-		Symbols:         make([]*symbol.Symbol, 0),
-		ConclusionTerms: make([]*symbol.Symbol, size),
+		Symbols: make([]*symbol.Symbol, 0),
 	}
 }
 

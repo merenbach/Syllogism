@@ -21,7 +21,7 @@ package main
 * b1     => first unused location in symbol table after a particular starting point
 			(first slot with symbols(N).Occurrences == 0)
 * c      => count of conclusion terms (those that appear only once), used in determination of whether premises form a (poly)syllogism
-* c(63)  => term indices of non-middle terms (that is, major and minor terms); currently symbols [ c(N) ] => symbolTable.ConclusionTerms(N)
+* c(63)  => term indices of non-middle terms (that is, major and minor terms); currently symbols [ c(N) ] => symbolConclusionTerms(N)
 * d(63)  => term distribution count, so anywhere we see d(N) => symbols(N).DistributionCount
 * d1     => form of most recently entered premise, either for entry into l$ or for evaluation with /
 * e(2)   => article type (index in a$ of article type)
@@ -89,9 +89,11 @@ var (
 	intarray_t [8]token.Type
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
 
-	premiseSet           = make(premise.Set, 0)
-	symbolTable          = symboltable.New(basicDimMax + 2)
-	negativePremiseCount = 0 // kludge because we aren't able to tally dynamically yet (chicken-and-egg)
+	premiseSet  = make(premise.Set, 0)
+	symbolTable = symboltable.New(basicDimMax + 2)
+	// SymbolConclusionTerms are major and minor (i.e., all the non-middle) terms
+	symbolConclusionTerms = make([]*symbol.Symbol, basicDimMax)
+	negativePremiseCount  = 0 // kludge because we aren't able to tally dynamically yet (chicken-and-egg)
 
 	stringarray_s [7]string // appears to hold parsed line tokens
 	recentWord1   string    // most recently-input first word (subject?)
@@ -154,8 +156,8 @@ func basicGosub5880() {
 	// 5880
 	//---See if conclusion possible---
 
-	symbol1 := symbolTable.ConclusionTerms[1]
-	symbol2 := symbolTable.ConclusionTerms[2]
+	symbol1 := symbolConclusionTerms[1]
+	symbol2 := symbolConclusionTerms[2]
 
 	for i, s := range symbolTable.Symbols {
 		if s.Occurrences < 2 {
@@ -228,7 +230,7 @@ func basicGosub5070() premise.Set {
 
 		if s.Occurrences == 1 {
 			localint_c++
-			symbolTable.ConclusionTerms[localint_c] = symbolTable.Symbols[i]
+			symbolConclusionTerms[localint_c] = symbolTable.Symbols[i]
 			continue
 		}
 
@@ -249,7 +251,7 @@ func basicGosub5070() premise.Set {
 
 			for i := 1; i <= localint_c; i++ {
 				// TODO: use tabwriter here?
-				sym := symbolTable.ConclusionTerms[i]
+				sym := symbolConclusionTerms[i]
 				fmt.Printf("%s%s -- %s\n", basicTabString(6), sym.Term, sym.TermType)
 			}
 		} else {
@@ -269,10 +271,10 @@ func basicGosub5070() premise.Set {
 		goto Line5750
 	}
 
-	if symbolTable.ConclusionTerms[1].DistributionCount == 0 && symbolTable.ConclusionTerms[2].DistributionCount == 1 {
-		temp_symbol = symbolTable.ConclusionTerms[2]
+	if symbolConclusionTerms[1].DistributionCount == 0 && symbolConclusionTerms[2].DistributionCount == 1 {
+		temp_symbol = symbolConclusionTerms[2]
 	} else {
-		temp_symbol = symbolTable.ConclusionTerms[1]
+		temp_symbol = symbolConclusionTerms[1]
 	}
 	localint_i = 0
 
@@ -329,7 +331,7 @@ Line5750: // 5750
 func basicGosub6200() {
 	// 6200
 	//---Compute conclusion---
-	z := premiseSet.Compute(negativePremiseCount, symbolTable.ConclusionTerms[1], symbolTable.ConclusionTerms[2])
+	z := premiseSet.Compute(negativePremiseCount, symbolConclusionTerms[1], symbolConclusionTerms[2])
 
 	// PRINT  conclusion
 	fmt.Printf("  / %s\n", z)
@@ -381,9 +383,9 @@ func basicGosub6630(p1 term.Type) {
 		recentWord1 = localstring_w
 	} else {
 		localint_j = 1
-		if !symbolTable.ConclusionTerms[localint_j].MatchesWordAndTermType(localstring_w, termType1) {
+		if !symbolConclusionTerms[localint_j].MatchesWordAndTermType(localstring_w, termType1) {
 			localint_j = 2
-			if !symbolTable.ConclusionTerms[localint_j].MatchesWordAndTermType(localstring_w, termType1) {
+			if !symbolConclusionTerms[localint_j].MatchesWordAndTermType(localstring_w, termType1) {
 				fmt.Printf("** Conclusion may not contain %s %q.\n", termType1, localstring_w)
 				localint_j = 0
 			}
@@ -405,8 +407,8 @@ func basicGosub6630(p1 term.Type) {
 	}
 
 	if localint_j > 0 {
-		localsymbol_t1 = symbolTable.ConclusionTerms[localint_j]
-		localsymbol_t2 = symbolTable.ConclusionTerms[3-localint_j]
+		localsymbol_t1 = symbolConclusionTerms[localint_j]
+		localsymbol_t2 = symbolConclusionTerms[3-localint_j]
 		if localstring_w != localsymbol_t2.Term {
 			goto Line7060
 		}
@@ -423,10 +425,10 @@ func basicGosub6630(p1 term.Type) {
 		}
 		goto Line7120
 	}
-	if localstring_w == symbolTable.ConclusionTerms[1].Term {
-		localsymbol_t2 = symbolTable.ConclusionTerms[2]
+	if localstring_w == symbolConclusionTerms[1].Term {
+		localsymbol_t2 = symbolConclusionTerms[2]
 	} else {
-		localsymbol_t2 = symbolTable.ConclusionTerms[1]
+		localsymbol_t2 = symbolConclusionTerms[1]
 	}
 	goto Line7070
 
@@ -486,6 +488,7 @@ func basicGosub1840() {
 		return
 	}
 
+	symbolConclusionTerms = make([]*symbol.Symbol, basicDimMax)
 	premiseSet = make(premise.Set, 0)
 	symbolTable = symboltable.New(basicDimMax + 2)
 	negativePremiseCount = 0
