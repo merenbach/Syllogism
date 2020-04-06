@@ -97,7 +97,6 @@ var (
 	localint_i  int
 	localint_j  int
 	localint_j1 int
-	localint_p1 term.Type
 
 	localsymbol_v1 *symbol.Symbol
 
@@ -699,7 +698,7 @@ func basicGosub2890(stringarray_s []string, intarray_t []token.Type) (form.Form,
 	return form.AllAIsB, nil // all A is B
 }
 
-func tokenize(localstring_l1 string) ([7]string, [8]token.Type, [3]article.Type, error) {
+func tokenize(localstring_l1 string) ([7]string, [8]token.Type, [3]article.Type, term.Type, error) {
 	// 2020
 	//---L1$ into array S$()---
 
@@ -716,7 +715,7 @@ func tokenize(localstring_l1 string) ([7]string, [8]token.Type, [3]article.Type,
 	var shadowintarray_t [8]token.Type
 	var shadowintarray_e [3]article.Type
 
-	localint_p1 = term.TypeUndetermined
+	localint_p1 := term.TypeUndetermined
 	shadowintarray_e[2] = article.TypeNone
 	localint_j = 1
 
@@ -856,7 +855,7 @@ Iterate:
 		}
 	}
 
-	return shadowstringarray_s, shadowintarray_t, shadowintarray_e, returnErr
+	return shadowstringarray_s, shadowintarray_t, shadowintarray_e, localint_p1, returnErr
 }
 
 func basicGosub8980() {
@@ -865,7 +864,7 @@ func basicGosub8980() {
 
 	for _, localstring_l1 := range strings.Split(help.SampleData, "\n") {
 		fmt.Println(localstring_l1)
-		stringarray_s, intarray_t, intarray_e, err := tokenize(localstring_l1)
+		stringarray_s, intarray_t, intarray_e, localint_p1, err := tokenize(localstring_l1)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -1049,7 +1048,7 @@ func runloop() bool {
 
 	//--scan line L1$ into array S$()
 
-	stringarray_s, intarray_t, intarray_e, err := tokenize(localstring_l1)
+	stringarray_s, intarray_t, intarray_e, localint_p1, err := tokenize(localstring_l1)
 	if err != nil {
 		fmt.Println(err)
 	}
