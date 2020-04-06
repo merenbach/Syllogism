@@ -94,7 +94,6 @@ var (
 	recentWord1 string // most recently-input first word (subject?)
 	recentWord2 string // most recently-input second word (predicate?)
 
-	localint_i  int
 	localint_j  int
 	localint_j1 int
 
@@ -721,7 +720,7 @@ func tokenize(localstring_l1 string) ([7]string, [8]token.Type, [3]article.Type,
 	}
 
 	// TODO: use strings.Fields here; but need to properly increase letter count
-	localint_i = 0
+	var localint_i int
 Iterate:
 	for _, word := range strings.Split(localstring_l1, " ") {
 		localint_i++
