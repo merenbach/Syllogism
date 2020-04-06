@@ -267,45 +267,47 @@ func basicGosub5070() premise.Set {
 		}
 		var localint_i int
 
-	Line5460: // 5460
 		localint_k = localint_i
 
-	Line5470: // 5470
-		if linkedPremises[localint_k].Subject == temp_symbol {
-			temp_symbol = linkedPremises[localint_k].Predicate
-		} else if linkedPremises[localint_k].Predicate == temp_symbol {
-			temp_symbol = linkedPremises[localint_k].Subject
-		} else {
-			localint_k++
-			if localint_k < len(premiseSet) {
-				goto Line5470
+		for {
+			if linkedPremises[localint_k].Subject == temp_symbol {
+				temp_symbol = linkedPremises[localint_k].Predicate
+			} else if linkedPremises[localint_k].Predicate == temp_symbol {
+				temp_symbol = linkedPremises[localint_k].Subject
+			} else {
+				localint_k++
+				if localint_k < len(premiseSet) {
+					continue
+				}
+
+				temp_symbol = linkedPremises[localint_i].Predicate
+
+				if localint_j1 == 0 {
+					localint_j1 = 4
+					fmt.Println("Not a syllogism: no way to order premises so that each premise")
+					fmt.Println("shares exactly one term with its successor; there is a")
+				}
+				fmt.Println(help.ClosedLoopHelp)
+				fmt.Println(linkedPremises[localint_i])
+				goto Line5730
 			}
 
-			temp_symbol = linkedPremises[localint_i].Predicate
-
-			if localint_j1 == 0 {
-				localint_j1 = 4
-				fmt.Println("Not a syllogism: no way to order premises so that each premise")
-				fmt.Println("shares exactly one term with its successor; there is a")
+			if localint_k != localint_i {
+				linkedPremises.Swap(localint_k, localint_i)
 			}
-			fmt.Println(help.ClosedLoopHelp)
-			fmt.Println(linkedPremises[localint_i])
-			goto Line5730
-		}
 
-		if localint_k != localint_i {
-			linkedPremises.Swap(localint_k, localint_i)
-		}
+			if localint_j1 != 0 {
+				fmt.Println(linkedPremises[localint_i])
+			}
 
-		if localint_j1 != 0 {
-			fmt.Println(linkedPremises[localint_i])
-		}
+		Line5730: // 5730
+			localint_i++
 
-	Line5730: // 5730
-		localint_i++
+			if localint_i == len(premiseSet) {
+				break
+			}
 
-		if localint_i < len(premiseSet) {
-			goto Line5460
+			localint_k = localint_i
 		}
 	}
 
