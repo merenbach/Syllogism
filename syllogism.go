@@ -270,13 +270,13 @@ func basicGosub5070() premise.Set {
 		localint_k = localint_i
 
 		for {
-			sym := linkedPremises[localint_k]
-			if sym.Subject == temp_symbol {
-				temp_symbol = sym.Predicate
+			prem := linkedPremises[localint_k]
+			if prem.Subject == temp_symbol {
+				temp_symbol = prem.Predicate
 				linkedPremises.Swap(localint_k, localint_i)
 
-			} else if sym.Predicate == temp_symbol {
-				temp_symbol = sym.Subject
+			} else if prem.Predicate == temp_symbol {
+				temp_symbol = prem.Subject
 				linkedPremises.Swap(localint_k, localint_i)
 
 			} else {
