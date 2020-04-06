@@ -708,6 +708,7 @@ func tokenize(localstring_l1 string) ([7]string, [8]token.Type, [3]article.Type,
 	//                      1   3        6            5    4     6
 
 	// TODO: try to return when we need to return
+	//       or consider no-ops: https://blog.golang.org/error-handling-and-go
 	var returnErr error
 
 	var localstring_s string
