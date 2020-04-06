@@ -270,27 +270,14 @@ func basicGosub5070() premise.Set {
 		localint_k = localint_i
 
 		for {
-			if linkedPremises[localint_k].Subject == temp_symbol {
-				temp_symbol = linkedPremises[localint_k].Predicate
+			sym := linkedPremises[localint_k]
+			if sym.Subject == temp_symbol {
+				temp_symbol = sym.Predicate
+				linkedPremises.Swap(localint_k, localint_i)
 
-				if localint_k != localint_i {
-					linkedPremises.Swap(localint_k, localint_i)
-				}
-
-				if localint_j1 != 0 {
-					fmt.Println(linkedPremises[localint_i])
-				}
-
-			} else if linkedPremises[localint_k].Predicate == temp_symbol {
-				temp_symbol = linkedPremises[localint_k].Subject
-
-				if localint_k != localint_i {
-					linkedPremises.Swap(localint_k, localint_i)
-				}
-
-				if localint_j1 != 0 {
-					fmt.Println(linkedPremises[localint_i])
-				}
+			} else if sym.Predicate == temp_symbol {
+				temp_symbol = sym.Subject
+				linkedPremises.Swap(localint_k, localint_i)
 
 			} else {
 				localint_k++
@@ -306,6 +293,9 @@ func basicGosub5070() premise.Set {
 					fmt.Println("shares exactly one term with its successor; there is a")
 				}
 				fmt.Println(help.ClosedLoopHelp)
+			}
+
+			if localint_j1 != 0 {
 				fmt.Println(linkedPremises[localint_i])
 			}
 
