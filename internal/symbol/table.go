@@ -1,11 +1,11 @@
 package symbol
 
-// A SymbolTable contains a collection of symbols.
-type SymbolTable []*Symbol
+// A Table of symbols.
+type Table []*Symbol
 
 // Search a symbol table for a term matching a given string.
 // Porting notes: All variable use is encapsulated, so if porting needs to be re-done in future, re-porting this function can be avoided by invoking the equivalent of `i1, b1 = search(start, w$)`.
-func (st SymbolTable) Search(start int, w string) int {
+func (st Table) Search(start int, w string) int {
 	// 3950
 	//---Search T$() for W$ from I1 to L1---
 

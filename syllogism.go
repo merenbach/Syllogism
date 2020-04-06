@@ -89,7 +89,7 @@ var (
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
 
 	premiseSet  = make(premise.Set, 0)
-	symbolTable = make(symbol.SymbolTable, 0)
+	symbolTable = make(symbol.Table, 0)
 	// SymbolConclusionTerms are major and minor (i.e., all the non-middle) terms
 	symbolConclusionTerms = make([]*symbol.Symbol, basicDimMax)
 	negativePremiseCount  = 0 // kludge because we aren't able to tally dynamically yet (chicken-and-egg)
@@ -489,7 +489,7 @@ func basicGosub1840() {
 
 	symbolConclusionTerms = make([]*symbol.Symbol, basicDimMax)
 	premiseSet = make(premise.Set, 0)
-	symbolTable = make(symbol.SymbolTable, 0)
+	symbolTable = make(symbol.Table, 0)
 	negativePremiseCount = 0
 }
 
@@ -1196,8 +1196,8 @@ func Dump() string {
 // }
 
 // Prune orphaned terms with no occurrences.
-func Prune(st symbol.SymbolTable) symbol.SymbolTable {
-	var ss symbol.SymbolTable
+func Prune(st symbol.Table) symbol.Table {
+	var ss symbol.Table
 	for _, s := range st {
 		if s.Occurrences > 0 {
 			ss = append(ss, s)
