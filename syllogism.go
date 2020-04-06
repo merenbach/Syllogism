@@ -90,7 +90,7 @@ var (
 	intarray_e [3]article.Type // TODO: about ready to redefine locally where used
 
 	premiseSet  = make(premise.Set, 0)
-	symbolTable = symboltable.New(basicDimMax + 2)
+	symbolTable = make(symboltable.SymbolTable, 0)
 	// SymbolConclusionTerms are major and minor (i.e., all the non-middle) terms
 	symbolConclusionTerms = make([]*symbol.Symbol, basicDimMax)
 	negativePremiseCount  = 0 // kludge because we aren't able to tally dynamically yet (chicken-and-egg)
@@ -130,14 +130,14 @@ func substitute() error {
 		}
 		if localint_i1 != -2 {
 			if localint_i1 > 0 {
-				if localint_i1 <= len(symbolTable.Symbols) {
-					fmt.Printf("Enter new term to replace %s %q\n", symbolTable.Symbols[localint_i1-1].TermType, symbolTable.Symbols[localint_i1-1].Term)
+				if localint_i1 <= len(symbolTable) {
+					fmt.Printf("Enter new term to replace %s %q\n", symbolTable[localint_i1-1].TermType, symbolTable[localint_i1-1].Term)
 
 					w := lineInput("? ")
-					symbolTable.Symbols[localint_i1-1].Term = w
+					symbolTable[localint_i1-1].Term = w
 					fmt.Printf("Replaced by %q\n", w)
 				} else {
-					fmt.Printf("Address %d too large.  Symbol table only of length %d.\n", localint_i1, len(symbolTable.Symbols))
+					fmt.Printf("Address %d too large.  Symbol table only of length %d.\n", localint_i1, len(symbolTable))
 				}
 			} else {
 				fmt.Println(help.SyllogismHelpForSubstitute)
@@ -159,7 +159,7 @@ func basicGosub5880() {
 	symbol1 := symbolConclusionTerms[1]
 	symbol2 := symbolConclusionTerms[2]
 
-	for i, s := range symbolTable.Symbols {
+	for i, s := range symbolTable {
 		if s.Occurrences < 2 {
 			continue
 		}
@@ -174,7 +174,7 @@ func basicGosub5880() {
 		}
 
 		if s.DistributionCount != 1 && s.TermType != term.TypeDesignator {
-			localsymbol_v1 = symbolTable.Symbols[i]
+			localsymbol_v1 = symbolTable[i]
 		}
 	}
 
@@ -223,14 +223,14 @@ func basicGosub5070() premise.Set {
 
 	var localint_c int
 
-	for i, s := range symbolTable.Symbols {
+	for i, s := range symbolTable {
 		if s.Occurrences == 0 || s.Occurrences == 2 {
 			continue
 		}
 
 		if s.Occurrences == 1 {
 			localint_c++
-			symbolConclusionTerms[localint_c] = symbolTable.Symbols[i]
+			symbolConclusionTerms[localint_c] = symbolTable[i]
 			continue
 		}
 
@@ -490,7 +490,7 @@ func basicGosub1840() {
 
 	symbolConclusionTerms = make([]*symbol.Symbol, basicDimMax)
 	premiseSet = make(premise.Set, 0)
-	symbolTable = symboltable.New(basicDimMax + 2)
+	symbolTable = make(symboltable.SymbolTable, 0)
 	negativePremiseCount = 0
 }
 
@@ -521,19 +521,19 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 		sym := func() *symbol.Symbol {
 			var localint_i1 int
 
-			Prune(symbolTable)
+			symbolTable = Prune(symbolTable)
 			for ; ; localint_i1++ { // 3500
 				localint_i1 = symbolTable.Search(localint_i1, w)
 
-				if localint_i1 == len(symbolTable.Symbols) {
-					symbolTable.Symbols = append(symbolTable.Symbols, &symbol.Symbol{
+				if localint_i1 == len(symbolTable) {
+					symbolTable = append(symbolTable, &symbol.Symbol{
 						Term:     w,
 						TermType: termType,
 					})
 					break
 				}
 
-				sym := symbolTable.Symbols[localint_i1]
+				sym := symbolTable[localint_i1]
 				if termType == term.TypeUndetermined {
 					if sym.TermType != term.TypeUndetermined || msg {
 						fmt.Printf("Note: predicate term %q", w)
@@ -556,7 +556,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise) {
 				}
 			}
 
-			return symbolTable.Symbols[localint_i1]
+			return symbolTable[localint_i1]
 		}()
 
 		if intarray_e[localint_j] != article.TypeNone {
@@ -1168,11 +1168,11 @@ func delPremise(n int) error {
 // Dump values of variables in a SymbolTable.
 func Dump() string {
 	dump := new(bytes.Buffer)
-	fmt.Fprintf(dump, "Highest symbol table loc. used: %d  Negative premises: %d\n", len(symbolTable.Symbols), negativePremiseCount)
-	if len(symbolTable.Symbols) > 0 {
+	fmt.Fprintf(dump, "Highest symbol table loc. used: %d  Negative premises: %d\n", len(symbolTable), negativePremiseCount)
+	if len(symbolTable) > 0 {
 		w := tabwriter.NewWriter(dump, 0, 0, 2, ' ', 0)
 		fmt.Fprint(w, "Adr.\tart.\tterm\ttype\toccurs\tdist. count")
-		for i, s := range symbolTable.Symbols {
+		for i, s := range symbolTable {
 			fmt.Fprintf(w, "\n%d\t%s", i+1, s.Dump())
 		}
 		w.Flush()
@@ -1180,16 +1180,32 @@ func Dump() string {
 	return dump.String()
 }
 
+// // Delete a term from the table.
+// func (st *SymbolTable) Delete(sym *symbol.Symbol) {
+// 	for i, s := range st.Symbols {
+// 		if s.Term == sym.Term {
+// 			// Delete without leaving uncollected pointers
+// 			// https://github.com/golang/go/wiki/SliceTricks
+// 			if i < len(st.Symbols)-1 {
+// 				copy(st.Symbols[i:], st.Symbols[i+1:])
+// 			}
+// 			st.Symbols[len(st.Symbols)-1] = nil
+// 			st.Symbols = st.Symbols[:len(st.Symbols)-1]
+// 			break
+// 		}
+// 	}
+// }
+
 // Prune orphaned terms with no occurrences.
-func Prune(st *symboltable.SymbolTable) {
-	var ss []*symbol.Symbol
-	for _, s := range st.Symbols {
+func Prune(st symboltable.SymbolTable) symboltable.SymbolTable {
+	var ss symboltable.SymbolTable
+	for _, s := range st {
 		if s.Occurrences > 0 {
 			ss = append(ss, s)
 		}
 	}
 
-	st.Symbols = ss
+	return ss
 }
 
 func main() {
