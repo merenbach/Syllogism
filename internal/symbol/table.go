@@ -11,6 +11,10 @@ func (st Table) Search(start int, w string) int {
 
 	// If found, I1 = L1; else I1 = L1+1. B1 set to 1st empty loc.
 	for i, s := range st {
+		if i < start {
+			continue
+		}
+
 		if s.Term == w {
 			break
 		}
