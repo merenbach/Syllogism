@@ -12,10 +12,10 @@ const (
 	SomeAIsNotB         = 1 // Type O (particular negative)
 	AllAIsB             = 2 // Type A (universal affirmative)
 	NoAIsB              = 3 // Type E (universal negative)
-	AIsT                = 4
-	AIsNotT             = 5
-	AEqualsT            = 6
-	ADoesNotEqualT      = 7
+	AIsT                = 4 // designator == general term
+	AIsNotT             = 5 // designator != general term
+	AEqualsT            = 6 // designator == designator
+	ADoesNotEqualT      = 7 // designator != designator
 )
 
 const (
