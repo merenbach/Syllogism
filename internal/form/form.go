@@ -7,15 +7,15 @@ type Form int
 // TODO: should be able to swap ordering of any of these and retain same functionality once refactor is complete
 //       since we won't be relying on integer values anymore
 const (
-	Undefined      Form = (-1)
-	SomeAIsB            = 0 // Type I (particular affirmative)
-	SomeAIsNotB         = 1 // Type O (particular negative)
-	AllAIsB             = 2 // Type A (universal affirmative)
-	NoAIsB              = 3 // Type E (universal negative)
-	AIsT                = 4 // designator == general term
-	AIsNotT             = 5 // designator != general term
-	AEqualsT            = 6 // designator == designator
-	ADoesNotEqualT      = 7 // designator != designator
+	Undefined      Form = iota
+	SomeAIsB            // Type I (particular affirmative)
+	SomeAIsNotB         // Type O (particular negative)
+	AllAIsB             // Type A (universal affirmative)
+	NoAIsB              // Type E (universal negative)
+	AIsT                // designator == general term
+	AIsNotT             // designator != general term
+	AEqualsT            // designator == designator
+	ADoesNotEqualT      // designator != designator
 )
 
 const (
@@ -43,7 +43,7 @@ func (t Form) IsNegative() bool {
 	// case AIsNotT:
 	// 	return true
 	// }
-	return t%2 == 1
+	return t%2 == 0
 }
 
 // Copula associated with this form.
