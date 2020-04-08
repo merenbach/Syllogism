@@ -436,6 +436,7 @@ Line7120: // 7120
 	} else if localsymbol_t1.DistributionCount > 0 && d1.IsParticular() {
 		localsymbol_v1 = localsymbol_t1
 	} else {
+		// TODO: this check appears to limit options down to form.SomeAIsB and form.AllAIsB
 		if localsymbol_t2.DistributionCount > 0 && !d1.IsNegative() && d1 != form.AIsT && d1 != form.AEqualsT {
 			localsymbol_v1 = localsymbol_t2
 		}
