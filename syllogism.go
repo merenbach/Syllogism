@@ -156,7 +156,8 @@ func basicGosub5880() {
 			continue
 		}
 
-		if s.DistributionCount == 0 {
+		dc := premiseSet.Distribution(s)
+		if dc == 0 {
 			if localint_j1 == 0 {
 				fmt.Println("Undistributed middle terms:")
 				localint_j1 = 5
@@ -165,7 +166,7 @@ func basicGosub5880() {
 			fmt.Printf("%s%s\n", basicTabString(5), s.Term)
 		}
 
-		if s.DistributionCount != 1 && s.TermType != term.TypeDesignator {
+		if dc != 1 && s.TermType != term.TypeDesignator {
 			localsymbol_v1 = symbolTable[i]
 		}
 	}
@@ -184,11 +185,13 @@ func basicGosub5880() {
 		return
 	}
 
-	if symbol1.DistributionCount == 0 && symbol2.DistributionCount == 0 {
+	dc1 := premiseSet.Distribution(symbol1)
+	dc2 := premiseSet.Distribution(symbol2)
+	if dc1 == 0 && dc2 == 0 {
 		fmt.Printf("Terms %q and %q, one of which is\n", symbol1.Term, symbol2.Term)
-	} else if symbol1.DistributionCount == 0 && symbol2.TermType == term.TypeDesignator {
+	} else if dc1 == 0 && symbol2.TermType == term.TypeDesignator {
 		fmt.Printf("Term %q\n", symbol1.Term)
-	} else if symbol2.DistributionCount == 0 && symbol1.TermType == term.TypeDesignator {
+	} else if dc2 == 0 && symbol1.TermType == term.TypeDesignator {
 		fmt.Printf("Term %q\n", symbol2.Term)
 	} else {
 		return
@@ -259,7 +262,7 @@ func basicGosub5070() premise.Set {
 	linkedPremises := premiseSet.Copy()
 
 	if len(linkedPremises) > 1 {
-		if symbolConclusionTerms[1].DistributionCount == 0 && symbolConclusionTerms[2].DistributionCount == 1 {
+		if premiseSet.Distribution(symbolConclusionTerms[1]) == 0 && premiseSet.Distribution(symbolConclusionTerms[2]) == 1 {
 			temp_symbol = symbolConclusionTerms[2]
 		} else {
 			temp_symbol = symbolConclusionTerms[1]
@@ -419,10 +422,10 @@ Line7120: // 7120
 	}
 
 	if localint_j1 != 1 {
-		if localsymbol_t1.DistributionCount == 0 && d1.IsUniversal() {
+		if premiseSet.Distribution(localsymbol_t1) == 0 && d1.IsUniversal() {
 			help.ShowTermDistributionError(localsymbol_t1.Term)
 			return
-		} else if localsymbol_t2.DistributionCount == 0 && (d1.IsNegative() || d1 == form.AEqualsT) {
+		} else if premiseSet.Distribution(localsymbol_t2) == 0 && (d1.IsNegative() || d1 == form.AEqualsT) {
 			help.ShowTermDistributionError(localsymbol_t2.Term)
 			return
 		}
@@ -437,11 +440,11 @@ Line7120: // 7120
 		localsymbol_v1 = &symbol.Symbol{
 			Term: localstring_w,
 		}
-	} else if localsymbol_t1.DistributionCount > 0 && d1.IsParticular() {
+	} else if premiseSet.Distribution(localsymbol_t1) > 0 && d1.IsParticular() {
 		localsymbol_v1 = localsymbol_t1
 	} else {
 		// TODO: this check appears to limit options down to form.SomeAIsB and form.AllAIsB
-		if localsymbol_t2.DistributionCount > 0 && !d1.IsNegative() && d1 != form.AIsT && d1 != form.AEqualsT {
+		if premiseSet.Distribution(localsymbol_t2) > 0 && !d1.IsNegative() && d1 != form.AIsT && d1 != form.AEqualsT {
 			localsymbol_v1 = localsymbol_t2
 		}
 
@@ -523,10 +526,6 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 		if localint_j != 2 {
 			prem.Subject = sym
 
-			if !d1.IsParticular() {
-				sym.DistributionCount++
-			}
-
 		} else {
 			prem.Predicate = sym
 
@@ -543,10 +542,6 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 				// 	d1 = form.ADoesNotEqualT
 				// }
 				d1 += 2
-			}
-
-			if d1 == form.AEqualsT || d1.IsNegative() {
-				sym.DistributionCount++
 			}
 		}
 
@@ -1092,7 +1087,6 @@ func delPremise(n int) error {
 			if p.Form.IsNegative() {
 				negativePremiseCount--
 			}
-			p.Decrement()
 
 			// Delete without leaving uncollected pointers
 			// https://github.com/golang/go/wiki/SliceTricks
@@ -1117,7 +1111,7 @@ func dump() {
 		w := tabwriter.NewWriter(dump, 0, 0, 2, ' ', 0)
 		fmt.Fprint(w, "Adr.\tart.\tterm\ttype\toccurs\tdist. count")
 		for i, s := range symbolTable {
-			fmt.Fprintf(w, "\n%d\t%s\t%d\t%d", i+1, s.Dump(), premiseSet.Occurrences(s), s.DistributionCount)
+			fmt.Fprintf(w, "\n%d\t%s\t%d\t%d", i+1, s.Dump(), premiseSet.Occurrences(s), premiseSet.Distribution(s))
 		}
 		w.Flush()
 	}
@@ -1168,9 +1162,6 @@ func Search(st symbol.Table, w string, termType term.Type, msg bool) *symbol.Sym
 		} else if sym.TermType == term.TypeUndetermined {
 			if msg {
 				fmt.Printf("Note: earlier use of %q taken as the %s used here\n", w, termType)
-			}
-			if termType == term.TypeDesignator {
-				sym.DistributionCount = premiseSet.Occurrences(sym)
 			}
 			sym.TermType = termType
 			return sym

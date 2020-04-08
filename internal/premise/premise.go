@@ -5,7 +5,6 @@ import (
 
 	"github.com/merenbach/syllogism/internal/form"
 	"github.com/merenbach/syllogism/internal/symbol"
-	"github.com/merenbach/syllogism/internal/term"
 )
 
 // Premise stores a line number and program statement.
@@ -40,29 +39,6 @@ func New(n int, s string) *Premise {
 
 func (pr *Premise) String() string {
 	return fmt.Sprintf("%d %s", pr.Number, pr.Statement)
-}
-
-// Decrement table entries.
-func (pr *Premise) Decrement() {
-	var (
-		pDecrement bool
-		qDecrement bool
-	)
-
-	if pr.Form.IsNegative() || pr.Predicate.TermType == term.TypeDesignator {
-		qDecrement = true
-	}
-
-	if !pr.Form.IsParticular() {
-		pDecrement = true
-	}
-
-	if pDecrement {
-		pr.Subject.DistributionCount--
-	}
-	if qDecrement {
-		pr.Predicate.DistributionCount--
-	}
 }
 
 // Empty determines whether a line is empty.

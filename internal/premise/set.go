@@ -68,13 +68,16 @@ func (ps Set) Compute(negativePremiseCount int, symbol1 *symbol.Symbol, symbol2 
 		return "A is A"
 	}
 
+	dc1 := ps.Distribution(symbol1)
+	dc2 := ps.Distribution(symbol2)
 	// if ps.NegativePremiseCount() == 0 {
 	if negativePremiseCount == 0 {
 		// affirmative conclusion
 		// TODO: can we push more of these conditionals inside the symbol type?
-		if symbol1.DistributionCount > 0 {
+
+		if dc1 > 0 {
 			return symbol1.ConclusionForAllIs(symbol2)
-		} else if symbol2.DistributionCount > 0 {
+		} else if dc2 > 0 {
 			return symbol2.ConclusionForAllIs(symbol1)
 		} else if symbol1.ArticleType != article.TypeNone || symbol2.ArticleType == article.TypeNone {
 			return symbol1.ConclusionForSomeIs(symbol2)
@@ -84,9 +87,9 @@ func (ps Set) Compute(negativePremiseCount int, symbol1 *symbol.Symbol, symbol2 
 
 	} else {
 		// negative conclusion
-		if symbol2.DistributionCount == 0 {
+		if dc2 == 0 {
 			return fmt.Sprintf("Some %s is not %s%s", symbol2.Term, symbol1.ArticleType, symbol1.Term)
-		} else if symbol1.DistributionCount == 0 {
+		} else if dc1 == 0 {
 			return fmt.Sprintf("Some %s is not %s%s", symbol1.Term, symbol2.ArticleType, symbol2.Term)
 		} else if symbol1.TermType == term.TypeDesignator {
 			return fmt.Sprintf("%s is not %s%s", symbol1.Term, symbol2.ArticleType, symbol2.Term)

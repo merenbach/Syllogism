@@ -9,10 +9,9 @@ import (
 
 // A Symbol is a logical symbol.
 type Symbol struct {
-	Term              string
-	ArticleType       article.Type
-	TermType          term.Type
-	DistributionCount int
+	Term        string
+	ArticleType article.Type
+	TermType    term.Type
 }
 
 func (s *Symbol) String() string {
