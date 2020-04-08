@@ -63,6 +63,7 @@ package main
 */
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"fmt"
 	"log"
@@ -70,6 +71,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"text/tabwriter"
 
 	"github.com/merenbach/syllogism/internal/article"
 	"github.com/merenbach/syllogism/internal/form"
@@ -150,7 +152,7 @@ func basicGosub5880() {
 	symbol2 := symbolConclusionTerms[2]
 
 	for i, s := range symbolTable {
-		if s.Occurrences < 2 {
+		if premiseSet.Occurrences(s) < 2 {
 			continue
 		}
 
@@ -214,11 +216,12 @@ func basicGosub5070() premise.Set {
 	var localint_c int
 
 	for i, s := range symbolTable {
-		if s.Occurrences == 0 || s.Occurrences == 2 {
+		o := premiseSet.Occurrences(s)
+		if o == 0 || o == 2 {
 			continue
 		}
 
-		if s.Occurrences == 1 {
+		if o == 1 {
 			localint_c++
 			symbolConclusionTerms[localint_c] = symbolTable[i]
 			continue
@@ -229,7 +232,7 @@ func basicGosub5070() premise.Set {
 			localint_j1 = 2
 		}
 
-		fmt.Printf("   %s %q occurs %d times in premises.\n", s.TermType, s.Term, s.Occurrences)
+		fmt.Printf("   %s %q occurs %d times in premises.\n", s.TermType, s.Term, o)
 	}
 
 	if localint_c != 2 {
@@ -490,7 +493,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 		w := stringutil.Singularize(raw_string)
 
 		symbolTable = Prune(symbolTable)
-		sym := symbolTable.Search(w, termType, msg)
+		sym := Search(symbolTable, w, termType, msg)
 		if sym == nil {
 			sym = &symbol.Symbol{
 				Term:     w,
@@ -512,10 +515,9 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 			sym.ArticleType = intarray_e[localint_j]
 		}
 
-		sym.Occurrences++
-
-		if sym.Occurrences >= 3 && msg {
-			fmt.Printf("Warning: %s %q has occurred %d times\n", sym.TermType, w, sym.Occurrences)
+		o := premiseSet.Occurrences(sym)
+		if o >= 3 && msg {
+			fmt.Printf("Warning: %s %q has occurred %d times\n", sym.TermType, w, o)
 		}
 
 		if localint_j != 2 {
@@ -548,7 +550,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 			}
 		}
 
-		if sym.Occurrences == 2 && sym.DistributionCount == 0 && msg {
+		if premiseSet.Occurrences(sym) == 2 && premiseSet.Distribution(sym) == 0 && msg {
 			fmt.Printf("Warning: undistributed middle term %q\n", sym.Term)
 		}
 	}
@@ -1100,6 +1102,7 @@ func delPremise(n int) error {
 			premiseSet[len(premiseSet)-1] = nil
 			premiseSet = premiseSet[:len(premiseSet)-1]
 
+			symbolTable = Prune(symbolTable)
 			return nil
 		}
 	}
@@ -1109,7 +1112,16 @@ func delPremise(n int) error {
 // Dump values of variables in a SymbolTable.
 func dump() {
 	fmt.Printf("Highest symbol table loc. used: %d  Negative premises: %d\n", len(symbolTable), negativePremiseCount)
-	fmt.Println(symbolTable.Dump())
+	dump := new(bytes.Buffer)
+	if len(symbolTable) > 0 {
+		w := tabwriter.NewWriter(dump, 0, 0, 2, ' ', 0)
+		fmt.Fprint(w, "Adr.\tart.\tterm\ttype\toccurs\tdist. count")
+		for i, s := range symbolTable {
+			fmt.Fprintf(w, "\n%d\t%s\t%d\t%d", i+1, s.Dump(), premiseSet.Occurrences(s), s.DistributionCount)
+		}
+		w.Flush()
+	}
+	fmt.Println(dump.String())
 }
 
 // // Delete a term from the table.
@@ -1132,12 +1144,44 @@ func dump() {
 func Prune(st symbol.Table) symbol.Table {
 	var ss symbol.Table
 	for _, s := range st {
-		if s.Occurrences > 0 {
+		if premiseSet.Occurrences(s) > 0 {
 			ss = append(ss, s)
 		}
 	}
 
 	return ss
+}
+
+// Search symbol table for a term matching a given string, or return nil.
+func Search(st symbol.Table, w string, termType term.Type, msg bool) *symbol.Symbol {
+	for _, sym := range st {
+		if sym.Term != w {
+			continue
+		}
+
+		if termType == term.TypeUndetermined {
+			// TODO: while this matches the original BASIC, should this be && msg?
+			if sym.TermType != term.TypeUndetermined || msg {
+				fmt.Printf("Note: predicate term %q taken as the %s used earlier\n", w, sym.TermType)
+			}
+			return sym
+		} else if sym.TermType == term.TypeUndetermined {
+			if msg {
+				fmt.Printf("Note: earlier use of %q taken as the %s used here\n", w, termType)
+			}
+			if termType == term.TypeDesignator {
+				sym.DistributionCount = premiseSet.Occurrences(sym)
+			}
+			sym.TermType = termType
+			return sym
+		} else if termType == sym.TermType {
+			return sym
+		} else if msg {
+			fmt.Printf("Warning: %s %q has also occurred as a %s\n", termType, w, termType.Other())
+		}
+	}
+
+	return nil
 }
 
 func main() {

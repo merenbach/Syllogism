@@ -57,8 +57,12 @@ func (pr *Premise) Decrement() {
 		pDecrement = true
 	}
 
-	pr.Subject.ReduceDistributionCount(pDecrement)
-	pr.Predicate.ReduceDistributionCount(qDecrement)
+	if pDecrement {
+		pr.Subject.DistributionCount--
+	}
+	if qDecrement {
+		pr.Predicate.DistributionCount--
+	}
 }
 
 // Empty determines whether a line is empty.
