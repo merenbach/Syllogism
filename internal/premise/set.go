@@ -17,6 +17,11 @@ func (ps Set) Swap(i, j int) {
 	ps[i], ps[j] = ps[j], ps[i]
 }
 
+// Less determines sorting order between items.
+func (ps Set) Less(i, j int) bool {
+	return ps[i].Number < ps[j].Number
+}
+
 // Copy shallowly into a new premise set.
 func (ps Set) Copy() Set {
 	c := make(Set, len(ps))
