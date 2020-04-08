@@ -495,12 +495,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 				localint_i1 = symbolTable.Search(w, localint_i1)
 
 				if localint_i1 == (-1) {
-					sym := &symbol.Symbol{
-						Term:     w,
-						TermType: termType,
-					}
-					symbolTable = append(symbolTable, sym)
-					return sym
+					break
 				}
 
 				sym := symbolTable[localint_i1]
@@ -525,6 +520,13 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 					fmt.Printf("Warning: %s %q has also occurred as a %s\n", termType, w, termType.Other())
 				}
 			}
+
+			sym := &symbol.Symbol{
+				Term:     w,
+				TermType: termType,
+			}
+			symbolTable = append(symbolTable, sym)
+			return sym
 		}()
 
 		if intarray_e[localint_j] != article.TypeNone {
