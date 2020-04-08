@@ -491,37 +491,16 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 
 		sym := func() *symbol.Symbol {
 			symbolTable = Prune(symbolTable)
-			for _, sym := range symbolTable {
-				if sym.Term != w {
-					continue
-				}
+			sym := symbolTable.Search(w, termType, msg)
 
-				if termType == term.TypeUndetermined {
-					if sym.TermType != term.TypeUndetermined || msg {
-						fmt.Printf("Note: predicate term %q taken as the %s used earlier\n", w, sym.TermType)
-					}
-					return sym
-				} else if sym.TermType == term.TypeUndetermined {
-					if msg {
-						fmt.Printf("Note: earlier use of %q taken as the %s used here\n", w, termType)
-					}
-					if termType == term.TypeDesignator {
-						sym.DistributionCount = sym.Occurrences
-					}
-					sym.TermType = termType
-					return sym
-				} else if termType == sym.TermType {
-					return sym
-				} else if msg {
-					fmt.Printf("Warning: %s %q has also occurred as a %s\n", termType, w, termType.Other())
+			if sym == nil {
+				sym = &symbol.Symbol{
+					Term:     w,
+					TermType: termType,
 				}
+				symbolTable = append(symbolTable, sym)
 			}
 
-			sym := &symbol.Symbol{
-				Term:     w,
-				TermType: termType,
-			}
-			symbolTable = append(symbolTable, sym)
 			return sym
 		}()
 
