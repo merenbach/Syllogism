@@ -564,6 +564,13 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 			}
 
 			if sym.TermType == term.TypeDesignator {
+				// TODO:
+				// switch d1 {
+				// case form.AIsT:
+				// 	d1 = form.AEqualsT
+				// case form.AIsNotT:
+				// 	d1 = form.ADoesNotEqualT
+				// }
 				d1 += 2
 			}
 
