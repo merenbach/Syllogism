@@ -62,7 +62,6 @@ package main
 */
 import (
 	"bufio"
-	"bytes"
 	"errors"
 	"fmt"
 	"log"
@@ -70,7 +69,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"text/tabwriter"
 
 	"github.com/merenbach/syllogism/internal/article"
 	"github.com/merenbach/syllogism/internal/form"
@@ -135,7 +133,7 @@ func substitute() error {
 			}
 			fmt.Println()
 		} else {
-			fmt.Println(Dump())
+			dump()
 		}
 	}
 
@@ -954,7 +952,7 @@ func runloop() bool {
 		help.ShowGeneralHelp()
 		return true
 	case "dump":
-		fmt.Println(Dump())
+		dump()
 		return true
 	case "msg":
 		msg = !msg
@@ -1107,18 +1105,9 @@ func delPremise(n int) error {
 }
 
 // Dump values of variables in a SymbolTable.
-func Dump() string {
-	dump := new(bytes.Buffer)
-	fmt.Fprintf(dump, "Highest symbol table loc. used: %d  Negative premises: %d\n", len(symbolTable), negativePremiseCount)
-	if len(symbolTable) > 0 {
-		w := tabwriter.NewWriter(dump, 0, 0, 2, ' ', 0)
-		fmt.Fprint(w, "Adr.\tart.\tterm\ttype\toccurs\tdist. count")
-		for i, s := range symbolTable {
-			fmt.Fprintf(w, "\n%d\t%s", i+1, s.Dump())
-		}
-		w.Flush()
-	}
-	return dump.String()
+func dump() {
+	fmt.Printf("Highest symbol table loc. used: %d  Negative premises: %d\n", len(symbolTable), negativePremiseCount)
+	fmt.Println(symbolTable.Dump())
 }
 
 // // Delete a term from the table.
