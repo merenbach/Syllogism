@@ -498,10 +498,11 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 
 				if localint_i1 == (-1) {
 					localint_i1 = len(symbolTable)
-					symbolTable = append(symbolTable, &symbol.Symbol{
+					sym := &symbol.Symbol{
 						Term:     w,
 						TermType: termType,
-					})
+					}
+					symbolTable = append(symbolTable, sym)
 					break
 				}
 
