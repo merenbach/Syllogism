@@ -519,7 +519,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 		if localint_j != 2 {
 			prem.Subject = sym
 
-			if d1 != form.SomeAIsB && d1 != form.SomeAIsNotB {
+			if !d1.IsParticular() {
 				sym.DistributionCount++
 			}
 

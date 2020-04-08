@@ -32,6 +32,18 @@ const (
 	WordNot = "not"
 )
 
+// IsParticular determines if this form is particular.
+func (t Form) IsParticular() bool {
+	switch t {
+	case SomeAIsB:
+		return true
+	case SomeAIsNotB:
+		return true
+	default:
+		return false
+	}
+}
+
 // IsNegative determines if this form is negative.
 func (t Form) IsNegative() bool {
 	// TODO: don't rely on numeric values here?
