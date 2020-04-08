@@ -1079,7 +1079,7 @@ func addPremise(n int, s string) *premise.Premise {
 
 	// Append the new premise and sort by line number
 	premiseSet = append(premiseSet, prem)
-	sort.Slice(premiseSet, premiseSet.Less)
+	sort.Sort(premiseSet)
 
 	return prem
 }
