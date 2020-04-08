@@ -491,14 +491,11 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 
 		sym := func() *symbol.Symbol {
 			symbolTable = Prune(symbolTable)
-			for localint_i1 := 0; ; localint_i1++ { // 3500
-				localint_i1 = symbolTable.Search(w, localint_i1)
-
-				if localint_i1 == (-1) {
-					break
+			for _, sym := range symbolTable {
+				if sym.Term != w {
+					continue
 				}
 
-				sym := symbolTable[localint_i1]
 				if termType == term.TypeUndetermined {
 					if sym.TermType != term.TypeUndetermined || msg {
 						fmt.Printf("Note: predicate term %q", w)
