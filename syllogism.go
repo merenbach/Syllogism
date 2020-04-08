@@ -8,6 +8,7 @@ package main
 * Use Golang list type for Line collection?
 * Improve dumping further
 * Remove any spurious whitespace in entries
+* Cache occurrences and refresh on add line and delete line
 *
 * Testing notes:
 * - Can simulate closed loop with sample, removing line 20, and then setting line 10 to "all men are mortal" (duplicating line 70)
