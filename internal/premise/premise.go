@@ -53,7 +53,7 @@ func (pr *Premise) Decrement() {
 		qDecrement = true
 	}
 
-	if pr.Form >= 2 {
+	if !pr.Form.IsParticular() {
 		pDecrement = true
 	}
 
