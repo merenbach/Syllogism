@@ -490,20 +490,17 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 		w := stringutil.Singularize(raw_string)
 
 		sym := func() *symbol.Symbol {
-			var localint_i1 int
-
 			symbolTable = Prune(symbolTable)
-			for ; ; localint_i1++ { // 3500
+			for localint_i1 := 0; ; localint_i1++ { // 3500
 				localint_i1 = symbolTable.Search(w, localint_i1)
 
 				if localint_i1 == (-1) {
-					localint_i1 = len(symbolTable)
 					sym := &symbol.Symbol{
 						Term:     w,
 						TermType: termType,
 					}
 					symbolTable = append(symbolTable, sym)
-					break
+					return sym
 				}
 
 				sym := symbolTable[localint_i1]
@@ -512,7 +509,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 						fmt.Printf("Note: predicate term %q", w)
 						fmt.Printf(" taken as the %s used earlier\n", sym.TermType)
 					}
-					break
+					return sym
 				} else if sym.TermType == term.TypeUndetermined {
 					if msg {
 						fmt.Printf("Note: earlier use of %q taken as the %s used here\n", w, termType)
@@ -521,15 +518,13 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 						sym.DistributionCount = sym.Occurrences
 					}
 					sym.TermType = termType
-					break
+					return sym
 				} else if termType == sym.TermType {
-					break
+					return sym
 				} else if msg {
 					fmt.Printf("Warning: %s %q has also occurred as a %s\n", termType, w, termType.Other())
 				}
 			}
-
-			return symbolTable[localint_i1]
 		}()
 
 		if intarray_e[localint_j] != article.TypeNone {
