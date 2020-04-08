@@ -489,20 +489,15 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 
 		w := stringutil.Singularize(raw_string)
 
-		sym := func() *symbol.Symbol {
-			symbolTable = Prune(symbolTable)
-			sym := symbolTable.Search(w, termType, msg)
-
-			if sym == nil {
-				sym = &symbol.Symbol{
-					Term:     w,
-					TermType: termType,
-				}
-				symbolTable = append(symbolTable, sym)
+		symbolTable = Prune(symbolTable)
+		sym := symbolTable.Search(w, termType, msg)
+		if sym == nil {
+			sym = &symbol.Symbol{
+				Term:     w,
+				TermType: termType,
 			}
-
-			return sym
-		}()
+			symbolTable = append(symbolTable, sym)
+		}
 
 		if intarray_e[localint_j] != article.TypeNone {
 			sym.ArticleType = intarray_e[localint_j]
