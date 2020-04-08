@@ -17,6 +17,7 @@ func (st Table) Search(w string, termType term.Type, msg bool) *Symbol {
 		}
 
 		if termType == term.TypeUndetermined {
+			// TODO: while this matches the original BASIC, should this be && msg?
 			if sym.TermType != term.TypeUndetermined || msg {
 				fmt.Printf("Note: predicate term %q taken as the %s used earlier\n", w, sym.TermType)
 			}
