@@ -498,8 +498,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 
 				if termType == term.TypeUndetermined {
 					if sym.TermType != term.TypeUndetermined || msg {
-						fmt.Printf("Note: predicate term %q", w)
-						fmt.Printf(" taken as the %s used earlier\n", sym.TermType)
+						fmt.Printf("Note: predicate term %q taken as the %s used earlier\n", w, sym.TermType)
 					}
 					return sym
 				} else if sym.TermType == term.TypeUndetermined {
