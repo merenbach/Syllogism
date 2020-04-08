@@ -3,7 +3,7 @@ package symbol
 // A Table of symbols.
 type Table []*Symbol
 
-// Search a symbol table for a term matching a given string.
+// Search a symbol table for a term matching a given string, or return (-1).
 // Porting notes: All variable use is encapsulated, so if porting needs to be re-done in future, re-porting this function can be avoided by invoking the equivalent of `i1, b1 = search(start, w$)`.
 func (st Table) Search(w string, start int) int {
 	// 3950
@@ -16,11 +16,9 @@ func (st Table) Search(w string, start int) int {
 		}
 
 		if s.Term == w {
-			break
+			return i
 		}
-
-		start = i + 1
 	}
 
-	return start
+	return (-1)
 }
