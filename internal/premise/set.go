@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/merenbach/syllogism/internal/article"
+	"github.com/merenbach/syllogism/internal/form"
 	"github.com/merenbach/syllogism/internal/help"
 	"github.com/merenbach/syllogism/internal/symbol"
 	"github.com/merenbach/syllogism/internal/term"
@@ -113,11 +114,11 @@ func (ps Set) List(analyze bool) error {
 		} else {
 			fmt.Printf("%d  ", prem.Number)
 
-			if prem.Form < 6 && prem.Predicate.TermType == term.TypeDesignator {
+			if prem.Form != form.AEqualsT && prem.Form != form.ADoesNotEqualT && prem.Predicate.TermType == term.TypeDesignator {
 				prem.Form += 2
 			}
 
-			if prem.Form < 4 {
+			if prem.Form.IsParticular() || prem.Form.IsUniversal() {
 				fmt.Printf("%s  ", prem.Form.Quantifier())
 			}
 
