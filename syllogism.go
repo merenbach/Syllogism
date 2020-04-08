@@ -494,7 +494,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 
 			symbolTable = Prune(symbolTable)
 			for ; ; localint_i1++ { // 3500
-				localint_i1 = symbolTable.Search(localint_i1, w)
+				localint_i1 = symbolTable.Search(w, localint_i1)
 
 				if localint_i1 == len(symbolTable) {
 					symbolTable = append(symbolTable, &symbol.Symbol{
