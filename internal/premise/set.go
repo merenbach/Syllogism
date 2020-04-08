@@ -12,6 +12,10 @@ import (
 // Set of all premises.
 type Set []*Premise
 
+func (ps Set) Len() int {
+	return len(ps)
+}
+
 // Swap items at the given positions.
 func (ps Set) Swap(i, j int) {
 	ps[i], ps[j] = ps[j], ps[i]
