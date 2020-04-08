@@ -415,7 +415,7 @@ Line7120: // 7120
 	}
 
 	if localint_j1 != 1 {
-		if localsymbol_t1.DistributionCount == 0 && (d1 == form.AllAIsB || d1 == form.NoAIsB) {
+		if localsymbol_t1.DistributionCount == 0 && d1.IsUniversal() {
 			help.ShowTermDistributionError(localsymbol_t1.Term)
 			return
 		} else if localsymbol_t2.DistributionCount == 0 && (d1.IsNegative() || d1 == form.AEqualsT) {
@@ -433,7 +433,7 @@ Line7120: // 7120
 		localsymbol_v1 = &symbol.Symbol{
 			Term: localstring_w,
 		}
-	} else if localsymbol_t1.DistributionCount > 0 && (d1 == form.SomeAIsB || d1 == form.SomeAIsNotB) {
+	} else if localsymbol_t1.DistributionCount > 0 && d1.IsParticular() {
 		localsymbol_v1 = localsymbol_t1
 	} else {
 		if localsymbol_t2.DistributionCount > 0 && !d1.IsNegative() && d1 != form.AIsT && d1 != form.AEqualsT {
@@ -477,7 +477,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 
 	intarray_e[1] = article.TypeNone
 	temp := func(localint_j int, raw_string string) {
-		if d1 == form.SomeAIsB || d1 == form.SomeAIsNotB || d1 == form.AllAIsB || d1 == form.NoAIsB {
+		if d1.IsParticular() || d1.IsUniversal() {
 			termType = term.TypeGeneralTerm
 		} else if localint_j == 1 {
 			termType = term.TypeDesignator

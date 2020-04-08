@@ -32,12 +32,24 @@ const (
 	WordNot = "not"
 )
 
-// IsParticular determines if this form is particular.
+// IsParticular determines if this form is particular (type I or type O).
 func (t Form) IsParticular() bool {
 	switch t {
 	case SomeAIsB:
 		return true
 	case SomeAIsNotB:
+		return true
+	default:
+		return false
+	}
+}
+
+// IsUniversal determines if this form is universal (type A or type E).
+func (t Form) IsUniversal() bool {
+	switch t {
+	case AllAIsB:
+		return true
+	case NoAIsB:
 		return true
 	default:
 		return false
