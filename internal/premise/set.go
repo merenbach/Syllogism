@@ -173,14 +173,14 @@ func (ps Set) Distribution(s *symbol.Symbol) int {
 	return n
 }
 
-// // NegativePremiseCount returns the count of negative premises.
-// TODO: this should probably actually return the slice of negative premises, and then we can do len() on that
-// func (ps Set) NegativePremiseCount() int {
-// 	var negativePremises int
-// 	for _, p := range ps {
-// 		if p.Form.IsNegative() {
-// 			negativePremises++
-// 		}
-// 	}
-// 	return negativePremises
-// }
+// Negative premise count.
+// TODO: this could return the slice of negative premises, and then we can do len() on that
+func (ps Set) Negative() int {
+	var n int
+	for _, p := range ps {
+		if p.Form.IsNegative() {
+			n++
+		}
+	}
+	return n
+}
