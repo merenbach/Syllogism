@@ -94,7 +94,6 @@ var (
 	recentWord1 string // most recently-input first word (subject?)
 	recentWord2 string // most recently-input second word (predicate?)
 
-	localint_j  int
 	localint_j1 int
 
 	localsymbol_v1 *symbol.Symbol
@@ -359,6 +358,7 @@ func basicGosub6630(p1 term.Type, stringarray_s []string, intarray_t []token.Typ
 		}
 	}
 
+	var localint_j int
 	localstring_w = stringutil.Singularize(recentWord1)
 	if localint_j1 != 0 {
 		recentWord1 = localstring_w
@@ -555,8 +555,8 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 		return aType
 	}
 
+	// TODO: do we actually need to set intarray_e here?
 	intarray_e[1] = temp(true, intarray_e[1], recentWord1)
-	localint_j = 2
 	intarray_e[2] = temp(false, intarray_e[2], recentWord2)
 
 	prem.Form = d1
