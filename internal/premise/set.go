@@ -144,6 +144,35 @@ func (ps Set) Occurrences(s *symbol.Symbol) int {
 	return n
 }
 
+// Distribution count for a particular symbol.
+func (ps Set) Distribution(s *symbol.Symbol) int {
+	var n int
+
+	// if s.TermType == term.TypeDesignator {
+	// 	n = ps.Occurrences(s)
+	// }
+
+	for _, p := range ps {
+		if p.Subject == s {
+			if !p.Form.IsParticular() {
+				n++
+			}
+		}
+
+		if p.Predicate == s {
+			// TODO: Decrement() reduced if predicate had a designator type; is that what we want instead?
+			// or does d1 += 2 in syllogism.go mean that unless we have a designator==designator or negative premise,
+			// we're not going to increase distribution for predicate?
+			// In short: TODO: should this be p.Predicate.TermType == term.TypeDesignator?
+			if p.Form == form.AEqualsT || p.Form.IsNegative() {
+				n++
+			}
+		}
+	}
+
+	return n
+}
+
 // // NegativePremiseCount returns the count of negative premises.
 // TODO: this should probably actually return the slice of negative premises, and then we can do len() on that
 // func (ps Set) NegativePremiseCount() int {
