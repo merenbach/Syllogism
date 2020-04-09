@@ -486,7 +486,9 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 	}
 
 	intarray_e[1] = article.TypeNone
-	temp := func(localint_j int, raw_string string) {
+	temp := func(localint_j int, raw_string string) article.Type {
+		var aType article.Type = intarray_e[localint_j]
+
 		if d1.IsParticular() || d1.IsUniversal() {
 			termType = term.TypeGeneralTerm
 		} else if localint_j == 1 {
@@ -507,17 +509,17 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 			symbolTable = append(symbolTable, sym)
 		}
 
-		if intarray_e[localint_j] != article.TypeNone {
-			sym.ArticleType = intarray_e[localint_j]
+		if aType != article.TypeNone {
+			sym.ArticleType = aType
 		} else if sym.ArticleType == article.TypeNone && w != raw_string {
 			if stringutil.HasPrefixVowel(w) {
 				// AN
-				intarray_e[localint_j] = article.TypeAn
+				aType = article.TypeAn
 			} else {
 				// A
-				intarray_e[localint_j] = article.TypeA
+				aType = article.TypeA
 			}
-			sym.ArticleType = intarray_e[localint_j]
+			sym.ArticleType = aType
 		}
 
 		// Add 1 because we're about to increase it by setting premise subject or predicate below
@@ -551,12 +553,14 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 		if o == 2 && premiseSet.Distribution(sym) == 0 && msg {
 			fmt.Printf("Warning: undistributed middle term %q\n", sym.Term)
 		}
+
+		return aType
 	}
 
 	localint_j = 1
-	temp(localint_j, recentWord1)
+	intarray_e[localint_j] = temp(localint_j, recentWord1)
 	localint_j = 2
-	temp(localint_j, recentWord2)
+	intarray_e[localint_j] = temp(localint_j, recentWord2)
 
 	prem.Form = d1
 }
