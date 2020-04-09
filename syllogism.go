@@ -486,12 +486,10 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 	}
 
 	intarray_e[1] = article.TypeNone
-	temp := func(localint_j int, raw_string string) article.Type {
-		var aType article.Type = intarray_e[localint_j]
-
+	temp := func(subject bool, aType article.Type, raw_string string) article.Type {
 		if d1.IsParticular() || d1.IsUniversal() {
 			termType = term.TypeGeneralTerm
-		} else if localint_j == 1 {
+		} else if subject {
 			termType = term.TypeDesignator
 		} else {
 			termType = p1
@@ -528,7 +526,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 			fmt.Printf("Warning: %s %q has occurred %d times\n", sym.TermType, w, o)
 		}
 
-		if localint_j != 2 {
+		if subject {
 			prem.Subject = sym
 
 		} else {
@@ -557,10 +555,9 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 		return aType
 	}
 
-	localint_j = 1
-	intarray_e[localint_j] = temp(localint_j, recentWord1)
+	intarray_e[1] = temp(true, intarray_e[1], recentWord1)
 	localint_j = 2
-	intarray_e[localint_j] = temp(localint_j, recentWord2)
+	intarray_e[2] = temp(false, intarray_e[2], recentWord2)
 
 	prem.Form = d1
 }
