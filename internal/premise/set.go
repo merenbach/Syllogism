@@ -63,7 +63,7 @@ func (ps Set) Find(s *symbol.Symbol, start int) int {
 // }
 
 // Compute a conclusion.
-func (ps Set) Compute(negativePremiseCount int, symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
+func (ps Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
 	if len(ps) == 0 {
 		return "A is A"
 	}
@@ -71,7 +71,7 @@ func (ps Set) Compute(negativePremiseCount int, symbol1 *symbol.Symbol, symbol2 
 	dc1 := ps.Distribution(symbol1)
 	dc2 := ps.Distribution(symbol2)
 	// if ps.NegativePremiseCount() == 0 {
-	if negativePremiseCount == 0 {
+	if ps.Negative() == 0 {
 		// affirmative conclusion
 		// TODO: can we push more of these conditionals inside the symbol type?
 

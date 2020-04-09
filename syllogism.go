@@ -307,7 +307,7 @@ func basicGosub5070() premise.Set {
 func basicGosub6200() {
 	// 6200
 	//---Compute conclusion---
-	z := premiseSet.Compute(premiseSet.Negative(), symbolConclusionTerms[1], symbolConclusionTerms[2])
+	z := premiseSet.Compute(symbolConclusionTerms[1], symbolConclusionTerms[2])
 
 	// PRINT  conclusion
 	fmt.Printf("  / %s\n", z)
