@@ -90,7 +90,6 @@ var (
 	symbolTable = make(symbol.Table, 0)
 	// SymbolConclusionTerms are major and minor (i.e., all the non-middle) terms
 	symbolConclusionTerms = make([]*symbol.Symbol, basicDimMax)
-	negativePremiseCount  = 0 // kludge because we aren't able to tally dynamically yet (chicken-and-egg)
 
 	recentWord1 string // most recently-input first word (subject?)
 	recentWord2 string // most recently-input second word (predicate?)
@@ -171,6 +170,7 @@ func basicGosub5880() {
 		}
 	}
 
+	negativePremiseCount := premiseSet.Negative()
 	if negativePremiseCount > 1 {
 		localint_j1 = 6
 		fmt.Println("More than one negative premise:")
@@ -307,7 +307,7 @@ func basicGosub5070() premise.Set {
 func basicGosub6200() {
 	// 6200
 	//---Compute conclusion---
-	z := premiseSet.Compute(negativePremiseCount, symbolConclusionTerms[1], symbolConclusionTerms[2])
+	z := premiseSet.Compute(premiseSet.Negative(), symbolConclusionTerms[1], symbolConclusionTerms[2])
 
 	// PRINT  conclusion
 	fmt.Printf("  / %s\n", z)
@@ -327,6 +327,7 @@ func basicGosub6630(p1 term.Type, stringarray_s []string, intarray_t []token.Typ
 	)
 	var termType1 term.Type = term.TypeGeneralTerm // formerly g1
 	var termType2 term.Type = term.TypeGeneralTerm // formerly g2
+	negativePremiseCount := premiseSet.Negative()
 
 	//--conc. poss, line in s$()
 	d1, err := basicGosub2890(stringarray_s, intarray_t)
@@ -468,7 +469,6 @@ func basicGosub1840() {
 	symbolConclusionTerms = make([]*symbol.Symbol, basicDimMax)
 	premiseSet = make(premise.Set, 0)
 	symbolTable = make(symbol.Table, 0)
-	negativePremiseCount = 0
 }
 
 func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarray_s []string, intarray_e []article.Type) {
@@ -477,7 +477,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 	// d1 is guaranteed not to be form.Undefined unless `sample` method isn't working (TODO: funnel sample through same logic as user input)
 	var termType term.Type // formerly g
 	if d1.IsNegative() {
-		negativePremiseCount++
+		negativePremiseCount := premiseSet.Negative()
 		if negativePremiseCount > 1 && msg {
 			fmt.Printf("Warning: %d negative premises\n", negativePremiseCount)
 		}
@@ -1085,10 +1085,6 @@ func addPremise(n int, s string) *premise.Premise {
 func delPremise(n int) error {
 	for i, p := range premiseSet {
 		if p.Number == n {
-			if p.Form.IsNegative() {
-				negativePremiseCount--
-			}
-
 			// Delete without leaving uncollected pointers
 			// https://github.com/golang/go/wiki/SliceTricks
 			if i < len(premiseSet)-1 {
@@ -1106,7 +1102,7 @@ func delPremise(n int) error {
 
 // Dump values of variables in a SymbolTable.
 func dump() {
-	fmt.Printf("Highest symbol table loc. used: %d  Negative premises: %d\n", len(symbolTable), negativePremiseCount)
+	fmt.Printf("Highest symbol table loc. used: %d  Negative premises: %d\n", len(symbolTable), premiseSet.Negative())
 	dump := new(bytes.Buffer)
 	if len(symbolTable) > 0 {
 		w := tabwriter.NewWriter(dump, 0, 0, 2, ' ', 0)
