@@ -156,6 +156,10 @@ func basicGosub5880() {
 		}
 
 		dc := premiseSet.Distribution(s)
+		if dc == 1 {
+			continue
+		}
+
 		if dc == 0 {
 			if localint_j1 == 0 {
 				fmt.Println("Undistributed middle terms:")
@@ -165,7 +169,7 @@ func basicGosub5880() {
 			fmt.Printf("%s%s\n", basicTabString(5), s.Term)
 		}
 
-		if dc != 1 && s.TermType != term.TypeDesignator {
+		if s.TermType != term.TypeDesignator {
 			localsymbol_v1 = symbolTable[i]
 		}
 	}
