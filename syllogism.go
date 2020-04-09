@@ -672,7 +672,7 @@ func tokenize(localstring_l1 string) ([7]string, [8]token.Type, [3]article.Type,
 
 	localint_p1 := term.TypeUndetermined
 	shadowintarray_e[2] = article.TypeNone
-	localint_j = 1
+	localint_j := 1
 
 	localint_l := len(localstring_l1)
 
