@@ -519,7 +519,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 		}
 
 		o := premiseSet.Occurrences(sym)
-		if o >= 3 && msg {
+		if o > 2 && msg {
 			fmt.Printf("Warning: %s %q has occurred %d times\n", sym.TermType, w, o)
 		}
 
