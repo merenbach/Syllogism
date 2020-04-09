@@ -128,6 +128,22 @@ func (ps Set) List(analyze bool) error {
 	return nil
 }
 
+// Occurrences of a particular symbol.
+// TODO: this should track symbol.Occurrences perfectly.
+func (ps Set) Occurrences(s *symbol.Symbol) int {
+	var n int
+	for _, p := range ps {
+		if p.Subject == s {
+			n++
+		}
+
+		if p.Predicate == s {
+			n++
+		}
+	}
+	return n
+}
+
 // // NegativePremiseCount returns the count of negative premises.
 // TODO: this should probably actually return the slice of negative premises, and then we can do len() on that
 // func (ps Set) NegativePremiseCount() int {
