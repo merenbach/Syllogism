@@ -40,8 +40,3 @@ func New(n int, s string) *Premise {
 func (pr *Premise) String() string {
 	return fmt.Sprintf("%d %s", pr.Number, pr.Statement)
 }
-
-// Empty determines whether a line is empty.
-func (pr *Premise) Empty() bool {
-	return pr.Statement == ""
-}
