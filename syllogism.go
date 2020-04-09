@@ -473,7 +473,7 @@ func basicGosub1840() {
 	symbolTable = make(symbol.Table, 0)
 }
 
-func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarray_s []string, intarray_e []article.Type) {
+func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, lineNumber int, intarray_e []article.Type) {
 	// 3400
 	//---Add W$(1), W$(2) to table T$()---
 	// d1 is guaranteed not to be form.Undefined unless `sample` method isn't working (TODO: funnel sample through same logic as user input)
@@ -533,7 +533,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 			prem.Predicate = sym
 
 			if prem.Subject == prem.Predicate && msg {
-				fmt.Printf("Warning: same term occurs twice in line %s\n", stringarray_s[1])
+				fmt.Printf("Warning: same term occurs twice in line %d\n", lineNumber)
 			}
 
 			if sym.TermType == term.TypeDesignator {
@@ -556,8 +556,8 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, stringarr
 	}
 
 	// TODO: do we actually need to set intarray_e here?
-	intarray_e[1] = temp(true, intarray_e[1], recentWord1)
-	intarray_e[2] = temp(false, intarray_e[2], recentWord2)
+	_ = temp(true, intarray_e[1], recentWord1)
+	_ = temp(false, intarray_e[2], recentWord2)
 
 	prem.Form = d1
 }
@@ -837,7 +837,7 @@ func basicGosub8980() {
 		}
 		localint_s := len(stringarray_s[1]) + 1
 		prem := addPremise(n, localstring_l1[localint_s:])
-		basicGosub3400(d1, localint_p1, prem, stringarray_s[:], intarray_e[:])
+		basicGosub3400(d1, localint_p1, prem, n, intarray_e[:])
 	}
 
 	if msg {
@@ -1023,7 +1023,7 @@ func runloop() bool {
 				}
 				localint_s := len(stringarray_s[1]) + 1
 				prem := addPremise(n, localstring_l1[localint_s:])
-				basicGosub3400(d1, localint_p1, prem, stringarray_s[:], intarray_e[:]) // add terms to symbol table
+				basicGosub3400(d1, localint_p1, prem, n, intarray_e[:]) // add terms to symbol table
 			}
 		} else {
 			if len(premiseSet) == 0 {
