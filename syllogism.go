@@ -486,7 +486,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 	}
 
 	intarray_e[1] = article.TypeNone
-	temp := func(subject bool, aType article.Type, raw_string string) article.Type {
+	temp := func(subject bool, aType article.Type, raw_string string) {
 		if d1.IsParticular() || d1.IsUniversal() {
 			termType = term.TypeGeneralTerm
 		} else if subject {
@@ -551,13 +551,10 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 		if o == 2 && premiseSet.Distribution(sym) == 0 && msg {
 			fmt.Printf("Warning: undistributed middle term %q\n", sym.Term)
 		}
-
-		return aType
 	}
 
-	// TODO: do we actually need to set intarray_e here?
-	_ = temp(true, intarray_e[1], recentWord1)
-	_ = temp(false, intarray_e[2], recentWord2)
+	temp(true, intarray_e[1], recentWord1)
+	temp(false, intarray_e[2], recentWord2)
 
 	prem.Form = d1
 }
