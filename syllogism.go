@@ -477,7 +477,6 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 	// 3400
 	//---Add W$(1), W$(2) to table T$()---
 	// d1 is guaranteed not to be form.Undefined unless `sample` method isn't working (TODO: funnel sample through same logic as user input)
-	var termType term.Type // formerly g
 	if d1.IsNegative() {
 		if err := premiseSet.CheckNegative(); err != nil {
 			fmt.Println(err)
@@ -486,6 +485,8 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 
 	intarray_e[1] = article.TypeNone
 	temp := func(subject bool, aType article.Type, raw_string string) {
+		var termType term.Type // formerly g
+
 		if d1.IsParticular() || d1.IsUniversal() {
 			termType = term.TypeGeneralTerm
 		} else if subject {
