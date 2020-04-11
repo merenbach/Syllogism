@@ -541,7 +541,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 			}
 		}
 
-		if err := premiseSet.CheckOccurrences(sym, w); err != nil {
+		if err := premiseSet.CheckOccurrences(sym); err != nil {
 			fmt.Println(err)
 		}
 	}

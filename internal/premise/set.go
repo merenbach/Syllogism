@@ -142,11 +142,11 @@ func (ps Set) CheckNegative() error {
 }
 
 // CheckOccurrences validates the occurrence count of a symbol.
-func (ps Set) CheckOccurrences(s *symbol.Symbol, w string) error {
+func (ps Set) CheckOccurrences(s *symbol.Symbol) error {
 	// Add 1 because we're about to increase it by setting premise subject or predicate below
 	o := ps.Occurrences(s)
 	if o > 2 {
-		return fmt.Errorf("Warning: %s %q has occurred %d times", s.TermType, w, o)
+		return fmt.Errorf("Warning: %s %q has occurred %d times", s.TermType, s.Term, o)
 	} else if o == 2 && ps.Distribution(s) == 0 {
 		return fmt.Errorf("Warning: undistributed middle term %q", s.Term)
 	}
