@@ -522,15 +522,9 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 
 		if subject {
 			prem.Subject = sym
-			if err := premiseSet.CheckOccurrences(sym, w); err != nil {
-				fmt.Println(err)
-			}
 
 		} else {
 			prem.Predicate = sym
-			if err := premiseSet.CheckOccurrences(sym, w); err != nil {
-				fmt.Println(err)
-			}
 
 			if prem.Subject == prem.Predicate && msg {
 				fmt.Printf("Warning: same term occurs twice in line %d\n", prem.Number)
@@ -548,8 +542,8 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 			}
 		}
 
-		if premiseSet.Occurrences(sym) == 2 && premiseSet.Distribution(sym) == 0 && msg {
-			fmt.Printf("Warning: undistributed middle term %q\n", sym.Term)
+		if err := premiseSet.CheckOccurrences(sym, w); err != nil {
+			fmt.Println(err)
 		}
 	}
 

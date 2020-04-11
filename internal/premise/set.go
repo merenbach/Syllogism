@@ -137,6 +137,8 @@ func (ps Set) CheckOccurrences(s *symbol.Symbol, w string) error {
 	o := ps.Occurrences(s)
 	if o > 2 {
 		return fmt.Errorf("Warning: %s %q has occurred %d times", s.TermType, w, o)
+	} else if o == 2 && ps.Distribution(s) == 0 {
+		return fmt.Errorf("Warning: undistributed middle term %q", s.Term)
 	}
 
 	return nil
