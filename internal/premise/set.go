@@ -131,6 +131,17 @@ func (ps Set) List(analyze bool) error {
 	return nil
 }
 
+// CheckOccurrences validates the occurrence count of a symbol.
+func (ps Set) CheckOccurrences(s *symbol.Symbol, w string) error {
+	// Add 1 because we're about to increase it by setting premise subject or predicate below
+	o := ps.Occurrences(s)
+	if o > 2 {
+		return fmt.Errorf("Warning: %s %q has occurred %d times", s.TermType, w, o)
+	}
+
+	return nil
+}
+
 // Occurrences of a particular symbol.
 // TODO: this should track symbol.Occurrences perfectly.
 func (ps Set) Occurrences(s *symbol.Symbol) int {

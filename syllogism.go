@@ -520,17 +520,17 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 			sym.ArticleType = aType
 		}
 
-		// Add 1 because we're about to increase it by setting premise subject or predicate below
-		o := premiseSet.Occurrences(sym) + 1
-		if o > 2 && msg {
-			fmt.Printf("Warning: %s %q has occurred %d times\n", sym.TermType, w, o)
-		}
-
 		if subject {
 			prem.Subject = sym
+			if err := premiseSet.CheckOccurrences(sym, w); err != nil {
+				fmt.Println(err)
+			}
 
 		} else {
 			prem.Predicate = sym
+			if err := premiseSet.CheckOccurrences(sym, w); err != nil {
+				fmt.Println(err)
+			}
 
 			if prem.Subject == prem.Predicate && msg {
 				fmt.Printf("Warning: same term occurs twice in line %d\n", prem.Number)
@@ -548,7 +548,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 			}
 		}
 
-		if o == 2 && premiseSet.Distribution(sym) == 0 && msg {
+		if premiseSet.Occurrences(sym) == 2 && premiseSet.Distribution(sym) == 0 && msg {
 			fmt.Printf("Warning: undistributed middle term %q\n", sym.Term)
 		}
 	}
