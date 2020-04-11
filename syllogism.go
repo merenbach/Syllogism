@@ -484,7 +484,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 	}
 
 	intarray_e[1] = article.TypeNone
-	temp := func(subject bool, aType article.Type, raw_string string) {
+	temp := func(subject bool, aType article.Type, raw_string string) *symbol.Symbol {
 		var termType term.Type // formerly g
 
 		if d1.IsParticular() || d1.IsUniversal() {
@@ -493,6 +493,14 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 			termType = term.TypeDesignator
 		} else {
 			termType = p1
+			if termType == term.TypeDesignator {
+				switch d1 {
+				case form.AIsT:
+					d1 = form.AEqualsT
+				case form.AIsNotT:
+					d1 = form.ADoesNotEqualT
+				}
+			}
 		}
 
 		symbolTable = Prune(symbolTable)
@@ -502,31 +510,18 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 			symbolTable = append(symbolTable, sym)
 		}
 
-		if subject {
-			prem.Subject = sym
-
-		} else {
-			prem.Predicate = sym
-
-			if sym.TermType == term.TypeDesignator {
-				// TODO:
-				// switch d1 {
-				// case form.AIsT:
-				// 	d1 = form.AEqualsT
-				// case form.AIsNotT:
-				// 	d1 = form.ADoesNotEqualT
-				// }
-				d1 += 2
-			}
-		}
-
-		if err := premiseSet.CheckOccurrences(sym); err != nil {
-			fmt.Println(err)
-		}
+		return sym
 	}
 
-	temp(true, intarray_e[1], recentWord1)
-	temp(false, intarray_e[2], recentWord2)
+	prem.Subject = temp(true, intarray_e[1], recentWord1)
+	if err := premiseSet.CheckOccurrences(prem.Subject); err != nil {
+		fmt.Println(err)
+	}
+
+	prem.Predicate = temp(false, intarray_e[2], recentWord2)
+	if err := premiseSet.CheckOccurrences(prem.Predicate); err != nil {
+		fmt.Println(err)
+	}
 
 	if prem.Subject == prem.Predicate && msg {
 		fmt.Printf("Warning: same term occurs twice in line %d\n", prem.Number)
