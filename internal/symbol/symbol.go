@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/merenbach/syllogism/internal/article"
+	"github.com/merenbach/syllogism/internal/stringutil"
 	"github.com/merenbach/syllogism/internal/term"
 )
 
@@ -12,6 +13,27 @@ type Symbol struct {
 	Term        string
 	ArticleType article.Type
 	TermType    term.Type
+}
+
+// New symbol.
+func New(s string, t term.Type, a article.Type) *Symbol {
+	w := stringutil.Singularize(s)
+
+	sym := &Symbol{
+		Term:        w,
+		TermType:    t,
+		ArticleType: a,
+	}
+
+	if sym.ArticleType == article.TypeNone && w != s {
+		if stringutil.HasPrefixVowel(w) {
+			sym.ArticleType = article.TypeAn
+		} else {
+			sym.ArticleType = article.TypeA
+		}
+	}
+
+	return sym
 }
 
 func (s *Symbol) String() string {

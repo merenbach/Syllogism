@@ -494,29 +494,11 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 			termType = p1
 		}
 
-		w := stringutil.Singularize(raw_string)
-
 		symbolTable = Prune(symbolTable)
-		sym := Search(symbolTable, w, termType, msg)
+		sym := Search(symbolTable, raw_string, termType, msg)
 		if sym == nil {
-			sym = &symbol.Symbol{
-				Term:     w,
-				TermType: termType,
-			}
+			sym = symbol.New(raw_string, termType, aType)
 			symbolTable = append(symbolTable, sym)
-		}
-
-		if aType != article.TypeNone {
-			sym.ArticleType = aType
-		} else if sym.ArticleType == article.TypeNone && w != raw_string {
-			if stringutil.HasPrefixVowel(w) {
-				// AN
-				aType = article.TypeAn
-			} else {
-				// A
-				aType = article.TypeA
-			}
-			sym.ArticleType = aType
 		}
 
 		if subject {
@@ -1137,7 +1119,9 @@ func Prune(st symbol.Table) symbol.Table {
 }
 
 // Search symbol table for a term matching a given string, or return nil.
-func Search(st symbol.Table, w string, termType term.Type, msg bool) *symbol.Symbol {
+func Search(st symbol.Table, s string, termType term.Type, msg bool) *symbol.Symbol {
+	w := stringutil.Singularize(s)
+
 	for _, sym := range st {
 		if sym.Term != w {
 			continue
