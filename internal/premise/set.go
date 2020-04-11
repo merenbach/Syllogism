@@ -131,6 +131,16 @@ func (ps Set) List(analyze bool) error {
 	return nil
 }
 
+// CheckNegative validates the negative premise count.
+func (ps Set) CheckNegative() error {
+	negativePremiseCount := ps.Negative()
+	if negativePremiseCount > 1 {
+		return fmt.Errorf("Warning: %d negative premises", negativePremiseCount)
+	}
+
+	return nil
+}
+
 // CheckOccurrences validates the occurrence count of a symbol.
 func (ps Set) CheckOccurrences(s *symbol.Symbol, w string) error {
 	// Add 1 because we're about to increase it by setting premise subject or predicate below

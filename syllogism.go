@@ -479,9 +479,8 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 	// d1 is guaranteed not to be form.Undefined unless `sample` method isn't working (TODO: funnel sample through same logic as user input)
 	var termType term.Type // formerly g
 	if d1.IsNegative() {
-		negativePremiseCount := premiseSet.Negative()
-		if negativePremiseCount > 1 && msg {
-			fmt.Printf("Warning: %d negative premises\n", negativePremiseCount)
+		if err := premiseSet.CheckNegative(); err != nil {
+			fmt.Println(err)
 		}
 	}
 
