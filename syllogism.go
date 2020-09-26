@@ -1001,6 +1001,8 @@ func runloop() bool {
 				}
 				if err := delPremise(n); err != nil {
 					fmt.Println(err)
+				} else {
+					symbolTable = Prune(symbolTable)
 				}
 			}
 		}
@@ -1065,8 +1067,6 @@ func delPremise(n int) error {
 			}
 			premiseSet[len(premiseSet)-1] = nil
 			premiseSet = premiseSet[:len(premiseSet)-1]
-
-			symbolTable = Prune(symbolTable)
 			return nil
 		}
 	}
