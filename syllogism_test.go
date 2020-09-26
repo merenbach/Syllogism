@@ -2,26 +2,123 @@ package main
 
 import "fmt"
 
-func ExampleDump() {
-	// help.ShowCopyright()
-	// fmt.Println()
-
+func ExampleSampleSlash() {
 	msg = true
-
-	// if msg {
-	// 	fmt.Println("Enter HELP for list of commands")
-	// }
 	runloop("sample")
 	fmt.Println()
-	runloop("dump")
-	fmt.Println()
-	runloop("link")
-	fmt.Println()
-	runloop("link*")
+	runloop("/")
+
+	// Output:
+	// 10 all mortals are fools
+	// 20 all athenians are men
+	// 30 all philosophers are geniuses
+	// 40 all people with good taste are philosophers
+	// 50 richter is a diamond broker
+	// 60 richter is the most hedonistic person in florida
+	// 70 all men are mortal
+	// 80 no genius is a fool
+	// 90 all diamond brokers are people with good taste
+	// 100 the most hedonistic person in florida is a decision-theorist
+	// Suggestion: try the LINK or LINK* command.
+	//
+	//   / Some decision-theorist is not an athenian
+}
+
+func ExampleSampleList() {
+	msg = true
+	runloop("sample")
 	fmt.Println()
 	runloop("list")
 	fmt.Println()
 	runloop("list*")
+
+	// Output:
+	// 10 all mortals are fools
+	// 20 all athenians are men
+	// 30 all philosophers are geniuses
+	// 40 all people with good taste are philosophers
+	// 50 richter is a diamond broker
+	// 60 richter is the most hedonistic person in florida
+	// 70 all men are mortal
+	// 80 no genius is a fool
+	// 90 all diamond brokers are people with good taste
+	// 100 the most hedonistic person in florida is a decision-theorist
+	// Suggestion: try the LINK or LINK* command.
+	//
+	// 10  all mortals are fools
+	// 20  all athenians are men
+	// 30  all philosophers are geniuses
+	// 40  all people with good taste are philosophers
+	// 50  richter is a diamond broker
+	// 60  richter is the most hedonistic person in florida
+	// 70  all men are mortal
+	// 80  no genius is a fool
+	// 90  all diamond brokers are people with good taste
+	// 100  the most hedonistic person in florida is a decision-theorist
+	//
+	// 10  all  mortal*  is  fool
+	// 20  all  athenian*  is  man
+	// 30  all  philosopher*  is  genius
+	// 40  all  person with good taste*  is  philosopher
+	// 50  richter+  is  diamond broker
+	// 60  richter+  =   the most hedonistic person in florida+
+	// 70  all  man*  is  mortal
+	// 80  no  genius*  is  fool*
+	// 90  all  diamond broker*  is  person with good taste
+	// 100  the most hedonistic person in florida+  is  decision-theorist
+}
+
+func ExampleSampleLink() {
+	msg = true
+	runloop("sample")
+	fmt.Println()
+	runloop("link")
+	fmt.Println()
+	runloop("link*")
+
+	// Output:
+	// 10 all mortals are fools
+	// 20 all athenians are men
+	// 30 all philosophers are geniuses
+	// 40 all people with good taste are philosophers
+	// 50 richter is a diamond broker
+	// 60 richter is the most hedonistic person in florida
+	// 70 all men are mortal
+	// 80 no genius is a fool
+	// 90 all diamond brokers are people with good taste
+	// 100 the most hedonistic person in florida is a decision-theorist
+	// Suggestion: try the LINK or LINK* command.
+	//
+	// Premises of syllogism in order of term links:
+	// 20  all athenians are men
+	// 70  all men are mortal
+	// 10  all mortals are fools
+	// 80  no genius is a fool
+	// 30  all philosophers are geniuses
+	// 40  all people with good taste are philosophers
+	// 90  all diamond brokers are people with good taste
+	// 50  richter is a diamond broker
+	// 60  richter is the most hedonistic person in florida
+	// 100  the most hedonistic person in florida is a decision-theorist
+	//
+	// Premises of syllogism in order of term links:
+	// 20  all  athenian*  is  man
+	// 70  all  man*  is  mortal
+	// 10  all  mortal*  is  fool
+	// 80  no  genius*  is  fool*
+	// 30  all  philosopher*  is  genius
+	// 40  all  person with good taste*  is  philosopher
+	// 90  all  diamond broker*  is  person with good taste
+	// 50  richter+  is  diamond broker
+	// 60  richter+  =   the most hedonistic person in florida+
+	// 100  the most hedonistic person in florida+  is  decision-theorist
+}
+
+func ExampleSampleDump() {
+	msg = true
+	runloop("sample")
+	fmt.Println()
+	runloop("dump")
 
 	// Output:
 	// 10 all mortals are fools
@@ -49,50 +146,4 @@ func ExampleDump() {
 	// 9     a     diamond broker                         1     2       1
 	// 10          the most hedonistic person in florida  2     2       2
 	// 11    a     decision-theorist                      1     1       0
-	//
-	// Premises of syllogism in order of term links:
-	// 20  all athenians are men
-	// 70  all men are mortal
-	// 10  all mortals are fools
-	// 80  no genius is a fool
-	// 30  all philosophers are geniuses
-	// 40  all people with good taste are philosophers
-	// 90  all diamond brokers are people with good taste
-	// 50  richter is a diamond broker
-	// 60  richter is the most hedonistic person in florida
-	// 100  the most hedonistic person in florida is a decision-theorist
-	//
-	// Premises of syllogism in order of term links:
-	// 20  all  athenian*  is  man
-	// 70  all  man*  is  mortal
-	// 10  all  mortal*  is  fool
-	// 80  no  genius*  is  fool*
-	// 30  all  philosopher*  is  genius
-	// 40  all  person with good taste*  is  philosopher
-	// 90  all  diamond broker*  is  person with good taste
-	// 50  richter+  is  diamond broker
-	// 60  richter+  =   the most hedonistic person in florida+
-	// 100  the most hedonistic person in florida+  is  decision-theorist
-	//
-	// 10  all mortals are fools
-	// 20  all athenians are men
-	// 30  all philosophers are geniuses
-	// 40  all people with good taste are philosophers
-	// 50  richter is a diamond broker
-	// 60  richter is the most hedonistic person in florida
-	// 70  all men are mortal
-	// 80  no genius is a fool
-	// 90  all diamond brokers are people with good taste
-	// 100  the most hedonistic person in florida is a decision-theorist
-	//
-	// 10  all  mortal*  is  fool
-	// 20  all  athenian*  is  man
-	// 30  all  philosopher*  is  genius
-	// 40  all  person with good taste*  is  philosopher
-	// 50  richter+  is  diamond broker
-	// 60  richter+  =   the most hedonistic person in florida+
-	// 70  all  man*  is  mortal
-	// 80  no  genius*  is  fool*
-	// 90  all  diamond broker*  is  person with good taste
-	// 100  the most hedonistic person in florida+  is  decision-theorist
 }
