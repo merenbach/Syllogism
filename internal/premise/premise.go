@@ -28,7 +28,6 @@ func numberLen(n int) int {
 }
 
 // New premise.
-// TODO: accept string here and tokenize afterward
 func New(s string) (*Premise, error) {
 	var lineNumber int
 	if _, err := fmt.Sscanf(s, "%d", &lineNumber); err != nil {
