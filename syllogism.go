@@ -1048,6 +1048,7 @@ func addPremise(s string) (*premise.Premise, error) {
 	}
 
 	// Delete existing entry instead of replacing in-place
+	// Ignore errors in case line does not exist
 	_ = delPremise(prem.Number)
 
 	// Append the new premise and sort by line number
