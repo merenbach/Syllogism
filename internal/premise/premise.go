@@ -18,6 +18,7 @@ type Premise struct {
 	Predicate *symbol.Symbol
 }
 
+// NumberLen counts the digits in a base 10 integer.
 func numberLen(n int) int {
 	var i int
 	for n != 0 {
