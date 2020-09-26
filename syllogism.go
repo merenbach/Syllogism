@@ -845,9 +845,8 @@ func lineInput(prompt string) string {
 	return strings.TrimSpace(input)
 }
 
-func runloop() bool {
+func runloop(localstring_l1 string) bool {
 	//---Input line---
-	localstring_l1 := lineInput("> ")
 	localint_l := len(localstring_l1)
 
 	if localint_l == 0 {
@@ -1190,7 +1189,11 @@ func main() {
 		fmt.Println("Enter HELP for list of commands")
 	}
 
-	for runloop() {
+	for {
+		s := lineInput("> ")
 		// Keep running till runloop() returns false
+		if !runloop(s) {
+			break
+		}
 	}
 }
