@@ -210,8 +210,6 @@ func basicGosub5880() {
 func basicGosub5070() premise.Set {
 	// 5070
 	//---See if syllogism---
-	var temp_symbol *symbol.Symbol
-
 	localint_j1 = 0
 	localsymbol_v1 = nil // flag for modern validity
 	if len(premiseSet) == 0 {
@@ -262,49 +260,14 @@ func basicGosub5070() premise.Set {
 		return nil
 	}
 
-	linkedPremises := premiseSet.Copy()
-
-	if len(linkedPremises) > 1 {
-		if premiseSet.ToMap().Distribution(symbolConclusionTerms[1]) == 0 && premiseSet.ToMap().Distribution(symbolConclusionTerms[2]) == 1 {
-			temp_symbol = symbolConclusionTerms[2]
-		} else {
-			temp_symbol = symbolConclusionTerms[1]
-		}
-
-		for localint_i := 0; localint_i < len(linkedPremises); localint_i++ {
-			localint_k := linkedPremises.Find(temp_symbol, localint_i)
-			if localint_k == (-1) {
-				// Not found
-				temp_symbol = linkedPremises[localint_i].Predicate
-
-				if localint_j1 == 0 {
-					localint_j1 = 4
-					fmt.Println("Not a syllogism: no way to order premises so that each premise")
-					fmt.Println("shares exactly one term with its successor; there is a")
-				}
-				fmt.Println(help.ClosedLoopHelp)
-			} else {
-				prem := linkedPremises[localint_k]
-				linkedPremises.Swap(localint_k, localint_i)
-				ts := prem.ContrastingTerm(temp_symbol)
-				if ts == nil {
-					// We should never get here provided that prem contains temp_symbol
-					log.Printf("Could not find symbol %+v in premise %+v\n", temp_symbol, prem)
-				}
-				temp_symbol = ts
-			}
-
-			if localint_j1 != 0 {
-				fmt.Println(linkedPremises[localint_i])
-			}
-		}
+	var temp_symbol *symbol.Symbol
+	if premiseSet.ToMap().Distribution(symbolConclusionTerms[1]) == 0 && premiseSet.ToMap().Distribution(symbolConclusionTerms[2]) == 1 {
+		temp_symbol = symbolConclusionTerms[2]
+	} else {
+		temp_symbol = symbolConclusionTerms[1]
 	}
 
-	if localint_j1 > 0 {
-		return nil
-	}
-
-	return linkedPremises
+	return premiseSet.Linked(temp_symbol, &localint_j1)
 }
 
 func basicGosub6200() {

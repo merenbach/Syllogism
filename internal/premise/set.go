@@ -2,6 +2,8 @@ package premise
 
 import (
 	"fmt"
+	"log"
+	"sort"
 
 	"github.com/merenbach/syllogism/internal/article"
 	"github.com/merenbach/syllogism/internal/form"
@@ -16,6 +18,16 @@ type Set []*Premise
 // Map of all premises.
 type Map map[int]*Premise
 
+// Keys from a premise map, in ascending order.
+func (ps Map) Keys() []int {
+	keys := make([]int, 0, len(ps))
+	for k := range ps {
+		keys = append(keys, k)
+	}
+	sort.Ints(keys)
+	return keys
+}
+
 // ToMap converts the premise set to a map.
 func (ps Set) ToMap() Map {
 	m := make(map[int]*Premise, len(ps))
@@ -23,6 +35,45 @@ func (ps Set) ToMap() Map {
 		m[p.Number] = p
 	}
 	return m
+}
+
+// Linked premises
+func (ps Set) Linked(temp_symbol *symbol.Symbol, localint_j1 *int) Set {
+	linkedPremises := ps.Copy()
+	if len(linkedPremises) > 1 {
+		for localint_i := 0; localint_i < len(linkedPremises); localint_i++ {
+			localint_k := linkedPremises.Find(temp_symbol, localint_i)
+			if localint_k == (-1) {
+				// Not found
+				temp_symbol = linkedPremises[localint_i].Predicate
+
+				if *localint_j1 == 0 {
+					*localint_j1 = 4
+					fmt.Println("Not a syllogism: no way to order premises so that each premise")
+					fmt.Println("shares exactly one term with its successor; there is a")
+				}
+				fmt.Println(help.ClosedLoopHelp)
+			} else {
+				prem := linkedPremises[localint_k]
+				linkedPremises.Swap(localint_k, localint_i)
+				ts := prem.ContrastingTerm(temp_symbol)
+				if ts == nil {
+					// We should never get here provided that prem contains temp_symbol
+					log.Printf("Could not find symbol %+v in premise %+v\n", temp_symbol, prem)
+				}
+				temp_symbol = ts
+			}
+
+			if *localint_j1 != 0 {
+				fmt.Println(linkedPremises[localint_i])
+			}
+		}
+	}
+
+	if *localint_j1 > 0 {
+		return nil
+	}
+	return linkedPremises
 }
 
 func (ps Set) Len() int {
