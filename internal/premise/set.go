@@ -41,11 +41,11 @@ func (ps Set) ToMap() Map {
 func (ps Set) Linked(temp_symbol *symbol.Symbol, localint_j1 *int) Set {
 	linkedPremises := ps.copy()
 	if len(linkedPremises) > 1 {
-		for i := 0; i < len(linkedPremises); i++ {
+		for i, prem := range linkedPremises {
 			localint_k := linkedPremises.Find(temp_symbol, i)
 			if localint_k == (-1) {
 				// Not found
-				temp_symbol = linkedPremises[i].Predicate
+				temp_symbol = prem.Predicate
 
 				if *localint_j1 == 0 {
 					*localint_j1 = 4
@@ -65,7 +65,7 @@ func (ps Set) Linked(temp_symbol *symbol.Symbol, localint_j1 *int) Set {
 			}
 
 			if *localint_j1 != 0 {
-				fmt.Println(linkedPremises[i])
+				fmt.Println(prem)
 			}
 		}
 	}
