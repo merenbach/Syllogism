@@ -781,6 +781,7 @@ Iterate:
 	return shadowstringarray_s, shadowintarray_t, shadowintarray_e, localint_p1, returnErr
 }
 
+// TODO: errors should exit early here
 func basicGosub8980() {
 	// 8980
 	//--sample--
@@ -799,12 +800,10 @@ func basicGosub8980() {
 			}
 		}
 
-		n, err := strconv.Atoi(stringarray_s[1])
+		prem, err := addPremise(localstring_l1)
 		if err != nil {
 			log.Println(err)
 		}
-		localint_s := len(stringarray_s[1]) + 1
-		prem := addPremise(n, localstring_l1[localint_s:])
 		basicGosub3400(d1, localint_p1, prem, intarray_e[:])
 	}
 
@@ -985,20 +984,19 @@ func runloop() bool {
 				}
 			}
 			if d1 != form.Undefined {
-				n, err := strconv.Atoi(stringarray_s[1])
+				prem, err := addPremise(localstring_l1)
 				if err != nil {
 					log.Println(err)
 				}
-				localint_s := len(stringarray_s[1]) + 1
-				prem := addPremise(n, localstring_l1[localint_s:])
 				basicGosub3400(d1, localint_p1, prem, intarray_e[:]) // add terms to symbol table
 			}
 		} else {
 			if len(premiseSet) == 0 {
 				fmt.Println(help.NoPremises)
 			} else {
-				n, err := strconv.Atoi(stringarray_s[1])
-				if err != nil {
+				// TODO: exit early on error?
+				var n int
+				if _, err := fmt.Sscanf(localstring_l1, "%d", &n); err != nil {
 					log.Println(err)
 				}
 				if err := delPremise(n); err != nil {
@@ -1040,17 +1038,21 @@ func runloop() bool {
 	return true
 }
 
-func addPremise(n int, s string) *premise.Premise {
-	// Delete existing entry instead of replacing in-place
-	_ = delPremise(n)
+func addPremise(s string) (*premise.Premise, error) {
+	prem, err := premise.New(s)
+	if err != nil {
+		log.Println("Could not create premise")
+		return nil, err
+	}
 
-	prem := premise.New(n, s)
+	// Delete existing entry instead of replacing in-place
+	_ = delPremise(prem.Number)
 
 	// Append the new premise and sort by line number
 	premiseSet = append(premiseSet, prem)
 	sort.Sort(premiseSet)
 
-	return prem
+	return prem, nil
 }
 
 func delPremise(n int) error {

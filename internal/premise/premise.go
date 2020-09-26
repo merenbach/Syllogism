@@ -2,6 +2,7 @@ package premise
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/merenbach/syllogism/internal/form"
 	"github.com/merenbach/syllogism/internal/symbol"
@@ -17,6 +18,30 @@ type Premise struct {
 	Predicate *symbol.Symbol
 }
 
+func numberLen(n int) int {
+	var i int
+	for n != 0 {
+		n /= 10
+		i++
+	}
+	return i
+}
+
+// New premise.
+// TODO: accept string here and tokenize afterward
+func New(s string) (*Premise, error) {
+	var lineNumber int
+	if _, err := fmt.Sscanf(s, "%d", &lineNumber); err != nil {
+		return nil, err
+	}
+
+	stmt := s[numberLen(lineNumber):]
+	return &Premise{
+		Number:    lineNumber,
+		Statement: strings.TrimSpace(stmt),
+	}, nil
+}
+
 // ContrastingTerm returns the opposite term in a premise.
 func (pr *Premise) ContrastingTerm(s *symbol.Symbol) *symbol.Symbol {
 	if pr.Subject == s {
@@ -26,15 +51,6 @@ func (pr *Premise) ContrastingTerm(s *symbol.Symbol) *symbol.Symbol {
 	}
 
 	return nil
-}
-
-// New premise.
-// TODO: accept string here and tokenize afterward
-func New(n int, s string) *Premise {
-	return &Premise{
-		Number:    n,
-		Statement: s,
-	}
 }
 
 func (pr *Premise) String() string {
