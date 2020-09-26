@@ -39,7 +39,7 @@ func (ps Set) ToMap() Map {
 
 // Linked premises
 func (ps Set) Linked(temp_symbol *symbol.Symbol, localint_j1 *int) Set {
-	linkedPremises := ps.Copy()
+	linkedPremises := ps.copy()
 	if len(linkedPremises) > 1 {
 		for localint_i := 0; localint_i < len(linkedPremises); localint_i++ {
 			localint_k := linkedPremises.Find(temp_symbol, localint_i)
@@ -91,7 +91,7 @@ func (ps Set) Less(i, j int) bool {
 }
 
 // Copy shallowly into a new premise set.
-func (ps Set) Copy() Set {
+func (ps Set) copy() Set {
 	c := make(Set, len(ps))
 	copy(c, ps)
 	return c
