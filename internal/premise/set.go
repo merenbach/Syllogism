@@ -243,7 +243,10 @@ func (ps Map) Distribution(s *symbol.Symbol) int {
 	// }
 
 	for _, p := range ps {
+		// TODO: check universality rather than negate particularity?
 		if p.Subject == s {
+			// The subject of a universal statement is distributed
+			// Source: <http://logiccurriculum.com/2015/10/28/distributed-terms/>
 			if !p.Form.IsParticular() {
 				n++
 			}
@@ -254,7 +257,12 @@ func (ps Map) Distribution(s *symbol.Symbol) int {
 			// or does d1 += 2 in syllogism.go mean that unless we have a designator==designator or negative premise,
 			// we're not going to increase distribution for predicate?
 			// In short: TODO: should this be p.Predicate.TermType == term.TypeDesignator?
-			if p.Form == form.AEqualsT || p.Form.IsNegative() {
+
+			if p.Form.IsNegative() {
+				// The predicate of negative statements is distributed.
+				// Source: <http://logiccurriculum.com/2015/10/28/distributed-terms/>
+				n++
+			} else if p.Form == form.AEqualsT {
 				n++
 			}
 		}

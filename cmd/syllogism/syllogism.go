@@ -453,6 +453,17 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 	}
 
 	intarray_e[1] = article.TypeNone
+
+	temp2 := func(termType term.Type, aType article.Type, raw_string string) *symbol.Symbol {
+		symbolTable = Prune(symbolTable)
+		sym := Search(symbolTable, raw_string, termType, msg)
+		if sym == nil {
+			sym = symbol.New(raw_string, termType, aType)
+			symbolTable = append(symbolTable, sym)
+		}
+		return sym
+	}
+
 	temp := func(subject bool, aType article.Type, raw_string string) *symbol.Symbol {
 		var termType term.Type // formerly g
 
@@ -460,7 +471,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 			termType = term.TypeGeneralTerm
 		} else if subject {
 			termType = term.TypeDesignator
-		} else {
+		} else if !subject { // for predicate only...
 			termType = p1
 			if termType == term.TypeDesignator {
 				switch d1 {
@@ -472,14 +483,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 			}
 		}
 
-		symbolTable = Prune(symbolTable)
-		sym := Search(symbolTable, raw_string, termType, msg)
-		if sym == nil {
-			sym = symbol.New(raw_string, termType, aType)
-			symbolTable = append(symbolTable, sym)
-		}
-
-		return sym
+		return temp2(termType, aType, raw_string)
 	}
 
 	prem.Subject = temp(true, intarray_e[1], recentWord1)
