@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"sort"
 
 	"github.com/merenbach/syllogism/internal/article"
 	"github.com/merenbach/syllogism/internal/form"
@@ -19,15 +18,15 @@ type Set []*Premise
 // Map of all premises.
 type Map map[int]*Premise
 
-// Keys from a premise map, in ascending order.
-func (ps Map) Keys() []int {
-	keys := make([]int, 0, len(ps))
-	for k := range ps {
-		keys = append(keys, k)
-	}
-	sort.Ints(keys)
-	return keys
-}
+// // Keys from a premise map, in ascending order.
+// func (ps Map) Keys() []int {
+// 	keys := make([]int, 0, len(ps))
+// 	for k := range ps {
+// 		keys = append(keys, k)
+// 	}
+// 	sort.Ints(keys)
+// 	return keys
+// }
 
 // ToMap converts the premise set to a map.
 func (ps Set) ToMap() Map {
