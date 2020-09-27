@@ -43,11 +43,11 @@ func (ps Set) Linked(sym *symbol.Symbol) (Set, error) {
 	var errCount int
 	linkedPremises := ps.copy()
 	if len(linkedPremises) > 1 {
-		for i, prem := range linkedPremises {
+		for i := range linkedPremises {
 			k := linkedPremises.Find(sym, i)
 			if k == (-1) {
 				// Not found
-				sym = prem.Predicate
+				sym = linkedPremises[i].Predicate
 
 				if errCount == 0 {
 					errCount++
@@ -67,7 +67,7 @@ func (ps Set) Linked(sym *symbol.Symbol) (Set, error) {
 			}
 
 			if errCount != 0 {
-				fmt.Println(prem)
+				fmt.Println(linkedPremises[i])
 			}
 		}
 	}
