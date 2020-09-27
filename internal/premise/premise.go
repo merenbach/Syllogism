@@ -48,8 +48,8 @@ func New(s string) (*Premise, error) {
 	}, nil
 }
 
-// PremiseForm determines the form of a premise.
-func PremiseForm(stringarray_s []string, intarray_t []token.Type, recentWord1 *string, recentWord2 *string) (form.Form, error) {
+// PremiseForm determines the form of a premise. Pass a function to set new subject and predicate.
+func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string, string)) (form.Form, error) {
 	if stringarray_s[2] != form.WordAll {
 		if stringarray_s[2] != form.WordSome {
 			if stringarray_s[2] != form.WordNo {
@@ -66,16 +66,14 @@ func PremiseForm(stringarray_s []string, intarray_t []token.Type, recentWord1 *s
 						return form.Undefined, errors.New(help.MissingPredicate)
 					}
 
-					*recentWord1 = stringarray_s[2]
-					*recentWord2 = stringarray_s[5]
+					f(stringarray_s[2], stringarray_s[5])
 					return form.AIsNotT, nil // a is not T
 				} else {
 					if intarray_t[4] != token.TypeTerm {
 						return form.Undefined, errors.New(help.MissingPredicate)
 					}
 
-					*recentWord1 = stringarray_s[2]
-					*recentWord2 = stringarray_s[4]
+					f(stringarray_s[2], stringarray_s[4])
 					return form.AIsT, nil // a is T
 				}
 			}
@@ -92,8 +90,7 @@ func PremiseForm(stringarray_s []string, intarray_t []token.Type, recentWord1 *s
 				return form.Undefined, errors.New(help.MissingPredicate)
 			}
 
-			*recentWord1 = stringarray_s[3]
-			*recentWord2 = stringarray_s[5]
+			f(stringarray_s[3], stringarray_s[5])
 
 			return form.NoAIsB, nil // no A is B
 		}
@@ -107,15 +104,13 @@ func PremiseForm(stringarray_s []string, intarray_t []token.Type, recentWord1 *s
 			if intarray_t[6] != token.TypeTerm {
 				return form.Undefined, errors.New(help.MissingPredicate)
 			}
-			*recentWord1 = stringarray_s[3]
-			*recentWord2 = stringarray_s[6]
+			f(stringarray_s[3], stringarray_s[6])
 			return form.SomeAIsNotB, nil // some A is not B
 		}
 		if intarray_t[5] != token.TypeTerm {
 			return form.Undefined, errors.New(help.MissingPredicate)
 		}
-		*recentWord1 = stringarray_s[3]
-		*recentWord2 = stringarray_s[5]
+		f(stringarray_s[3], stringarray_s[5])
 		return form.SomeAIsB, nil // Some A is B
 	}
 	if intarray_t[3] != token.TypeTerm {
@@ -127,8 +122,7 @@ func PremiseForm(stringarray_s []string, intarray_t []token.Type, recentWord1 *s
 	if intarray_t[5] != token.TypeTerm {
 		return form.Undefined, errors.New(help.MissingPredicate)
 	}
-	*recentWord1 = stringarray_s[3]
-	*recentWord2 = stringarray_s[5]
+	f(stringarray_s[3], stringarray_s[5])
 	return form.AllAIsB, nil // all A is B
 }
 

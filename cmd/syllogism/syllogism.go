@@ -510,7 +510,10 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 func basicGosub2890(stringarray_s []string, intarray_t []token.Type) (form.Form, error) {
 	// 2890
 	//---Parse line in S$()---
-	return premise.PremiseForm(stringarray_s, intarray_t, &recentWord1, &recentWord2)
+	return premise.PremiseForm(stringarray_s, intarray_t, func(w1 string, w2 string) {
+		recentWord1 = w1
+		recentWord2 = w2
+	})
 }
 
 // TODO: errors should exit early here
