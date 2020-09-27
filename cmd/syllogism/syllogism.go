@@ -152,11 +152,11 @@ func basicGosub5880() {
 	symbol2 := symbolConclusionTerms[2]
 
 	for i, s := range symbolTable {
-		if premiseSet.ToMap().Occurrences(s) < 2 {
+		if premiseSet.Occurrences(s) < 2 {
 			continue
 		}
 
-		dc := premiseSet.ToMap().Distribution(s)
+		dc := premiseSet.Distribution(s)
 		if dc == 1 {
 			continue
 		}
@@ -175,7 +175,7 @@ func basicGosub5880() {
 		}
 	}
 
-	negativePremiseCount := premiseSet.ToMap().Negative()
+	negativePremiseCount := premiseSet.Negative()
 	if negativePremiseCount > 1 {
 		localint_j1 = 6
 		fmt.Println("More than one negative premise:")
@@ -190,8 +190,8 @@ func basicGosub5880() {
 		return
 	}
 
-	dc1 := premiseSet.ToMap().Distribution(symbol1)
-	dc2 := premiseSet.ToMap().Distribution(symbol2)
+	dc1 := premiseSet.Distribution(symbol1)
+	dc2 := premiseSet.Distribution(symbol2)
 	if dc1 == 0 && dc2 == 0 {
 		fmt.Printf("Terms %q and %q, one of which is\n", symbol1.Term, symbol2.Term)
 	} else if dc1 == 0 && symbol2.TermType == term.TypeDesignator {
@@ -222,7 +222,7 @@ func basicGosub5070() premise.Set {
 	var localint_c int
 
 	for i, s := range symbolTable {
-		o := premiseSet.ToMap().Occurrences(s)
+		o := premiseSet.Occurrences(s)
 		if o == 0 || o == 2 {
 			continue
 		}
@@ -264,7 +264,7 @@ func basicGosub5070() premise.Set {
 
 	// so j1 == 0 here...
 	var sym *symbol.Symbol
-	if premiseSet.ToMap().Distribution(symbolConclusionTerms[1]) == 0 && premiseSet.ToMap().Distribution(symbolConclusionTerms[2]) == 1 {
+	if premiseSet.Distribution(symbolConclusionTerms[1]) == 0 && premiseSet.Distribution(symbolConclusionTerms[2]) == 1 {
 		sym = symbolConclusionTerms[2]
 	} else {
 		sym = symbolConclusionTerms[1]
@@ -280,7 +280,7 @@ func basicGosub5070() premise.Set {
 func basicGosub6200() {
 	// 6200
 	//---Compute conclusion---
-	z := premiseSet.ToMap().Compute(symbolConclusionTerms[1], symbolConclusionTerms[2])
+	z := premiseSet.Compute(symbolConclusionTerms[1], symbolConclusionTerms[2])
 
 	// PRINT  conclusion
 	fmt.Printf("  / %s\n", z)
@@ -300,7 +300,7 @@ func basicGosub6630(p1 term.Type, stringarray_s []string, intarray_t []token.Typ
 	)
 	var termType1 term.Type = term.TypeGeneralTerm // formerly g1
 	var termType2 term.Type = term.TypeGeneralTerm // formerly g2
-	negativePremiseCount := premiseSet.ToMap().Negative()
+	negativePremiseCount := premiseSet.Negative()
 
 	//--conc. poss, line in s$()
 	d1, err := basicGosub2890(stringarray_s, intarray_t)
@@ -395,10 +395,10 @@ Line7120: // 7120
 	}
 
 	if localint_j1 != 1 {
-		if premiseSet.ToMap().Distribution(localsymbol_t1) == 0 && d1.IsUniversal() {
+		if premiseSet.Distribution(localsymbol_t1) == 0 && d1.IsUniversal() {
 			help.ShowTermDistributionError(localsymbol_t1.Term)
 			return
-		} else if premiseSet.ToMap().Distribution(localsymbol_t2) == 0 && (d1.IsNegative() || d1 == form.AEqualsT) {
+		} else if premiseSet.Distribution(localsymbol_t2) == 0 && (d1.IsNegative() || d1 == form.AEqualsT) {
 			help.ShowTermDistributionError(localsymbol_t2.Term)
 			return
 		}
@@ -413,11 +413,11 @@ Line7120: // 7120
 		localsymbol_v1 = &symbol.Symbol{
 			Term: localstring_w,
 		}
-	} else if premiseSet.ToMap().Distribution(localsymbol_t1) > 0 && d1.IsParticular() {
+	} else if premiseSet.Distribution(localsymbol_t1) > 0 && d1.IsParticular() {
 		localsymbol_v1 = localsymbol_t1
 	} else {
 		// TODO: this check appears to limit options down to form.SomeAIsB and form.AllAIsB
-		if premiseSet.ToMap().Distribution(localsymbol_t2) > 0 && !d1.IsNegative() && d1 != form.AIsT && d1 != form.AEqualsT {
+		if premiseSet.Distribution(localsymbol_t2) > 0 && !d1.IsNegative() && d1 != form.AIsT && d1 != form.AEqualsT {
 			localsymbol_v1 = localsymbol_t2
 		}
 
@@ -448,7 +448,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 	//---Add W$(1), W$(2) to table T$()---
 	// d1 is guaranteed not to be form.Undefined unless `sample` method isn't working (TODO: funnel sample through same logic as user input)
 	if d1.IsNegative() {
-		if err := premiseSet.ToMap().CheckNegative(); err != nil {
+		if err := premiseSet.CheckNegative(); err != nil {
 			fmt.Println(err)
 		}
 	}
@@ -494,11 +494,11 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 
 	prem.Form = d1
 
-	if err := premiseSet.ToMap().CheckOccurrences(prem.Subject); err != nil {
+	if err := premiseSet.CheckOccurrences(prem.Subject); err != nil {
 		fmt.Println(err)
 	}
 
-	if err := premiseSet.ToMap().CheckOccurrences(prem.Predicate); err != nil {
+	if err := premiseSet.CheckOccurrences(prem.Predicate); err != nil {
 		fmt.Println(err)
 	}
 
@@ -1054,13 +1054,13 @@ func delPremise(n int) error {
 
 // Dump values of variables in a SymbolTable.
 func dump() {
-	fmt.Printf("Highest symbol table loc. used: %d  Negative premises: %d\n", len(symbolTable), premiseSet.ToMap().Negative())
+	fmt.Printf("Highest symbol table loc. used: %d  Negative premises: %d\n", len(symbolTable), premiseSet.Negative())
 	dump := new(bytes.Buffer)
 	if len(symbolTable) > 0 {
 		w := tabwriter.NewWriter(dump, 0, 0, 2, ' ', 0)
 		fmt.Fprint(w, "Adr.\tart.\tterm\ttype\toccurs\tdist. count")
 		for i, s := range symbolTable {
-			fmt.Fprintf(w, "\n%d\t%s\t%d\t%d", i+1, s.Dump(), premiseSet.ToMap().Occurrences(s), premiseSet.ToMap().Distribution(s))
+			fmt.Fprintf(w, "\n%d\t%s\t%d\t%d", i+1, s.Dump(), premiseSet.Occurrences(s), premiseSet.Distribution(s))
 		}
 		w.Flush()
 	}
@@ -1087,7 +1087,7 @@ func dump() {
 func Prune(st symbol.Table) symbol.Table {
 	var ss symbol.Table
 	for _, s := range st {
-		if premiseSet.ToMap().Occurrences(s) > 0 {
+		if premiseSet.Occurrences(s) > 0 {
 			ss = append(ss, s)
 		}
 	}

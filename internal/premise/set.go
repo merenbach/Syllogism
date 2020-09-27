@@ -15,28 +15,6 @@ import (
 // Set of all premises.
 type Set []*Premise
 
-// Map of all premises.
-type Map map[int]*Premise
-
-// // Keys from a premise map, in ascending order.
-// func (ps Map) Keys() []int {
-// 	keys := make([]int, 0, len(ps))
-// 	for k := range ps {
-// 		keys = append(keys, k)
-// 	}
-// 	sort.Ints(keys)
-// 	return keys
-// }
-
-// ToMap converts the premise set to a map.
-func (ps Set) ToMap() Map {
-	m := make(map[int]*Premise, len(ps))
-	for _, p := range ps {
-		m[p.Number] = p
-	}
-	return m
-}
-
 // Linked premises
 func (ps Set) Linked(sym *symbol.Symbol) (Set, error) {
 	var errCount int
@@ -113,7 +91,7 @@ func (ps Set) Find(s *symbol.Symbol, start int) int {
 // }
 
 // Compute a conclusion.
-func (ps Map) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
+func (ps Set) Compute(symbol1 *symbol.Symbol, symbol2 *symbol.Symbol) string {
 	if len(ps) == 0 {
 		return "A is A"
 	}
@@ -182,7 +160,7 @@ func (ps Set) List(analyze bool) error {
 }
 
 // CheckNegative validates the negative premise count.
-func (ps Map) CheckNegative() error {
+func (ps Set) CheckNegative() error {
 	negativePremiseCount := ps.Negative()
 	if negativePremiseCount > 1 {
 		return fmt.Errorf("Warning: %d negative premises", negativePremiseCount)
@@ -192,7 +170,7 @@ func (ps Map) CheckNegative() error {
 }
 
 // CheckOccurrences validates the occurrence count of a symbol.
-func (ps Map) CheckOccurrences(s *symbol.Symbol) error {
+func (ps Set) CheckOccurrences(s *symbol.Symbol) error {
 	o := ps.Occurrences(s)
 	if o > 2 {
 		return fmt.Errorf("Warning: %s %q has occurred %d times", s.TermType, s.Term, o)
@@ -205,7 +183,7 @@ func (ps Map) CheckOccurrences(s *symbol.Symbol) error {
 
 // Occurrences of a particular symbol.
 // TODO: this should track symbol.Occurrences perfectly.
-func (ps Map) Occurrences(s *symbol.Symbol) int {
+func (ps Set) Occurrences(s *symbol.Symbol) int {
 	var n int
 	for _, p := range ps {
 		if p.Subject == s {
@@ -220,7 +198,7 @@ func (ps Map) Occurrences(s *symbol.Symbol) int {
 }
 
 // Distribution count for a particular symbol.
-func (ps Map) Distribution(s *symbol.Symbol) int {
+func (ps Set) Distribution(s *symbol.Symbol) int {
 	var n int
 
 	// if s.TermType == term.TypeDesignator {
@@ -258,7 +236,7 @@ func (ps Map) Distribution(s *symbol.Symbol) int {
 
 // Negative premise count.
 // TODO: this could return the slice of negative premises, and then we can do len() on that
-func (ps Map) Negative() int {
+func (ps Set) Negative() int {
 	var n int
 	for _, p := range ps {
 		if p.Form.IsNegative() {
