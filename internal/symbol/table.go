@@ -3,6 +3,18 @@ package symbol
 // A Table of symbols.
 type Table []*Symbol
 
+// Filter a symbol table with a function determining which elements to keep.
+func (st Table) Filter(f func(s *Symbol) bool) Table {
+	var ss Table
+	for _, s := range st {
+		if f(s) {
+			ss = append(ss, s)
+		}
+	}
+
+	return ss
+}
+
 // Dump values of variables in a symbol table.
 // TODO: improve alignment?
 // func (st Table) Dump() string {

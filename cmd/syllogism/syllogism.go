@@ -1080,14 +1080,9 @@ func dump() {
 
 // Prune orphaned terms with no occurrences.
 func Prune(st symbol.Table) symbol.Table {
-	var ss symbol.Table
-	for _, s := range st {
-		if premiseSet.Occurrences(s) > 0 {
-			ss = append(ss, s)
-		}
-	}
-
-	return ss
+	return st.Filter(func(s *symbol.Symbol) bool {
+		return premiseSet.Occurrences(s) > 0
+	})
 }
 
 // Search symbol table for a term matching a given string, or return nil.
