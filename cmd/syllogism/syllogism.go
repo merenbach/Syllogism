@@ -268,7 +268,11 @@ func basicGosub5070() premise.Set {
 		sym = symbolConclusionTerms[1]
 	}
 
-	return premiseSet.Linked(sym, &localint_j1)
+	out, err := premiseSet.Linked(sym)
+	if err != nil {
+		localint_j1 = 4
+	}
+	return out
 }
 
 func basicGosub6200() {

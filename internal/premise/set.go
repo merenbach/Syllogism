@@ -1,6 +1,7 @@
 package premise
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"sort"
@@ -38,7 +39,8 @@ func (ps Set) ToMap() Map {
 }
 
 // Linked premises
-func (ps Set) Linked(sym *symbol.Symbol, localint_j1 *int) Set {
+func (ps Set) Linked(sym *symbol.Symbol) (Set, error) {
+	var errCount int
 	linkedPremises := ps.copy()
 	if len(linkedPremises) > 1 {
 		for i, prem := range linkedPremises {
@@ -47,8 +49,8 @@ func (ps Set) Linked(sym *symbol.Symbol, localint_j1 *int) Set {
 				// Not found
 				sym = prem.Predicate
 
-				if *localint_j1 == 0 {
-					*localint_j1 = 4
+				if errCount == 0 {
+					errCount++
 					fmt.Println("Not a syllogism: no way to order premises so that each premise")
 					fmt.Println("shares exactly one term with its successor; there is a")
 				}
@@ -64,16 +66,16 @@ func (ps Set) Linked(sym *symbol.Symbol, localint_j1 *int) Set {
 				sym = ts
 			}
 
-			if *localint_j1 != 0 {
+			if errCount != 0 {
 				fmt.Println(prem)
 			}
 		}
 	}
 
-	if *localint_j1 > 0 {
-		return nil
+	if errCount > 0 {
+		return nil, errors.New("TODO: improve this error message; couldn't order premises")
 	}
-	return linkedPremises
+	return linkedPremises, nil
 }
 
 func (ps Set) Len() int {
