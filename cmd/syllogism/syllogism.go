@@ -10,11 +10,6 @@ package main
 * Remove any spurious whitespace in entries
 * Cache occurrences and refresh on add line and delete line
 *
-* Testing notes:
-* - Can simulate closed loop with sample, removing line 20, and then setting line 10 to "all men are mortal" (duplicating line 70)
-* FIXED: commit 6209d81d3ffb383a5105f38e6a198f08ea91abd2 broke this test--no warning
-* FIXED: commit 39943afe1628ab95c17c30839ed55105fbb19d58 broke this test--incorrect line order
-*
 * Porting notes on variables:
 *
 * a(63)  => unknown, but for premises; currently a(N) => premiseset.AArray(N)

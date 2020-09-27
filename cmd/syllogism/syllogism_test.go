@@ -2,6 +2,39 @@ package main
 
 import "fmt"
 
+func ExampleClosedLoopTest() {
+	// We can simulate a closed loop with sample, removing line 20, and then setting line 10 to "all men are mortal" (duplicating line 70).
+
+	msg = true
+	runloop("sample")
+	fmt.Println()
+	runloop("20")
+	runloop("10 all men are mortal")
+	fmt.Println()
+	runloop("link")
+
+	// Output:
+	// 10 all mortals are fools
+	// 20 all athenians are men
+	// 30 all philosophers are geniuses
+	// 40 all people with good taste are philosophers
+	// 50 richter is a diamond broker
+	// 60 richter is the most hedonistic person in florida
+	// 70 all men are mortal
+	// 80 no genius is a fool
+	// 90 all diamond brokers are people with good taste
+	// 100 the most hedonistic person in florida is a decision-theorist
+	// Suggestion: try the LINK or LINK* command.
+	//
+	// Warning: undistributed middle term "mortal"
+	//
+	// Not a syllogism: no way to order premises so that each premise
+	// shares exactly one term with its successor; there is a
+	// closed loop in the term chain within the premise set--
+	// 10 all men are mortal
+	// 70 all men are mortal
+}
+
 func ExampleSampleSlash() {
 	msg = true
 	runloop("sample")
