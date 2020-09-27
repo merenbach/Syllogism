@@ -1029,7 +1029,9 @@ func addPremise(s string) (*premise.Premise, error) {
 
 	// Append the new premise and sort by line number
 	premiseSet = append(premiseSet, prem)
-	sort.Sort(premiseSet)
+	sort.Slice(premiseSet, func(i int, j int) bool {
+		return premiseSet[i].Number < premiseSet[j].Number
+	})
 
 	return prem, nil
 }
