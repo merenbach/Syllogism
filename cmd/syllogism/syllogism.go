@@ -12,7 +12,8 @@ package main
 *
 * Testing notes:
 * - Can simulate closed loop with sample, removing line 20, and then setting line 10 to "all men are mortal" (duplicating line 70)
-* TODO: commit 6209d81d3ffb383a5105f38e6a198f08ea91abd2 (and possibly others) broke this test--no warning, incorrect line order
+* FIXED: commit 6209d81d3ffb383a5105f38e6a198f08ea91abd2 broke this test--no warning
+* TODO:  commit 39943afe1628ab95c17c30839ed55105fbb19d58 broke this test--incorrect line order
 *
 * Porting notes on variables:
 *
