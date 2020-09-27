@@ -487,12 +487,16 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 
 	tType1 := temp(true)
 	prem.Subject = temp2(tType1, intarray_e[1], recentWord1)
+
+	tType2 := temp(false)
+	prem.Predicate = temp2(tType2, intarray_e[2], recentWord2)
+
+	prem.Form = d1
+
 	if err := premiseSet.ToMap().CheckOccurrences(prem.Subject); err != nil {
 		fmt.Println(err)
 	}
 
-	tType2 := temp(false)
-	prem.Predicate = temp2(tType2, intarray_e[2], recentWord2)
 	if err := premiseSet.ToMap().CheckOccurrences(prem.Predicate); err != nil {
 		fmt.Println(err)
 	}
@@ -500,8 +504,6 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 	if prem.Subject == prem.Predicate && msg {
 		fmt.Printf("Warning: same term occurs twice in line %d\n", prem.Number)
 	}
-
-	prem.Form = d1
 }
 
 // type formInfo struct {
