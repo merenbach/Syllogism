@@ -61,7 +61,6 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -511,86 +510,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 func basicGosub2890(stringarray_s []string, intarray_t []token.Type) (form.Form, error) {
 	// 2890
 	//---Parse line in S$()---
-	if stringarray_s[2] != form.WordAll {
-		if stringarray_s[2] != form.WordSome {
-			if stringarray_s[2] != form.WordNo {
-				if intarray_t[2] != token.TypeTerm {
-					return form.Undefined, errors.New(help.MissingSubject)
-				}
-
-				if intarray_t[3] != token.TypeCopula {
-					return form.Undefined, errors.New(help.MissingCopula)
-				}
-
-				if stringarray_s[4] == form.WordNot {
-					if intarray_t[5] != token.TypeTerm {
-						return form.Undefined, errors.New(help.MissingPredicate)
-					}
-
-					recentWord1 = stringarray_s[2]
-					recentWord2 = stringarray_s[5]
-					return form.AIsNotT, nil // a is not T
-				} else {
-					if intarray_t[4] != token.TypeTerm {
-						return form.Undefined, errors.New(help.MissingPredicate)
-					}
-
-					recentWord1 = stringarray_s[2]
-					recentWord2 = stringarray_s[4]
-					return form.AIsT, nil // a is T
-				}
-			}
-
-			if intarray_t[3] != token.TypeTerm {
-				return form.Undefined, errors.New(help.MissingSubject)
-			}
-
-			if intarray_t[4] != token.TypeCopula {
-				return form.Undefined, errors.New(help.MissingCopula)
-			}
-
-			if intarray_t[5] != token.TypeTerm {
-				return form.Undefined, errors.New(help.MissingPredicate)
-			}
-
-			recentWord1 = stringarray_s[3]
-			recentWord2 = stringarray_s[5]
-
-			return form.NoAIsB, nil // no A is B
-		}
-		if intarray_t[3] != token.TypeTerm {
-			return form.Undefined, errors.New(help.MissingSubject)
-		}
-		if intarray_t[4] != token.TypeCopula {
-			return form.Undefined, errors.New(help.MissingCopula)
-		}
-		if stringarray_s[5] == form.WordNot {
-			if intarray_t[6] != token.TypeTerm {
-				return form.Undefined, errors.New(help.MissingPredicate)
-			}
-			recentWord1 = stringarray_s[3]
-			recentWord2 = stringarray_s[6]
-			return form.SomeAIsNotB, nil // some A is not B
-		}
-		if intarray_t[5] != token.TypeTerm {
-			return form.Undefined, errors.New(help.MissingPredicate)
-		}
-		recentWord1 = stringarray_s[3]
-		recentWord2 = stringarray_s[5]
-		return form.SomeAIsB, nil // Some A is B
-	}
-	if intarray_t[3] != token.TypeTerm {
-		return form.Undefined, errors.New(help.MissingSubject)
-	}
-	if intarray_t[4] != token.TypeCopula {
-		return form.Undefined, errors.New(help.MissingCopula)
-	}
-	if intarray_t[5] != token.TypeTerm {
-		return form.Undefined, errors.New(help.MissingPredicate)
-	}
-	recentWord1 = stringarray_s[3]
-	recentWord2 = stringarray_s[5]
-	return form.AllAIsB, nil // all A is B
+	return premise.PremiseForm(stringarray_s, intarray_t, &recentWord1, &recentWord2)
 }
 
 func tokenize(localstring_l1 string) ([7]string, [8]token.Type, [3]article.Type, term.Type, error) {
