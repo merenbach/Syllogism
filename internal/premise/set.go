@@ -38,14 +38,14 @@ func (ps Set) ToMap() Map {
 }
 
 // Linked premises
-func (ps Set) Linked(temp_symbol *symbol.Symbol, localint_j1 *int) Set {
+func (ps Set) Linked(sym *symbol.Symbol, localint_j1 *int) Set {
 	linkedPremises := ps.copy()
 	if len(linkedPremises) > 1 {
 		for i, prem := range linkedPremises {
-			localint_k := linkedPremises.Find(temp_symbol, i)
-			if localint_k == (-1) {
+			k := linkedPremises.Find(sym, i)
+			if k == (-1) {
 				// Not found
-				temp_symbol = prem.Predicate
+				sym = prem.Predicate
 
 				if *localint_j1 == 0 {
 					*localint_j1 = 4
@@ -54,14 +54,14 @@ func (ps Set) Linked(temp_symbol *symbol.Symbol, localint_j1 *int) Set {
 				}
 				fmt.Println(help.ClosedLoopHelp)
 			} else {
-				prem := linkedPremises[localint_k]
-				linkedPremises.Swap(localint_k, i)
-				ts := prem.ContrastingTerm(temp_symbol)
+				prem := linkedPremises[k]
+				linkedPremises.Swap(k, i)
+				ts := prem.ContrastingTerm(sym)
 				if ts == nil {
-					// We should never get here provided that prem contains temp_symbol
-					log.Printf("Could not find symbol %+v in premise %+v\n", temp_symbol, prem)
+					// We should never get here provided that prem contains sym
+					log.Printf("Could not find symbol %+v in premise %+v\n", sym, prem)
 				}
-				temp_symbol = ts
+				sym = ts
 			}
 
 			if *localint_j1 != 0 {
