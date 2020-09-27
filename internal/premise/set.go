@@ -57,7 +57,23 @@ func (ps Set) Linked(sym *symbol.Symbol) (Set, error) {
 				fmt.Println(help.ClosedLoopHelp)
 			} else {
 				prem := linkedPremises[k]
-				linkedPremises.Swap(k, i)
+				// linkedPremises[k], linkedPremises[i] = linkedPremises[i], linkedPremises[k]
+				// linkedPremises.Swap(k, i)
+
+				// NOTE: THIS WHOLE SCOPE SIMPLY SWAPS WHAT'S AT POSITION LOCALINT_I WITH LOCALINT_K
+				// NOTE: ...or does it???
+				premises := make([]*Premise, 3)
+
+				localint_n := 1
+				premises[1] = linkedPremises[i]
+
+				for m := i; m < k; m++ {
+					localint_n = 3 - localint_n
+					premises[localint_n] = linkedPremises[m+1]
+					linkedPremises[m+1] = premises[3-localint_n]
+				}
+
+				linkedPremises[i] = premises[localint_n]
 				ts := prem.ContrastingTerm(sym)
 				if ts == nil {
 					// We should never get here provided that prem contains sym
