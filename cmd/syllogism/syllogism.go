@@ -260,14 +260,15 @@ func basicGosub5070() premise.Set {
 		return nil
 	}
 
-	var temp_symbol *symbol.Symbol
+	// so j1 == 0 here...
+	var sym *symbol.Symbol
 	if premiseSet.ToMap().Distribution(symbolConclusionTerms[1]) == 0 && premiseSet.ToMap().Distribution(symbolConclusionTerms[2]) == 1 {
-		temp_symbol = symbolConclusionTerms[2]
+		sym = symbolConclusionTerms[2]
 	} else {
-		temp_symbol = symbolConclusionTerms[1]
+		sym = symbolConclusionTerms[1]
 	}
 
-	return premiseSet.Linked(temp_symbol, &localint_j1)
+	return premiseSet.Linked(sym, &localint_j1)
 }
 
 func basicGosub6200() {
