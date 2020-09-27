@@ -464,7 +464,7 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 		return sym
 	}
 
-	temp := func(subject bool, aType article.Type, raw_string string) *symbol.Symbol {
+	temp := func(subject bool) term.Type {
 		var termType term.Type // formerly g
 
 		if d1.IsParticular() || d1.IsUniversal() {
@@ -482,16 +482,17 @@ func basicGosub3400(d1 form.Form, p1 term.Type, prem *premise.Premise, intarray_
 				}
 			}
 		}
-
-		return temp2(termType, aType, raw_string)
+		return termType
 	}
 
-	prem.Subject = temp(true, intarray_e[1], recentWord1)
+	tType1 := temp(true)
+	prem.Subject = temp2(tType1, intarray_e[1], recentWord1)
 	if err := premiseSet.ToMap().CheckOccurrences(prem.Subject); err != nil {
 		fmt.Println(err)
 	}
 
-	prem.Predicate = temp(false, intarray_e[2], recentWord2)
+	tType2 := temp(false)
+	prem.Predicate = temp2(tType2, intarray_e[2], recentWord2)
 	if err := premiseSet.ToMap().CheckOccurrences(prem.Predicate); err != nil {
 		fmt.Println(err)
 	}
