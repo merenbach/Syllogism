@@ -56,6 +56,7 @@ func testForm(s string, t3 token.Type, t4 token.Type, t5 token.Type, t6 token.Ty
 		return false, errors.New(help.MissingCopula)
 	case s == form.WordNot:
 		// Used for particular forms ending in "NOT B"--we need to make sure that B is a term now
+		// We skip this bit and fall through if t6 is undefined (used when it's not needed, for universal tests)
 		if t6 != token.TypeUndetermined {
 			if t6 != token.TypeTerm {
 				return false, errors.New(help.MissingPredicate)
@@ -72,15 +73,15 @@ func testForm(s string, t3 token.Type, t4 token.Type, t5 token.Type, t6 token.Ty
 
 // PremiseForm determines the form of a premise. Pass a function to set new subject and predicate.
 func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string, string)) (form.Form, error) {
-	if stringarray_s[2] == form.WordAll {
+	switch {
+	case stringarray_s[2] == form.WordAll:
 		if _, err := testForm(stringarray_s[5], intarray_t[3], intarray_t[4], intarray_t[5], token.TypeUndetermined); err != nil {
 			return form.Undefined, err
 		}
 		f(stringarray_s[3], stringarray_s[5])
 		return form.AllAIsB, nil // all A is B
-	}
 
-	if stringarray_s[2] == form.WordSome {
+	case stringarray_s[2] == form.WordSome:
 		if negative, err := testForm(stringarray_s[5], intarray_t[3], intarray_t[4], intarray_t[5], intarray_t[6]); err != nil {
 			return form.Undefined, err
 		} else if negative {
@@ -89,24 +90,24 @@ func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string,
 		}
 		f(stringarray_s[3], stringarray_s[5])
 		return form.SomeAIsB, nil // Some A is B
-	}
 
-	if stringarray_s[2] == form.WordNo {
+	case stringarray_s[2] == form.WordNo:
 		if _, err := testForm(stringarray_s[5], intarray_t[3], intarray_t[4], intarray_t[5], token.TypeUndetermined); err != nil {
 			return form.Undefined, err
 		}
 		f(stringarray_s[3], stringarray_s[5])
 		return form.NoAIsB, nil // no A is B
-	}
 
-	if negative, err := testForm(stringarray_s[4], intarray_t[2], intarray_t[3], intarray_t[4], intarray_t[5]); err != nil {
-		return form.Undefined, err
-	} else if negative {
-		f(stringarray_s[2], stringarray_s[5])
-		return form.AIsNotT, nil // a is not T
+	default:
+		if negative, err := testForm(stringarray_s[4], intarray_t[2], intarray_t[3], intarray_t[4], intarray_t[5]); err != nil {
+			return form.Undefined, err
+		} else if negative {
+			f(stringarray_s[2], stringarray_s[5])
+			return form.AIsNotT, nil // a is not T
+		}
+		f(stringarray_s[2], stringarray_s[4])
+		return form.AIsT, nil // a is T
 	}
-	f(stringarray_s[2], stringarray_s[4])
-	return form.AIsT, nil // a is T
 }
 
 // BasicTab prints tabs in the manner of BASIC's TAB(N)
