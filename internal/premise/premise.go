@@ -48,13 +48,13 @@ func New(s string) (*Premise, error) {
 	}, nil
 }
 
-func testForm(stringarray_s []string, intarray_t []token.Type, particular bool) (bool, error) {
+func testForm(s string, intarray_t []token.Type, particular bool) (bool, error) {
 	switch {
 	case intarray_t[3] != token.TypeTerm:
 		return false, errors.New(help.MissingSubject)
 	case intarray_t[4] != token.TypeCopula:
 		return false, errors.New(help.MissingCopula)
-	case stringarray_s[5] == form.WordNot:
+	case s == form.WordNot:
 		if particular {
 			if intarray_t[6] != token.TypeTerm {
 				return false, errors.New(help.MissingPredicate)
@@ -72,7 +72,7 @@ func testForm(stringarray_s []string, intarray_t []token.Type, particular bool) 
 // PremiseForm determines the form of a premise. Pass a function to set new subject and predicate.
 func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string, string)) (form.Form, error) {
 	if stringarray_s[2] == form.WordAll {
-		if _, err := testForm(stringarray_s, intarray_t, false); err != nil {
+		if _, err := testForm(stringarray_s[5], intarray_t, false); err != nil {
 			return form.Undefined, err
 		}
 		f(stringarray_s[3], stringarray_s[5])
@@ -80,7 +80,7 @@ func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string,
 	}
 
 	if stringarray_s[2] == form.WordSome {
-		if negative, err := testForm(stringarray_s, intarray_t, true); err != nil {
+		if negative, err := testForm(stringarray_s[5], intarray_t, true); err != nil {
 			return form.Undefined, err
 		} else if negative {
 			f(stringarray_s[3], stringarray_s[6])
@@ -91,7 +91,7 @@ func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string,
 	}
 
 	if stringarray_s[2] == form.WordNo {
-		if _, err := testForm(stringarray_s, intarray_t, false); err != nil {
+		if _, err := testForm(stringarray_s[5], intarray_t, false); err != nil {
 			return form.Undefined, err
 		}
 		f(stringarray_s[3], stringarray_s[5])
