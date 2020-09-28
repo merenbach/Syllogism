@@ -48,21 +48,22 @@ func New(s string) (*Premise, error) {
 	}, nil
 }
 
-func testForm(s string, intarray_t []token.Type, particular bool) (bool, error) {
+func testForm(s string, t3 token.Type, t4 token.Type, t5 token.Type, t6 token.Type) (bool, error) {
 	switch {
-	case intarray_t[3] != token.TypeTerm:
+	case t3 != token.TypeTerm:
 		return false, errors.New(help.MissingSubject)
-	case intarray_t[4] != token.TypeCopula:
+	case t4 != token.TypeCopula:
 		return false, errors.New(help.MissingCopula)
 	case s == form.WordNot:
-		if particular {
-			if intarray_t[6] != token.TypeTerm {
+		// Used for particular forms ending in "NOT B"--we need to make sure that B is a term now
+		if t6 != token.TypeUndetermined {
+			if t6 != token.TypeTerm {
 				return false, errors.New(help.MissingPredicate)
 			}
 			return true, nil
 		}
 		fallthrough
-	case intarray_t[5] != token.TypeTerm:
+	case t5 != token.TypeTerm:
 		return false, errors.New(help.MissingPredicate)
 	default:
 		return false, nil
@@ -72,7 +73,7 @@ func testForm(s string, intarray_t []token.Type, particular bool) (bool, error) 
 // PremiseForm determines the form of a premise. Pass a function to set new subject and predicate.
 func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string, string)) (form.Form, error) {
 	if stringarray_s[2] == form.WordAll {
-		if _, err := testForm(stringarray_s[5], intarray_t, false); err != nil {
+		if _, err := testForm(stringarray_s[5], intarray_t[3], intarray_t[4], intarray_t[5], token.TypeUndetermined); err != nil {
 			return form.Undefined, err
 		}
 		f(stringarray_s[3], stringarray_s[5])
@@ -80,7 +81,7 @@ func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string,
 	}
 
 	if stringarray_s[2] == form.WordSome {
-		if negative, err := testForm(stringarray_s[5], intarray_t, true); err != nil {
+		if negative, err := testForm(stringarray_s[5], intarray_t[3], intarray_t[4], intarray_t[5], intarray_t[6]); err != nil {
 			return form.Undefined, err
 		} else if negative {
 			f(stringarray_s[3], stringarray_s[6])
@@ -91,30 +92,21 @@ func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string,
 	}
 
 	if stringarray_s[2] == form.WordNo {
-		if _, err := testForm(stringarray_s[5], intarray_t, false); err != nil {
+		if _, err := testForm(stringarray_s[5], intarray_t[3], intarray_t[4], intarray_t[5], token.TypeUndetermined); err != nil {
 			return form.Undefined, err
 		}
 		f(stringarray_s[3], stringarray_s[5])
 		return form.NoAIsB, nil // no A is B
 	}
 
-	switch {
-	case intarray_t[2] != token.TypeTerm:
-		return form.Undefined, errors.New(help.MissingSubject)
-	case intarray_t[3] != token.TypeCopula:
-		return form.Undefined, errors.New(help.MissingCopula)
-	case stringarray_s[4] == form.WordNot:
-		if intarray_t[5] != token.TypeTerm {
-			return form.Undefined, errors.New(help.MissingPredicate)
-		}
+	if negative, err := testForm(stringarray_s[4], intarray_t[2], intarray_t[3], intarray_t[4], intarray_t[5]); err != nil {
+		return form.Undefined, err
+	} else if negative {
 		f(stringarray_s[2], stringarray_s[5])
 		return form.AIsNotT, nil // a is not T
-	case intarray_t[4] != token.TypeTerm:
-		return form.Undefined, errors.New(help.MissingPredicate)
-	default:
-		f(stringarray_s[2], stringarray_s[4])
-		return form.AIsT, nil // a is T
 	}
+	f(stringarray_s[2], stringarray_s[4])
+	return form.AIsT, nil // a is T
 }
 
 // BasicTab prints tabs in the manner of BASIC's TAB(N)

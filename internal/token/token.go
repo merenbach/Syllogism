@@ -24,4 +24,7 @@ const (
 
 	// TypeTerm denotes a term.
 	TypeTerm
+
+	// TypeUndetermined denotes an undetermined term type.
+	TypeUndetermined
 )
