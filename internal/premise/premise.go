@@ -51,17 +51,17 @@ func New(s string) (*Premise, error) {
 // PremiseForm determines the form of a premise. Pass a function to set new subject and predicate.
 func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string, string)) (form.Form, error) {
 	if stringarray_s[2] == form.WordAll {
-		if intarray_t[3] != token.TypeTerm {
+		switch {
+		case intarray_t[3] != token.TypeTerm:
 			return form.Undefined, errors.New(help.MissingSubject)
-		}
-		if intarray_t[4] != token.TypeCopula {
+		case intarray_t[4] != token.TypeCopula:
 			return form.Undefined, errors.New(help.MissingCopula)
-		}
-		if intarray_t[5] != token.TypeTerm {
+		case intarray_t[5] != token.TypeTerm:
 			return form.Undefined, errors.New(help.MissingPredicate)
+		default:
+			f(stringarray_s[3], stringarray_s[5])
+			return form.AllAIsB, nil // all A is B
 		}
-		f(stringarray_s[3], stringarray_s[5])
-		return form.AllAIsB, nil // all A is B
 	}
 
 	if stringarray_s[2] == form.WordSome {
@@ -86,20 +86,17 @@ func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string,
 	}
 
 	if stringarray_s[2] == form.WordNo {
-		if intarray_t[3] != token.TypeTerm {
+		switch {
+		case intarray_t[3] != token.TypeTerm:
 			return form.Undefined, errors.New(help.MissingSubject)
-		}
-
-		if intarray_t[4] != token.TypeCopula {
+		case intarray_t[4] != token.TypeCopula:
 			return form.Undefined, errors.New(help.MissingCopula)
-		}
-
-		if intarray_t[5] != token.TypeTerm {
+		case intarray_t[5] != token.TypeTerm:
 			return form.Undefined, errors.New(help.MissingPredicate)
+		default:
+			f(stringarray_s[3], stringarray_s[5])
+			return form.NoAIsB, nil // no A is B
 		}
-
-		f(stringarray_s[3], stringarray_s[5])
-		return form.NoAIsB, nil // no A is B
 	}
 
 	if intarray_t[2] != token.TypeTerm {
