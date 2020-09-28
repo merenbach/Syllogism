@@ -50,68 +50,61 @@ func New(s string) (*Premise, error) {
 
 // PremiseForm determines the form of a premise. Pass a function to set new subject and predicate.
 func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string, string)) (form.Form, error) {
-	if stringarray_s[2] != form.WordAll {
-		if stringarray_s[2] != form.WordSome {
-			if stringarray_s[2] != form.WordNo {
-				if intarray_t[2] != token.TypeTerm {
-					return form.Undefined, errors.New(help.MissingSubject)
-				}
-
-				if intarray_t[3] != token.TypeCopula {
-					return form.Undefined, errors.New(help.MissingCopula)
-				}
-
-				if stringarray_s[4] == form.WordNot {
-					if intarray_t[5] != token.TypeTerm {
-						return form.Undefined, errors.New(help.MissingPredicate)
-					}
-
-					f(stringarray_s[2], stringarray_s[5])
-					return form.AIsNotT, nil // a is not T
-				} else {
-					if intarray_t[4] != token.TypeTerm {
-						return form.Undefined, errors.New(help.MissingPredicate)
-					}
-
-					f(stringarray_s[2], stringarray_s[4])
-					return form.AIsT, nil // a is T
-				}
-			}
-
-			if intarray_t[3] != token.TypeTerm {
-				return form.Undefined, errors.New(help.MissingSubject)
-			}
-
-			if intarray_t[4] != token.TypeCopula {
-				return form.Undefined, errors.New(help.MissingCopula)
-			}
-
-			if intarray_t[5] != token.TypeTerm {
-				return form.Undefined, errors.New(help.MissingPredicate)
-			}
-
-			f(stringarray_s[3], stringarray_s[5])
-
-			return form.NoAIsB, nil // no A is B
-		}
+	if stringarray_s[2] == form.WordAll {
 		if intarray_t[3] != token.TypeTerm {
 			return form.Undefined, errors.New(help.MissingSubject)
 		}
 		if intarray_t[4] != token.TypeCopula {
 			return form.Undefined, errors.New(help.MissingCopula)
 		}
-		if stringarray_s[5] == form.WordNot {
-			if intarray_t[6] != token.TypeTerm {
-				return form.Undefined, errors.New(help.MissingPredicate)
-			}
-			f(stringarray_s[3], stringarray_s[6])
-			return form.SomeAIsNotB, nil // some A is not B
-		}
 		if intarray_t[5] != token.TypeTerm {
 			return form.Undefined, errors.New(help.MissingPredicate)
 		}
 		f(stringarray_s[3], stringarray_s[5])
-		return form.SomeAIsB, nil // Some A is B
+		return form.AllAIsB, nil // all A is B
+	}
+
+	if stringarray_s[2] != form.WordSome {
+		if stringarray_s[2] != form.WordNo {
+			if intarray_t[2] != token.TypeTerm {
+				return form.Undefined, errors.New(help.MissingSubject)
+			}
+
+			if intarray_t[3] != token.TypeCopula {
+				return form.Undefined, errors.New(help.MissingCopula)
+			}
+
+			if stringarray_s[4] == form.WordNot {
+				if intarray_t[5] != token.TypeTerm {
+					return form.Undefined, errors.New(help.MissingPredicate)
+				}
+
+				f(stringarray_s[2], stringarray_s[5])
+				return form.AIsNotT, nil // a is not T
+			} else {
+				if intarray_t[4] != token.TypeTerm {
+					return form.Undefined, errors.New(help.MissingPredicate)
+				}
+
+				f(stringarray_s[2], stringarray_s[4])
+				return form.AIsT, nil // a is T
+			}
+		}
+
+		if intarray_t[3] != token.TypeTerm {
+			return form.Undefined, errors.New(help.MissingSubject)
+		}
+
+		if intarray_t[4] != token.TypeCopula {
+			return form.Undefined, errors.New(help.MissingCopula)
+		}
+
+		if intarray_t[5] != token.TypeTerm {
+			return form.Undefined, errors.New(help.MissingPredicate)
+		}
+
+		f(stringarray_s[3], stringarray_s[5])
+		return form.NoAIsB, nil // no A is B
 	}
 	if intarray_t[3] != token.TypeTerm {
 		return form.Undefined, errors.New(help.MissingSubject)
@@ -119,11 +112,18 @@ func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string,
 	if intarray_t[4] != token.TypeCopula {
 		return form.Undefined, errors.New(help.MissingCopula)
 	}
+	if stringarray_s[5] == form.WordNot {
+		if intarray_t[6] != token.TypeTerm {
+			return form.Undefined, errors.New(help.MissingPredicate)
+		}
+		f(stringarray_s[3], stringarray_s[6])
+		return form.SomeAIsNotB, nil // some A is not B
+	}
 	if intarray_t[5] != token.TypeTerm {
 		return form.Undefined, errors.New(help.MissingPredicate)
 	}
 	f(stringarray_s[3], stringarray_s[5])
-	return form.AllAIsB, nil // all A is B
+	return form.SomeAIsB, nil // Some A is B
 }
 
 // BasicTab prints tabs in the manner of BASIC's TAB(N)
