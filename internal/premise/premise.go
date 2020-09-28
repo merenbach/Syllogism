@@ -48,23 +48,23 @@ func New(s string) (*Premise, error) {
 	}, nil
 }
 
-func testForm(s string, t3 token.Type, t4 token.Type, t5 token.Type, t6 token.Type) (bool, error) {
+func testForm(s string, terms ...token.Type) (bool, error) {
 	switch {
-	case t3 != token.TypeTerm:
+	case terms[0] != token.TypeTerm:
 		return false, errors.New(help.MissingSubject)
-	case t4 != token.TypeCopula:
+	case terms[1] != token.TypeCopula:
 		return false, errors.New(help.MissingCopula)
 	case s == form.WordNot:
 		// Used for particular forms ending in "NOT B"--we need to make sure that B is a term now
-		// We skip this bit and fall through if t6 is undefined (used when it's not needed, for universal tests)
-		if t6 != token.TypeUndetermined {
-			if t6 != token.TypeTerm {
+		// We skip this bit and fall through if terms[3] is undefined (used when it's not needed, for universal tests)
+		if len(terms) > 3 {
+			if terms[3] != token.TypeTerm {
 				return false, errors.New(help.MissingPredicate)
 			}
 			return true, nil
 		}
 		fallthrough
-	case t5 != token.TypeTerm:
+	case terms[2] != token.TypeTerm:
 		return false, errors.New(help.MissingPredicate)
 	default:
 		return false, nil
@@ -75,7 +75,7 @@ func testForm(s string, t3 token.Type, t4 token.Type, t5 token.Type, t6 token.Ty
 func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string, string)) (form.Form, error) {
 	switch {
 	case stringarray_s[2] == form.WordAll:
-		if _, err := testForm(stringarray_s[5], intarray_t[3], intarray_t[4], intarray_t[5], token.TypeUndetermined); err != nil {
+		if _, err := testForm(stringarray_s[5], intarray_t[3], intarray_t[4], intarray_t[5]); err != nil {
 			return form.Undefined, err
 		}
 		f(stringarray_s[3], stringarray_s[5])
@@ -92,7 +92,7 @@ func PremiseForm(stringarray_s []string, intarray_t []token.Type, f func(string,
 		return form.SomeAIsB, nil // Some A is B
 
 	case stringarray_s[2] == form.WordNo:
-		if _, err := testForm(stringarray_s[5], intarray_t[3], intarray_t[4], intarray_t[5], token.TypeUndetermined); err != nil {
+		if _, err := testForm(stringarray_s[5], intarray_t[3], intarray_t[4], intarray_t[5]); err != nil {
 			return form.Undefined, err
 		}
 		f(stringarray_s[3], stringarray_s[5])
