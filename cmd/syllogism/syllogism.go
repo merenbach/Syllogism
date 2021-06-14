@@ -111,31 +111,35 @@ func substitute() error {
 		if err != nil {
 			continue
 		}
-		if localint_i1 == -1 {
-			break
-		}
-		if localint_i1 != -2 {
-			if localint_i1 > 0 {
-				if localint_i1 <= len(symbolTable) {
-					fmt.Printf("Enter new term to replace %s %q\n", symbolTable[localint_i1-1].TermType, symbolTable[localint_i1-1].Term)
 
-					w := lineInput("? ")
-					symbolTable[localint_i1-1].Term = w
-					fmt.Printf("Replaced by %q\n", w)
-				} else {
-					fmt.Printf("Address %d too large.  Symbol table only of length %d.\n", localint_i1, len(symbolTable))
-				}
-			} else {
+		switch localint_i1 {
+		case 0:
+			fmt.Println(help.SyllogismHelpForSubstitute)
+			fmt.Println()
+		case (-1):
+			fmt.Println("Exit from substitution routine")
+			return nil
+		case (-2):
+			dump()
+		default:
+			// Print a help message if out-of-bounds numbers are input
+			if localint_i1 < 0 {
 				fmt.Println(help.SyllogismHelpForSubstitute)
+				fmt.Println()
+			}
+
+			if localint_i1 <= len(symbolTable) {
+				fmt.Printf("Enter new term to replace %s %q\n", symbolTable[localint_i1-1].TermType, symbolTable[localint_i1-1].Term)
+
+				w := lineInput("? ")
+				symbolTable[localint_i1-1].Term = w
+				fmt.Printf("Replaced by %q\n", w)
+			} else {
+				fmt.Printf("Address %d too large.  Symbol table only of length %d.\n", localint_i1, len(symbolTable))
 			}
 			fmt.Println()
-		} else {
-			dump()
 		}
 	}
-
-	fmt.Println("Exit from substitution routine")
-	return nil
 }
 
 func basicGosub5880() {
