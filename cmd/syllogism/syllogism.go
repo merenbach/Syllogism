@@ -291,6 +291,11 @@ func basicGosub6200() {
 func basicGosub6630(p1 term.Type, stringarray_s []string, intarray_t []token.Type) {
 	// 6630
 	//---test offered conclusion---
+
+	printConclusionRequirements := func(sym *symbol.Symbol) {
+		fmt.Printf("** Conclusion must contain %s %q.\n", sym.TermType, sym.Term)
+	}
+
 	var (
 		localstring_w  string
 		localsymbol_t1 *symbol.Symbol
@@ -355,21 +360,19 @@ func basicGosub6630(p1 term.Type, stringarray_s []string, intarray_t []token.Typ
 		}
 	}
 
-	printConclusionRequirements := func(sym *symbol.Symbol) {
-		fmt.Printf("** Conclusion must contain %s %q.\n", sym.TermType, sym.Term)
-	}
-
 	if localint_j > 0 {
 		localsymbol_t1 = symbolConclusionTerms[localint_j]
 		localsymbol_t2 = symbolConclusionTerms[3-localint_j]
 		if localstring_w != localsymbol_t2.Term {
 			fmt.Printf("** Conclusion may not contain %s %q;\n", termType2, localstring_w)
-			goto Line7070
+			printConclusionRequirements(localsymbol_t2)
+			return
 		}
 		if localsymbol_t2.TermType != term.TypeUndetermined {
 			if termType2 != term.TypeUndetermined && termType2 != localsymbol_t2.TermType {
 				fmt.Printf("** Conclusion may not contain %s %q;\n", termType2, localstring_w)
-				goto Line7070
+				printConclusionRequirements(localsymbol_t2)
+				return
 			}
 		} else if termType2 != term.TypeUndetermined {
 			fmt.Printf("Note: %q used in premises taken to be %s\n", localsymbol_t2.Term, termType2)
@@ -386,7 +389,6 @@ func basicGosub6630(p1 term.Type, stringarray_s []string, intarray_t []token.Typ
 		localsymbol_t2 = symbolConclusionTerms[1]
 	}
 
-Line7070: // 7070
 	printConclusionRequirements(localsymbol_t2)
 	return
 
