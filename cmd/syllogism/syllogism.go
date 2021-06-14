@@ -355,12 +355,8 @@ func basicGosub6630(p1 term.Type, stringarray_s []string, intarray_t []token.Typ
 			fmt.Printf("** Subject is a %s, predicate is a %s -- but\n", term.TypeDesignator, term.TypeGeneralTerm)
 			fmt.Println(help.ConclusionFromNoPremises)
 			return
-		} else {
-			goto Line7120
 		}
-	}
-
-	if localint_j > 0 {
+	} else if localint_j > 0 {
 		localsymbol_t1 = symbolConclusionTerms[localint_j]
 		localsymbol_t2 = symbolConclusionTerms[3-localint_j]
 		if localstring_w != localsymbol_t2.Term {
@@ -381,18 +377,17 @@ func basicGosub6630(p1 term.Type, stringarray_s []string, intarray_t []token.Typ
 			fmt.Println("** Negative conclusion required.")
 			return
 		}
-		goto Line7120
-	}
-	if localstring_w == symbolConclusionTerms[1].Term {
-		localsymbol_t2 = symbolConclusionTerms[2]
 	} else {
-		localsymbol_t2 = symbolConclusionTerms[1]
+		if localstring_w == symbolConclusionTerms[1].Term {
+			localsymbol_t2 = symbolConclusionTerms[2]
+		} else {
+			localsymbol_t2 = symbolConclusionTerms[1]
+		}
+
+		printConclusionRequirements(localsymbol_t2)
+		return
 	}
 
-	printConclusionRequirements(localsymbol_t2)
-	return
-
-Line7120: // 7120
 	if negativePremiseCount == 0 && d1.IsNegative() {
 		fmt.Println("** Affirmative conclusion required.")
 		return
