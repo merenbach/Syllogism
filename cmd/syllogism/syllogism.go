@@ -355,6 +355,10 @@ func basicGosub6630(p1 term.Type, stringarray_s []string, intarray_t []token.Typ
 		}
 	}
 
+	printConclusionRequirements := func(sym *symbol.Symbol) {
+		fmt.Printf("** Conclusion must contain %s %q.\n", sym.TermType, sym.Term)
+	}
+
 	if localint_j > 0 {
 		localsymbol_t1 = symbolConclusionTerms[localint_j]
 		localsymbol_t2 = symbolConclusionTerms[3-localint_j]
@@ -383,7 +387,7 @@ func basicGosub6630(p1 term.Type, stringarray_s []string, intarray_t []token.Typ
 	}
 
 Line7070: // 7070
-	fmt.Printf("** Conclusion must contain %s %q.\n", localsymbol_t2.TermType, localsymbol_t2.Term)
+	printConclusionRequirements(localsymbol_t2)
 	return
 
 Line7120: // 7120
